@@ -2,14 +2,6 @@
 
 A simple 2D game engine built in C++ using SDL3 and OpenGL, developed alongside a pixel art roguelike game.
 
-## Features
-
-- Layer stack system with event propagation
-- SDL3 windowing and input
-- OpenGL rendering backend
-- ImGui debug overlay
-- Logging system via spdlog
-
 ## Dependencies
 
 - SDL3
