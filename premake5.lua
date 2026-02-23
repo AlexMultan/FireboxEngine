@@ -10,40 +10,37 @@ workspace "FireboxEngine"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
-IncludeDir["SDL"] = "FireboxEngine/vendor/SDL/include"
-IncludeDir["Glad"] = "FireboxEngine/vendor/Glad/include"
-IncludeDir["imgui"] = "FireboxEngine/vendor/ImGui"
-IncludeDir["glm"] = "FireboxEngine/vendor/GLM"
+IncludeDir["SDL"] = "FireboxEngine/ThirdParty/SDL/include"
+IncludeDir["Glad"] = "FireboxEngine/ThirdParty/Glad/include"
+IncludeDir["imgui"] = "FireboxEngine/ThirdParty/ImGui"
+IncludeDir["glm"] = "FireboxEngine/ThirdParty/GLM"
 
-include "FireboxEngine/vendor/Glad"
-include "FireboxEngine/vendor/ImGui"
+include "FireboxEngine/ThirdParty/Glad"
+include "FireboxEngine/ThirdParty/ImGui"
 
 project "FireboxEngine"
     location "FireboxEngine"
     language "C++"
 
-    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
-
-    pchheader "fireboxpch.h"
-    pchsource "FireboxEngine/src/fireboxpch.cpp"
+    targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
+    objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
 
     files{
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/Source/Engine/**.h",
+        "%{prj.name}/Source/Engine/**.cpp"
     }
 
     includedirs{
-        "%{prj.name}/vendor/spdlog/include",
+        "%{prj.name}/ThirdParty/spdlog/include",
         "%{IncludeDir.SDL}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.imgui}",
         "%{IncludeDir.glm}",
-        "%{prj.name}/src"
+        "%{prj.name}/Source"
     }
 
     removefiles{
-        "%{prj.name}/vendor/GLM/glm/glm.cppm"
+        "%{prj.name}/ThirdParty/GLM/glm/glm.cppm"
     }
 
     links{
@@ -54,7 +51,7 @@ project "FireboxEngine"
     }
 
     libdirs{
-        "%{prj.name}/vendor/SDL/lib/x64"
+        "%{prj.name}/ThirdParty/SDL/lib/x64"
     }
 
     filter "system:windows"
@@ -68,9 +65,9 @@ project "FireboxEngine"
         }
 
         postbuildcommands{
-            "{MKDIR} %{wks.location}bin/" .. outputdir .. "/Game",
-            "{COPYFILE} %{cfg.buildtarget.relpath} %{wks.location}bin/" .. outputdir .. "/Game",
-            "{COPYFILE} %{wks.location}%{prj.name}/vendor/SDL/lib/x64/SDL3.dll %{wks.location}bin/" .. outputdir .. "/Game"
+            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Game",
+            "{COPYFILE} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Game",
+            "{COPYFILE} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Game"
         }
 
         links {
@@ -103,17 +100,17 @@ project "FireboxEngine"
         filter {"system:windows"}  
             buildoptions "/utf-8"
 
-project "Game"
-    location "Game"
+project "FireboxEditor"
+    location "FireboxEditor"
     kind "ConsoleApp"
     language "C++"
 
-    targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-    objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+    targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
+    objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
     
     files{
-        "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/Source/Editor/**.h",
+        "%{prj.name}/Source/Editor/**.cpp"
     }
 
     links{
@@ -121,11 +118,68 @@ project "Game"
     }
 
     includedirs{
-        "FireboxEngine/vendor/spdlog/include",
-        "FireboxEngine/vendor/SDL/include",
-        "FireboxEngine/vendor/GLM",
-        "FireboxEngine/vendor/ImGui",
-        "FireboxEngine/src"
+        "FireboxEngine/ThirdParty/spdlog/include",
+        "FireboxEngine/ThirdParty/SDL/include",
+        "FireboxEngine/ThirdParty/GLM",
+        "FireboxEngine/ThirdParty/ImGui",
+        "FireboxEngine/Source"
+    }
+
+    filter "system:windows"
+        cppdialect "C++20"
+        staticruntime "On"
+        systemversion "latest"
+
+        defines{
+            "FIREBOX_PLATFORM_WIN64",
+            "FIREBOX_EDITOR"
+        }
+
+        links {
+            "imm32"
+        }
+
+        filter "configurations:Debug"
+            defines "FIREBOX_DEBUG"
+            symbols "On"
+            buildoptions "/MDd"
+
+        filter "configurations:Release"
+            defines "FIREBOX_RELEASE"
+            optimize "On"
+            buildoptions "/MD"
+
+        filter "configurations:Shipping"
+            defines "FIREBOX_SHIPPING"
+            optimize "On"
+            buildoptions "/MD"
+
+        filter {"system:windows"}  
+            buildoptions "/utf-8"
+
+project "Game"
+    location "Game"
+    kind "ConsoleApp"
+    language "C++"
+
+    targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
+    objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
+    
+    files{
+        "%{prj.name}/Source/**.h",
+        "%{prj.name}/Source/**.cpp"
+    }
+
+    links{
+        "FireboxEngine"
+    }
+
+    includedirs{
+        "FireboxEngine/ThirdParty/spdlog/include",
+        "FireboxEngine/ThirdParty/SDL/include",
+        "FireboxEngine/ThirdParty/GLM",
+        "FireboxEngine/ThirdParty/ImGui",
+        "FireboxEngine/Source"
     }
 
     filter "system:windows"

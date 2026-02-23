@@ -4,9 +4,6 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Events">
-      <UniqueIdentifier>{3A8963B1-262B-8E87-0FE6-A1DBFB2615D8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Layers">
       <UniqueIdentifier>{157446C0-0116-7196-EAD0-84EAD611F8E6}</UniqueIdentifier>
     </Filter>
@@ -21,76 +18,62 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Core\Application.h">
+    <ClInclude Include="Source\Engine\Core\Application.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Core.h">
+    <ClInclude Include="Source\Engine\Core\Core.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\EntryPoint.h">
+    <ClInclude Include="Source\Engine\Core\EntryPoint.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Core\Log.h">
+    <ClInclude Include="Source\Engine\Core\Log.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Events\ApplicationEvent.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Events\Event.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Events\KeyEvent.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Events\MouseEvent.h">
-      <Filter>Events</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Firebox.h" />
-    <ClInclude Include="src\Layers\ImGuiLayer.h">
+    <ClInclude Include="Source\Engine\Firebox.h" />
+    <ClInclude Include="Source\Engine\Layers\ImGuiLayer.h">
       <Filter>Layers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Layers\Layer.h">
+    <ClInclude Include="Source\Engine\Layers\Layer.h">
       <Filter>Layers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Layers\LayerStack.h">
+    <ClInclude Include="Source\Engine\Layers\LayerStack.h">
       <Filter>Layers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Math\Vector.h">
+    <ClInclude Include="Source\Engine\Math\Vector.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\Window.h">
+    <ClInclude Include="Source\Engine\Platform\Window.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils\Assert.h">
+    <ClInclude Include="Source\Engine\Utils\Assert.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\Utils\Timer.h">
+    <ClInclude Include="Source\Engine\Utils\Timer.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="src\fireboxpch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Core\Application.cpp">
+    <ClCompile Include="Source\Engine\Core\Application.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Core\Log.cpp">
+    <ClCompile Include="Source\Engine\Core\Log.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Layers\ImGuiLayer.cpp">
+    <ClCompile Include="Source\Engine\Layers\ImGuiLayer.cpp">
       <Filter>Layers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Layers\Layer.cpp">
+    <ClCompile Include="Source\Engine\Layers\Layer.cpp">
       <Filter>Layers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Layers\LayerStack.cpp">
+    <ClCompile Include="Source\Engine\Layers\LayerStack.cpp">
       <Filter>Layers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Math\Vector.cpp">
+    <ClCompile Include="Source\Engine\Math\Vector.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\Window.cpp">
+    <ClCompile Include="Source\Engine\Platform\Window.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
-    <ClCompile Include="src\fireboxpch.cpp" />
   </ItemGroup>
 </Project>

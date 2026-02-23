@@ -55,22 +55,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)..\bin\Debug-windows-x86_64\Game\</OutDir>
-    <IntDir>$(ProjectDir)..\bin-int\Debug-windows-x86_64\Game\</IntDir>
+    <OutDir>$(ProjectDir)..\Binaries\Debug-windows-x86_64\Game\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\Debug-windows-x86_64\Game\</IntDir>
     <TargetName>Game</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\bin\Release-windows-x86_64\Game\</OutDir>
-    <IntDir>$(ProjectDir)..\bin-int\Release-windows-x86_64\Game\</IntDir>
+    <OutDir>$(ProjectDir)..\Binaries\Release-windows-x86_64\Game\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\Release-windows-x86_64\Game\</IntDir>
     <TargetName>Game</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\bin\Shipping-windows-x86_64\Game\</OutDir>
-    <IntDir>$(ProjectDir)..\bin-int\Shipping-windows-x86_64\Game\</IntDir>
+    <OutDir>$(ProjectDir)..\Binaries\Shipping-windows-x86_64\Game\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\Shipping-windows-x86_64\Game\</IntDir>
     <TargetName>Game</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>FIREBOX_PLATFORM_WIN64;FIREBOX_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\FireboxEngine\vendor\spdlog\include;..\FireboxEngine\vendor\SDL\include;..\FireboxEngine\vendor\GLM;..\FireboxEngine\vendor\ImGui;..\FireboxEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\FireboxEngine\ThirdParty\spdlog\include;..\FireboxEngine\ThirdParty\SDL\include;..\FireboxEngine\ThirdParty\GLM;..\FireboxEngine\ThirdParty\ImGui;..\FireboxEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -100,7 +100,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>FIREBOX_PLATFORM_WIN64;FIREBOX_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\FireboxEngine\vendor\spdlog\include;..\FireboxEngine\vendor\SDL\include;..\FireboxEngine\vendor\GLM;..\FireboxEngine\vendor\ImGui;..\FireboxEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\FireboxEngine\ThirdParty\spdlog\include;..\FireboxEngine\ThirdParty\SDL\include;..\FireboxEngine\ThirdParty\GLM;..\FireboxEngine\ThirdParty\ImGui;..\FireboxEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -125,7 +125,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>FIREBOX_PLATFORM_WIN64;FIREBOX_SHIPPING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\FireboxEngine\vendor\spdlog\include;..\FireboxEngine\vendor\SDL\include;..\FireboxEngine\vendor\GLM;..\FireboxEngine\vendor\ImGui;..\FireboxEngine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\FireboxEngine\ThirdParty\spdlog\include;..\FireboxEngine\ThirdParty\SDL\include;..\FireboxEngine\ThirdParty\GLM;..\FireboxEngine\ThirdParty\ImGui;..\FireboxEngine\Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -146,7 +146,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="Source\Game.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FireboxEngine\FireboxEngine.vcxproj">

@@ -1,0 +1,5 @@
+﻿cl : command line  warning D9025: overriding '/MTd' with '/MDd'
+  Editor.cpp
+  EditorLayer.cpp
+  Generating Code...
+  FireboxEditor.vcxproj -> E:\dev\FireboxEngine\Binaries\Debug-windows-x86_64\FireboxEditor\FireboxEditor.exe

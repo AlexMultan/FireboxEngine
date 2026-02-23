@@ -3,5 +3,8 @@ bin/
 bin-int/
 
 *.user
+*.vcxproj
+*.filters
+*.sln
 
 !/vendor/bin/

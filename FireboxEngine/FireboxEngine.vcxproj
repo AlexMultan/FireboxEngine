@@ -55,31 +55,30 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)..\bin\Debug-windows-x86_64\FireboxEngine\</OutDir>
-    <IntDir>$(ProjectDir)..\bin-int\Debug-windows-x86_64\FireboxEngine\</IntDir>
+    <OutDir>$(ProjectDir)..\Binaries\Debug-windows-x86_64\FireboxEngine\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\Debug-windows-x86_64\FireboxEngine\</IntDir>
     <TargetName>FireboxEngine</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\bin\Release-windows-x86_64\FireboxEngine\</OutDir>
-    <IntDir>$(ProjectDir)..\bin-int\Release-windows-x86_64\FireboxEngine\</IntDir>
+    <OutDir>$(ProjectDir)..\Binaries\Release-windows-x86_64\FireboxEngine\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\Release-windows-x86_64\FireboxEngine\</IntDir>
     <TargetName>FireboxEngine</TargetName>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|x64'">
-    <OutDir>$(ProjectDir)..\bin\Shipping-windows-x86_64\FireboxEngine\</OutDir>
-    <IntDir>$(ProjectDir)..\bin-int\Shipping-windows-x86_64\FireboxEngine\</IntDir>
+    <OutDir>$(ProjectDir)..\Binaries\Shipping-windows-x86_64\FireboxEngine\</OutDir>
+    <IntDir>$(ProjectDir)..\Intermediate\Shipping-windows-x86_64\FireboxEngine\</IntDir>
     <TargetName>FireboxEngine</TargetName>
     <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>fireboxpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>FIREBOX_PLATFORM_WIN64;FIREBOX_BUILD_DLL;FIREBOX_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\SDL\include;vendor\Glad\include;vendor\ImGui;vendor\GLM;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>ThirdParty\spdlog\include;ThirdParty\SDL\include;ThirdParty\Glad\include;ThirdParty\ImGui;ThirdParty\GLM;Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -91,24 +90,23 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL3.lib;opengl32.lib;imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>vendor\SDL\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\Debug-windows-x86_64\FireboxEngine\FireboxEngine.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>ThirdParty\SDL\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ImportLibrary>..\Binaries\Debug-windows-x86_64\FireboxEngine\FireboxEngine.lib</ImportLibrary>
     </Link>
     <ProjectReference>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>IF NOT EXIST $(SolutionDir)bin\Debug-windows-x86_64\Game (mkdir $(SolutionDir)bin\Debug-windows-x86_64\Game)
-copy /B /Y ..\bin\Debug-windows-x86_64\FireboxEngine\FireboxEngine.dll $(SolutionDir)bin\Debug-windows-x86_64\Game
-copy /B /Y $(SolutionDir)$(ProjectName)\vendor\SDL\lib\x64\SDL3.dll $(SolutionDir)bin\Debug-windows-x86_64\Game</Command>
+      <Command>IF NOT EXIST $(SolutionDir)Binaries\Debug-windows-x86_64\Game (mkdir $(SolutionDir)Binaries\Debug-windows-x86_64\Game)
+copy /B /Y ..\Binaries\Debug-windows-x86_64\FireboxEngine\FireboxEngine.dll $(SolutionDir)Binaries\Debug-windows-x86_64\Game
+copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(SolutionDir)Binaries\Debug-windows-x86_64\Game</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>fireboxpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>FIREBOX_PLATFORM_WIN64;FIREBOX_BUILD_DLL;FIREBOX_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\SDL\include;vendor\Glad\include;vendor\ImGui;vendor\GLM;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>ThirdParty\spdlog\include;ThirdParty\SDL\include;ThirdParty\Glad\include;ThirdParty\ImGui;ThirdParty\GLM;Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -124,24 +122,23 @@ copy /B /Y $(SolutionDir)$(ProjectName)\vendor\SDL\lib\x64\SDL3.dll $(SolutionDi
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>SDL3.lib;opengl32.lib;imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>vendor\SDL\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <ImportLibrary>..\bin\Release-windows-x86_64\FireboxEngine\FireboxEngine.lib</ImportLibrary>
+      <AdditionalLibraryDirectories>ThirdParty\SDL\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ImportLibrary>..\Binaries\Release-windows-x86_64\FireboxEngine\FireboxEngine.lib</ImportLibrary>
     </Link>
     <ProjectReference>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>IF NOT EXIST $(SolutionDir)bin\Release-windows-x86_64\Game (mkdir $(SolutionDir)bin\Release-windows-x86_64\Game)
-copy /B /Y ..\bin\Release-windows-x86_64\FireboxEngine\FireboxEngine.dll $(SolutionDir)bin\Release-windows-x86_64\Game
-copy /B /Y $(SolutionDir)$(ProjectName)\vendor\SDL\lib\x64\SDL3.dll $(SolutionDir)bin\Release-windows-x86_64\Game</Command>
+      <Command>IF NOT EXIST $(SolutionDir)Binaries\Release-windows-x86_64\Game (mkdir $(SolutionDir)Binaries\Release-windows-x86_64\Game)
+copy /B /Y ..\Binaries\Release-windows-x86_64\FireboxEngine\FireboxEngine.dll $(SolutionDir)Binaries\Release-windows-x86_64\Game
+copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(SolutionDir)Binaries\Release-windows-x86_64\Game</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|x64'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>fireboxpch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>FIREBOX_PLATFORM_WIN64;FIREBOX_BUILD_DLL;FIREBOX_STATIC;FIREBOX_SHIPPING;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;vendor\SDL\include;vendor\Glad\include;vendor\ImGui;vendor\GLM;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>ThirdParty\spdlog\include;ThirdParty\SDL\include;ThirdParty\Glad\include;ThirdParty\ImGui;ThirdParty\GLM;Source;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -159,52 +156,44 @@ copy /B /Y $(SolutionDir)$(ProjectName)\vendor\SDL\lib\x64\SDL3.dll $(SolutionDi
     </Link>
     <Lib>
       <AdditionalDependencies>SDL3.lib;opengl32.lib;imm32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>vendor\SDL\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>ThirdParty\SDL\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
     <ProjectReference>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>IF NOT EXIST $(SolutionDir)bin\Shipping-windows-x86_64\Game (mkdir $(SolutionDir)bin\Shipping-windows-x86_64\Game)
-copy /B /Y ..\bin\Shipping-windows-x86_64\FireboxEngine\FireboxEngine.lib $(SolutionDir)bin\Shipping-windows-x86_64\Game
-copy /B /Y $(SolutionDir)$(ProjectName)\vendor\SDL\lib\x64\SDL3.dll $(SolutionDir)bin\Shipping-windows-x86_64\Game</Command>
+      <Command>IF NOT EXIST $(SolutionDir)Binaries\Shipping-windows-x86_64\Game (mkdir $(SolutionDir)Binaries\Shipping-windows-x86_64\Game)
+copy /B /Y ..\Binaries\Shipping-windows-x86_64\FireboxEngine\FireboxEngine.lib $(SolutionDir)Binaries\Shipping-windows-x86_64\Game
+copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(SolutionDir)Binaries\Shipping-windows-x86_64\Game</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Core\Application.h" />
-    <ClInclude Include="src\Core\Core.h" />
-    <ClInclude Include="src\Core\EntryPoint.h" />
-    <ClInclude Include="src\Core\Log.h" />
-    <ClInclude Include="src\Events\ApplicationEvent.h" />
-    <ClInclude Include="src\Events\Event.h" />
-    <ClInclude Include="src\Events\KeyEvent.h" />
-    <ClInclude Include="src\Events\MouseEvent.h" />
-    <ClInclude Include="src\Firebox.h" />
-    <ClInclude Include="src\Layers\ImGuiLayer.h" />
-    <ClInclude Include="src\Layers\Layer.h" />
-    <ClInclude Include="src\Layers\LayerStack.h" />
-    <ClInclude Include="src\Math\Vector.h" />
-    <ClInclude Include="src\Platform\Window.h" />
-    <ClInclude Include="src\Utils\Assert.h" />
-    <ClInclude Include="src\Utils\Timer.h" />
-    <ClInclude Include="src\fireboxpch.h" />
+    <ClInclude Include="Source\Engine\Core\Application.h" />
+    <ClInclude Include="Source\Engine\Core\Core.h" />
+    <ClInclude Include="Source\Engine\Core\EntryPoint.h" />
+    <ClInclude Include="Source\Engine\Core\Log.h" />
+    <ClInclude Include="Source\Engine\Firebox.h" />
+    <ClInclude Include="Source\Engine\Layers\ImGuiLayer.h" />
+    <ClInclude Include="Source\Engine\Layers\Layer.h" />
+    <ClInclude Include="Source\Engine\Layers\LayerStack.h" />
+    <ClInclude Include="Source\Engine\Math\Vector.h" />
+    <ClInclude Include="Source\Engine\Platform\Window.h" />
+    <ClInclude Include="Source\Engine\Utils\Assert.h" />
+    <ClInclude Include="Source\Engine\Utils\Timer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Core\Application.cpp" />
-    <ClCompile Include="src\Core\Log.cpp" />
-    <ClCompile Include="src\Layers\ImGuiLayer.cpp" />
-    <ClCompile Include="src\Layers\Layer.cpp" />
-    <ClCompile Include="src\Layers\LayerStack.cpp" />
-    <ClCompile Include="src\Math\Vector.cpp" />
-    <ClCompile Include="src\Platform\Window.cpp" />
-    <ClCompile Include="src\fireboxpch.cpp">
-      <PrecompiledHeader>Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="Source\Engine\Core\Application.cpp" />
+    <ClCompile Include="Source\Engine\Core\Log.cpp" />
+    <ClCompile Include="Source\Engine\Layers\ImGuiLayer.cpp" />
+    <ClCompile Include="Source\Engine\Layers\Layer.cpp" />
+    <ClCompile Include="Source\Engine\Layers\LayerStack.cpp" />
+    <ClCompile Include="Source\Engine\Math\Vector.cpp" />
+    <ClCompile Include="Source\Engine\Platform\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="vendor\Glad\Glad.vcxproj">
+    <ProjectReference Include="ThirdParty\Glad\Glad.vcxproj">
       <Project>{BDD6857C-A90D-870D-52FA-6C103E10030F}</Project>
     </ProjectReference>
-    <ProjectReference Include="vendor\ImGui\imgui.vcxproj">
+    <ProjectReference Include="ThirdParty\ImGui\imgui.vcxproj">
       <Project>{0098A80F-6CAC-D0C0-352E-7420A101CDF1}</Project>
     </ProjectReference>
   </ItemGroup>
