@@ -1,4 +1,6 @@
 .vs/
+Binaries/
+Intermediate/
 bin/
 bin-int/
 
