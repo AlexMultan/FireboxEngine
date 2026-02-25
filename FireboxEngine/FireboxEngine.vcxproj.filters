@@ -31,9 +31,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Source\Engine\Firebox.h" />
-    <ClInclude Include="Source\Engine\Layers\ImGuiLayer.h">
-      <Filter>Layers</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Engine\Layers\Layer.h">
       <Filter>Layers</Filter>
     </ClInclude>
@@ -59,9 +56,6 @@
     </ClCompile>
     <ClCompile Include="Source\Engine\Core\Log.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Engine\Layers\ImGuiLayer.cpp">
-      <Filter>Layers</Filter>
     </ClCompile>
     <ClCompile Include="Source\Engine\Layers\Layer.cpp">
       <Filter>Layers</Filter>

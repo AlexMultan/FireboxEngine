@@ -2,8 +2,7 @@
 #include "glad/glad.h"
 #include "Engine/Core/Log.h"
 
-Firebox::Window::Window(const char* title, uint32_t width, uint32_t height) 
-    : m_Window(nullptr), m_WindowTitle(title), m_WindowWidth(width), m_WindowHeight(height)
+Firebox::Window::Window(const WindowProperties& windowProps) : m_Window(nullptr), m_WindowProps(windowProps)
 {
 
 }
@@ -33,7 +32,7 @@ void Firebox::Window::Create()
     SDL_WindowFlags windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
 
     m_Window = SDL_CreateWindow(
-        m_WindowTitle, (int)(m_WindowWidth * m_MainScale), (int)(m_WindowHeight * m_MainScale), windowFlags);
+        m_WindowProps.title, (int)(m_WindowProps.width * m_MainScale), (int)(m_WindowProps.height * m_MainScale), windowFlags);
 
     if (m_Window == NULL)
     {
@@ -112,4 +111,3 @@ void Firebox::Window::PerformanceCounterEnd()
         SDL_Delay((uint32_t)((1000 / m_MaxFPS) - elapsed));
     } 
 }
-

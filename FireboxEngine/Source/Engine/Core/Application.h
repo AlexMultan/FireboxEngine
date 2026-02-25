@@ -7,15 +7,12 @@
 
 namespace Firebox {
 
-	class ImGuiLayer;
-
 	class FIREBOX_API Application
 	{
 	private:
 		static Application* s_Instance;
 		LayerStack m_LayerStack;
 		std::unique_ptr<Window> m_Window;
-		ImGuiLayer* m_ImGuiLayer;
 
 	public:
 		Application();
