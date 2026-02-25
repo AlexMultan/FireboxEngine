@@ -1,6 +1,23 @@
-#include <iostream>
+#include "Engine/Firebox.h"
+#include "Core/EditorViewport.h"
 
-int main()
+class Editor : public Firebox::Application
 {
-	return 0;
+public:
+
+	Editor()
+	{
+		PushLayer(new FireboxEditor::EditorViewport());
+		
+	}
+
+	~Editor()
+	{
+
+	}
+};
+
+Firebox::Application* Firebox::CreateApp()
+{
+	return new Editor;
 }

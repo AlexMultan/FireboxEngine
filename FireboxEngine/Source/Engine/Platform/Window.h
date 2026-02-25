@@ -7,6 +7,12 @@
 
 namespace Firebox {
 
+	struct WindowProperties
+	{
+		const char* title;
+		uint32_t width, height;
+	};
+
 	class FIREBOX_API Window
 	{
 		using EventCallbackFn = std::function<void(SDL_Event&)>;
@@ -16,17 +22,16 @@ namespace Firebox {
 		SDL_Window* m_Window;
 		SDL_GLContext m_GLContext;
 		bool m_Running = true;
-		const char* m_WindowTitle = "Game";
-		uint32_t m_WindowWidth = 1280;
-		uint32_t m_WindowHeight = 720;
 		float m_MainScale;
+
+		WindowProperties m_WindowProps;
 
 		uint64_t m_PerformanceCounterStart;
 		uint64_t m_PerformanceCounterEnd;
 		double m_MaxFPS = 144;
 
 	public:
-		Window(const char* title, uint32_t width, uint32_t height);
+		Window(const WindowProperties& windowProps);
 		virtual ~Window();
 
 		void Create();
@@ -46,12 +51,12 @@ namespace Firebox {
 
 		inline const uint32_t GetWindowWidth() const
 		{
-			return m_WindowWidth;
+			return m_WindowProps.width;
 		}
 
 		inline const uint32_t GetWindowHeight() const
 		{
-			return m_WindowHeight;
+			return m_WindowProps.height;
 		}
 
 		inline SDL_Window* GetWindow()

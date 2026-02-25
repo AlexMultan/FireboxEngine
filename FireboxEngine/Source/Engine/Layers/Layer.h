@@ -18,7 +18,7 @@ namespace Firebox {
 		virtual void OnDetach() {}
 		virtual void OnUpdate() {}
 		virtual void OnRender() {}
-		virtual void OnImGuiRender() {}
+		virtual void OnEditorUIRender() {}
 		virtual void OnEvent(SDL_Event& event) {}
 
 		inline const std::string& GetLayerName() const 

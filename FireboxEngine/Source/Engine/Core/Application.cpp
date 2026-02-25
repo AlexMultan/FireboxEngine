@@ -1,14 +1,12 @@
 #include "glad/glad.h"
 #include "Application.h"
-#include "Engine/Layers/ImGuiLayer.h"
 
 Firebox::Application* Firebox::Application::s_Instance = nullptr;
 
 Firebox::Application::Application()
 {
     s_Instance = this;
-
-    m_Window = std::make_unique<Window>("Roguelike Game", 1280, 720);
+    m_Window = std::make_unique<Window>(WindowProperties("Firebox Editor", 1600, 900));
     m_Window->Create();
     m_Window->SetEventCallback([this](SDL_Event& event)
         {
@@ -17,8 +15,6 @@ Firebox::Application::Application()
                 layer->OnEvent(event);
             }
         });
-    m_ImGuiLayer = new ImGuiLayer();
-    PushLayer(m_ImGuiLayer);
 }
 
 Firebox::Application::~Application()
@@ -60,12 +56,10 @@ void Firebox::Application::Run()
             layer->OnRender();
         }
 
-        m_ImGuiLayer->Begin();
         for (Layer* layer : m_LayerStack)
         {
-            layer->OnImGuiRender();
+            layer->OnEditorUIRender();
         }
-        m_ImGuiLayer->End();
 
         m_Window->SwapBuffers();
         m_Window->PerformanceCounterEnd();

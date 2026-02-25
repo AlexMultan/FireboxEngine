@@ -96,7 +96,10 @@
     <ProjectReference>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>IF NOT EXIST $(SolutionDir)Binaries\Debug-windows-x86_64\Game (mkdir $(SolutionDir)Binaries\Debug-windows-x86_64\Game)
+      <Command>IF NOT EXIST $(SolutionDir)Binaries\Debug-windows-x86_64\FireboxEditor (mkdir $(SolutionDir)Binaries\Debug-windows-x86_64\FireboxEditor)
+copy /B /Y ..\Binaries\Debug-windows-x86_64\FireboxEngine\FireboxEngine.dll $(SolutionDir)Binaries\Debug-windows-x86_64\FireboxEditor
+copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(SolutionDir)Binaries\Debug-windows-x86_64\FireboxEditor
+IF NOT EXIST $(SolutionDir)Binaries\Debug-windows-x86_64\Game (mkdir $(SolutionDir)Binaries\Debug-windows-x86_64\Game)
 copy /B /Y ..\Binaries\Debug-windows-x86_64\FireboxEngine\FireboxEngine.dll $(SolutionDir)Binaries\Debug-windows-x86_64\Game
 copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(SolutionDir)Binaries\Debug-windows-x86_64\Game</Command>
     </PostBuildEvent>
@@ -128,7 +131,10 @@ copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(Soluti
     <ProjectReference>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>IF NOT EXIST $(SolutionDir)Binaries\Release-windows-x86_64\Game (mkdir $(SolutionDir)Binaries\Release-windows-x86_64\Game)
+      <Command>IF NOT EXIST $(SolutionDir)Binaries\Release-windows-x86_64\FireboxEditor (mkdir $(SolutionDir)Binaries\Release-windows-x86_64\FireboxEditor)
+copy /B /Y ..\Binaries\Release-windows-x86_64\FireboxEngine\FireboxEngine.dll $(SolutionDir)Binaries\Release-windows-x86_64\FireboxEditor
+copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(SolutionDir)Binaries\Release-windows-x86_64\FireboxEditor
+IF NOT EXIST $(SolutionDir)Binaries\Release-windows-x86_64\Game (mkdir $(SolutionDir)Binaries\Release-windows-x86_64\Game)
 copy /B /Y ..\Binaries\Release-windows-x86_64\FireboxEngine\FireboxEngine.dll $(SolutionDir)Binaries\Release-windows-x86_64\Game
 copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(SolutionDir)Binaries\Release-windows-x86_64\Game</Command>
     </PostBuildEvent>
@@ -161,7 +167,10 @@ copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(Soluti
     <ProjectReference>
     </ProjectReference>
     <PostBuildEvent>
-      <Command>IF NOT EXIST $(SolutionDir)Binaries\Shipping-windows-x86_64\Game (mkdir $(SolutionDir)Binaries\Shipping-windows-x86_64\Game)
+      <Command>IF NOT EXIST $(SolutionDir)Binaries\Shipping-windows-x86_64\FireboxEditor (mkdir $(SolutionDir)Binaries\Shipping-windows-x86_64\FireboxEditor)
+copy /B /Y ..\Binaries\Shipping-windows-x86_64\FireboxEngine\FireboxEngine.lib $(SolutionDir)Binaries\Shipping-windows-x86_64\FireboxEditor
+copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(SolutionDir)Binaries\Shipping-windows-x86_64\FireboxEditor
+IF NOT EXIST $(SolutionDir)Binaries\Shipping-windows-x86_64\Game (mkdir $(SolutionDir)Binaries\Shipping-windows-x86_64\Game)
 copy /B /Y ..\Binaries\Shipping-windows-x86_64\FireboxEngine\FireboxEngine.lib $(SolutionDir)Binaries\Shipping-windows-x86_64\Game
 copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(SolutionDir)Binaries\Shipping-windows-x86_64\Game</Command>
     </PostBuildEvent>
@@ -172,7 +181,6 @@ copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(Soluti
     <ClInclude Include="Source\Engine\Core\EntryPoint.h" />
     <ClInclude Include="Source\Engine\Core\Log.h" />
     <ClInclude Include="Source\Engine\Firebox.h" />
-    <ClInclude Include="Source\Engine\Layers\ImGuiLayer.h" />
     <ClInclude Include="Source\Engine\Layers\Layer.h" />
     <ClInclude Include="Source\Engine\Layers\LayerStack.h" />
     <ClInclude Include="Source\Engine\Math\Vector.h" />
@@ -183,7 +191,6 @@ copy /B /Y $(SolutionDir)$(ProjectName)\ThirdParty\SDL\lib\x64\SDL3.dll $(Soluti
   <ItemGroup>
     <ClCompile Include="Source\Engine\Core\Application.cpp" />
     <ClCompile Include="Source\Engine\Core\Log.cpp" />
-    <ClCompile Include="Source\Engine\Layers\ImGuiLayer.cpp" />
     <ClCompile Include="Source\Engine\Layers\Layer.cpp" />
     <ClCompile Include="Source\Engine\Layers\LayerStack.cpp" />
     <ClCompile Include="Source\Engine\Math\Vector.cpp" />
