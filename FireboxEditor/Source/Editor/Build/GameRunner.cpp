@@ -1,5 +1,6 @@
 #include "GameRunner.h"
 #include "Editor/Build/Platform/WindowsGameRunner.h"
+#include "Engine/Core/Log.h"
 
 FireboxEditor::GameRunner::GameRunner(const std::string& editorRelativePath, const std::string& gamePath, const Extension& extension)
 	: m_EditorRelativePath(editorRelativePath), m_GamePath(gamePath), m_Extension(extension)
@@ -34,6 +35,7 @@ void FireboxEditor::GameRunner::RunGame()
 
 	WindowsGameRunner windowsGameRunner(m_EditorRelativePath, m_GamePath);
 	windowsGameRunner.RunOnWindows();
+	STACK(windowsGameRunner);
 
 #endif
 }

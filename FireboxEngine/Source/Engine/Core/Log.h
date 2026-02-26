@@ -3,6 +3,8 @@
 #include <memory>
 #include "Core.h"
 #include "spdlog/spdlog.h"
+#include <vector>
+#include <numeric>
 
 #define FIREBOX_CORE_TRACE(...) ::Firebox::Log::GetCoreLogger()->trace(__VA_ARGS__)
 #define FIREBOX_CORE_INFO(...)  ::Firebox::Log::GetCoreLogger()->info(__VA_ARGS__)
@@ -21,6 +23,8 @@
 #define FIREBOX_EDITOR_WARN(...)  ::Firebox::Log::GetEditorLogger()->warn(__VA_ARGS__)
 #define FIREBOX_EDITOR_ERROR(...) ::Firebox::Log::GetEditorLogger()->error(__VA_ARGS__)
 #define FIREBOX_EDITOR_CRITICAL(...) ::Firebox::Log::GetEditorLogger()->critical(__VA_ARGS__)
+
+#define STACK(x)::Firebox::Log::AddStackSize(x)
 
 namespace Firebox {
 
@@ -42,9 +46,22 @@ namespace Firebox {
 			return s_EditorLogger;
 		}
 
+		inline static size_t GetStackSize()
+		{
+			return std::accumulate(s_StackSize.begin(), s_StackSize.end(), 0);
+		}
+
+		template<typename T>
+		inline static void AddStackSize(const T& x)
+		{
+			s_StackSize.push_back(sizeof(x));
+		}
+
 	private:
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
 		static std::shared_ptr<spdlog::logger> s_EditorLogger;
+
+		inline static std::vector<unsigned __int64> s_StackSize;
 	};
 }

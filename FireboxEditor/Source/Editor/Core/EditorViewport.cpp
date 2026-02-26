@@ -1,9 +1,6 @@
 #include "EditorViewport.h"
 #include "Engine/Core/Application.h"
 #include "Engine/Core/Log.h"
-#include "Editor/Panels/AssetBrowser.h"
-#include "Editor/Panels/PropertiesPanel.h"
-#include "Editor/UI/MenuBar.h"
 
 #include "glm/glm.hpp"
 #include "imgui_impl_sdl3.h"
@@ -15,9 +12,14 @@
 #include <iostream>
 
 FireboxEditor::EditorViewport::EditorViewport() 
-    : Layer("EditorLayer"), io(nullptr)
+    : Layer("EditorLayer"), io(nullptr), m_AssetBrowser("Asset Browser"), m_PropertiesPanel("PropertiesPanel")
 {
-    
+    m_MenuBar = FireboxEditor::MenuBar();
+    m_DebuggerPanel = FireboxEditor::Debugger();
+    STACK(m_AssetBrowser);
+    STACK(m_PropertiesPanel);
+    STACK(m_MenuBar);
+    STACK(m_DebuggerPanel);
 }
 
 FireboxEditor::EditorViewport::~EditorViewport()
@@ -83,11 +85,6 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
 
     ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-    FireboxEditor::AssetBrowser assetBrowser("Asset Browser");
-    FireboxEditor::PropertiesPanel propertiesPanel("Properties");
-
-    FireboxEditor::MenuBar menuBar;
-
     ImGui::SetNextWindowPos(viewport->Pos);
     ImGui::SetNextWindowSize(viewport->Size);
     ImGui::SetNextWindowViewport(viewport->ID);
@@ -114,13 +111,14 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
 
     if (ImGui::Begin("Editor", nullptr, ImGuiWindowFlags_MenuBar))
     {
-        menuBar.RenderMenuBar();
+        m_MenuBar.RenderMenuBar();
         ImGui::End();
     }
     
-    assetBrowser.RenderPanel();
-    propertiesPanel.RenderPanel();
-    
+    m_AssetBrowser.RenderPanel();
+    m_PropertiesPanel.RenderPanel();
+    m_DebuggerPanel.RenderPanel();
+
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
     if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
