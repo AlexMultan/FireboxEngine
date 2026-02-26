@@ -8,7 +8,6 @@ public:
 	Editor()
 	{
 		PushLayer(new FireboxEditor::EditorViewport());
-		
 	}
 
 	~Editor()

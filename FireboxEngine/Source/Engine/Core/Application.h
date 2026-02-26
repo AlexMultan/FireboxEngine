@@ -13,6 +13,7 @@ namespace Firebox {
 		static Application* s_Instance;
 		LayerStack m_LayerStack;
 		std::unique_ptr<Window> m_Window;
+		std::string m_WindowName;
 
 	public:
 		Application();
@@ -32,6 +33,7 @@ namespace Firebox {
 		{ 
 			return *m_Window; 
 		}
+
 	};
 
 	Application* CreateApp();
