@@ -16,6 +16,11 @@
 #define FIREBOX_ERROR(...) ::Firebox::Log::GetClientLogger()->error(__VA_ARGS__)
 #define FIREBOX_CRITICAL(...) ::Firebox::Log::GetClientLogger()->critical(__VA_ARGS__)
 
+#define FIREBOX_EDITOR_TRACE(...) ::Firebox::Log::GetEditorLogger()->trace(__VA_ARGS__)
+#define FIREBOX_EDITOR_INFO(...)  ::Firebox::Log::GetEditorLogger()->info(__VA_ARGS__)
+#define FIREBOX_EDITOR_WARN(...)  ::Firebox::Log::GetEditorLogger()->warn(__VA_ARGS__)
+#define FIREBOX_EDITOR_ERROR(...) ::Firebox::Log::GetEditorLogger()->error(__VA_ARGS__)
+#define FIREBOX_EDITOR_CRITICAL(...) ::Firebox::Log::GetEditorLogger()->critical(__VA_ARGS__)
 
 namespace Firebox {
 
@@ -32,11 +37,14 @@ namespace Firebox {
 		{
 			return s_ClientLogger;
 		}
+		inline static std::shared_ptr<spdlog::logger>& GetEditorLogger()
+		{
+			return s_EditorLogger;
+		}
 
 	private:
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
+		static std::shared_ptr<spdlog::logger> s_EditorLogger;
 	};
 }
-
-#pragma once

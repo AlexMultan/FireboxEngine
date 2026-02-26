@@ -9,6 +9,13 @@
 
 namespace FireboxEditor {
 
+	struct ImGuiDemoDockspaceArgs
+	{
+		bool                IsFullscreen = true;
+		bool                KeepWindowPadding = false; // Keep WindowPadding to help understand that DockSpace() is a widget inside the window.
+		ImGuiDockNodeFlags  DockSpaceFlags = ImGuiDockNodeFlags_None;
+	};
+
 	class EditorViewport : public Firebox::Layer
 	{
 	private:

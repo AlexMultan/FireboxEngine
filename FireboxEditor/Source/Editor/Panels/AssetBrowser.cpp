@@ -19,7 +19,7 @@ void FireboxEditor::AssetBrowser::RenderPanel()
     {
         if (ImGui::Button("Folder", m_ButtonSize) && m_ShowFolderButton)
         {
-            FIREBOX_CORE_INFO("Opened folder!");
+            FIREBOX_EDITOR_INFO("Opened folder!");
             m_ShowFolderButton = false;
         }
     }
@@ -28,7 +28,7 @@ void FireboxEditor::AssetBrowser::RenderPanel()
     {
         if (ImGui::Button("Mesh", m_ButtonSize))
         {
-            FIREBOX_CORE_INFO("Opened first person arms model");
+            FIREBOX_EDITOR_INFO("Opened first person arms model");
         }
     }
 

@@ -25,7 +25,7 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 	if (ImGui::Button("Spawn"))
 	{
-		FIREBOX_CORE_INFO("Spawned Entity!");
+		FIREBOX_EDITOR_INFO("Spawned Entity!");
 	}
 	ImGui::SameLine();
 	ImGui::Text("Spawn Sprite Entity");

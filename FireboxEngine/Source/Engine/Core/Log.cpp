@@ -5,6 +5,7 @@ namespace Firebox {
 
 	std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
 	std::shared_ptr<spdlog::logger> Log::s_ClientLogger;
+	std::shared_ptr<spdlog::logger> Log::s_EditorLogger;
 
 	void Log::Init()
 	{
@@ -14,5 +15,8 @@ namespace Firebox {
 
 		s_ClientLogger = spdlog::stdout_color_mt("GAME");
 		s_ClientLogger->set_level(spdlog::level::trace);
+
+		s_EditorLogger = spdlog::stdout_color_mt("EDITOR");
+		s_EditorLogger->set_level(spdlog::level::trace);
 	}
 }
