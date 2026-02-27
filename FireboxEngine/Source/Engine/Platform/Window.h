@@ -5,7 +5,12 @@
 #include <functional>
 #include <vector>
 
+#include "Engine/Events/Event.h"
+
 namespace Firebox {
+
+	using EventCallbackFn = std::function<void(Event&)>;
+	using RawEventCallbackFn = std::function<void(const void*)>;
 
 	struct WindowProperties
 	{
@@ -15,10 +20,8 @@ namespace Firebox {
 
 	class FIREBOX_API Window
 	{
-		using EventCallbackFn = std::function<void(SDL_Event&)>;
 		
 	private:
-		EventCallbackFn m_EventCallback;
 		SDL_Window* m_Window;
 		SDL_GLContext m_GLContext;
 		bool m_Running = true;
@@ -29,6 +32,9 @@ namespace Firebox {
 		uint64_t m_PerformanceCounterStart;
 		uint64_t m_PerformanceCounterEnd;
 		double m_MaxFPS = 144;
+
+		EventCallbackFn m_EventCallback;
+		RawEventCallbackFn m_RawEventCallback;
 
 	public:
 		Window(const WindowProperties& windowProps);
@@ -43,6 +49,7 @@ namespace Firebox {
 		void PerformanceCounterEnd();
 
 		void SetEventCallback(const EventCallbackFn& callback) { m_EventCallback = callback; }
+		void SetRawEventCallback(const RawEventCallbackFn& callback) { m_RawEventCallback = callback; }
 
 		inline bool IsRunning()
 		{

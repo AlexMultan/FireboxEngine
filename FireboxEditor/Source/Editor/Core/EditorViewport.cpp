@@ -14,7 +14,7 @@
 FireboxEditor::EditorViewport::EditorViewport() 
     : Layer("EditorLayer"), io(nullptr), m_AssetBrowser("Asset Browser"), m_PropertiesPanel("PropertiesPanel")
 {
-    m_MenuBar = FireboxEditor::MenuBar();
+	m_MenuBar = FireboxEditor::MenuBar();
     m_DebuggerPanel = FireboxEditor::Debugger();
     STACK(m_AssetBrowser);
     STACK(m_PropertiesPanel);
@@ -38,6 +38,8 @@ void FireboxEditor::EditorViewport::OnAttach()
     io->ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
     io->ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
     io->ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
+
+	io->FontDefault = io->Fonts->AddFontFromFileTTF("Resources/Fonts/Arial/arial.ttf", 16.0f);
 
     ImGui::StyleColorsDark();
 
@@ -69,9 +71,13 @@ void FireboxEditor::EditorViewport::OnDetach()
     ImGui::DestroyContext();
 }
 
-void FireboxEditor::EditorViewport::OnEvent(SDL_Event& event)
+void FireboxEditor::EditorViewport::OnEvent(Firebox::Event& event)
 {
-    ImGui_ImplSDL3_ProcessEvent(&event);
+    Firebox::Window& window = Firebox::Application::Get().GetWindow();
+    window.SetRawEventCallback([](const void* rawEvent)
+        {
+            ImGui_ImplSDL3_ProcessEvent(static_cast<const SDL_Event*>(rawEvent));
+        });
 }
 
 void FireboxEditor::EditorViewport::OnEditorUIRender()
@@ -109,12 +115,14 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
         ImGui::End();
     }
 
-    if (ImGui::Begin("Editor", nullptr, ImGuiWindowFlags_MenuBar))
+    ImGuiWindowFlags viewportWindowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse;
+
+    if (ImGui::Begin("Viewport", nullptr, viewportWindowFlags))
     {
         m_MenuBar.RenderMenuBar();
         ImGui::End();
     }
-    
+
     m_AssetBrowser.RenderPanel();
     m_PropertiesPanel.RenderPanel();
     m_DebuggerPanel.RenderPanel();

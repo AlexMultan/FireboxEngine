@@ -2,7 +2,7 @@
 
 #include <string>
 #include "Engine/Core/Core.h"
-#include "SDL3/SDL.h"
+#include "Engine/Events/Event.h"
 
 namespace Firebox {
 
@@ -19,7 +19,7 @@ namespace Firebox {
 		virtual void OnUpdate() {}
 		virtual void OnRender() {}
 		virtual void OnEditorUIRender() {}
-		virtual void OnEvent(SDL_Event& event) {}
+		virtual void OnEvent(Event& event) {}
 
 		inline const std::string& GetLayerName() const 
 		{ 

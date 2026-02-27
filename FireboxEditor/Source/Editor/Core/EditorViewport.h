@@ -20,10 +20,10 @@ namespace FireboxEditor {
 		ImGuiWindowFlags m_WindowFlags;
 		ImGuiDockNodeFlags m_DockNodeFlags;
 
-		FireboxEditor::AssetBrowser m_AssetBrowser;
-		FireboxEditor::PropertiesPanel m_PropertiesPanel;
-		FireboxEditor::MenuBar m_MenuBar;
-		FireboxEditor::Debugger m_DebuggerPanel;
+		AssetBrowser m_AssetBrowser;
+		PropertiesPanel m_PropertiesPanel;
+		MenuBar m_MenuBar;
+		Debugger m_DebuggerPanel;
 
 	public:
 		EditorViewport();
@@ -32,7 +32,7 @@ namespace FireboxEditor {
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
 		virtual void OnEditorUIRender() override;
-		virtual void OnEvent(SDL_Event& event) override;
+		virtual void OnEvent(Firebox::Event& event) override;
 
 	};
 }

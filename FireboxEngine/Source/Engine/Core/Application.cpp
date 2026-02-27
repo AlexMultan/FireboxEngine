@@ -8,11 +8,13 @@ Firebox::Application::Application()
     s_Instance = this;
     m_Window = std::make_unique<Window>(WindowProperties("Firebox Editor", 1600, 900));
     m_Window->Create();
-    m_Window->SetEventCallback([this](SDL_Event& event)
+
+    m_Window->SetEventCallback([this](Event& e)
         {
-            for (Layer* layer : m_LayerStack)
+            for (auto it = m_LayerStack.begin(); it != m_LayerStack.end(); ++it)
             {
-                layer->OnEvent(event);
+                if (e.Handled) break;
+                (*it)->OnEvent(e);
             }
         });
 }
@@ -38,6 +40,16 @@ void Firebox::Application::Run()
     {
         layer->OnAttach();
     }
+
+    m_Window->SetEventCallback([this](Event& e)
+        {
+            for (auto it = m_LayerStack.begin(); it != m_LayerStack.end(); ++it)
+            {
+                if (e.Handled) break;
+                (*it)->OnEvent(e);
+            }
+        });
+
 
     while (m_Window->IsRunning())
     {

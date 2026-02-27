@@ -1,6 +1,7 @@
 #include "Window.h"
 #include "glad/glad.h"
 #include "Engine/Core/Log.h"
+#include "Engine/Events/SDLEventTranslator.h"
 
 Firebox::Window::Window(const WindowProperties& windowProps) : m_Window(nullptr), m_WindowProps(windowProps)
 {
@@ -58,25 +59,25 @@ void Firebox::Window::Create()
 
 void Firebox::Window::PollEvents()
 {
-    SDL_Event event;
-    while (SDL_PollEvent(&event))
+    SDL_Event sdlEvent;
+    while (SDL_PollEvent(&sdlEvent))
     {
-        if (event.type == SDL_EVENT_QUIT)
-        {
-            m_Running = false;
-        }
+        if (m_RawEventCallback)
+            m_RawEventCallback(&sdlEvent);
 
-        if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && event.window.windowID == SDL_GetWindowID(m_Window))
-        {
-            m_Running = false;
-        }
+        auto event = SDLEventTranslator::Translate(sdlEvent);
+        if (!event) continue;
+
+        EventDispatcher dispatcher(*event);
+        dispatcher.Dispatch<WindowCloseEvent>([this](WindowCloseEvent& e)
+            {
+                m_Running = false;
+                return true;
+            });
 
         if (m_EventCallback)
-        {
-            m_EventCallback(event);
-        }
+            m_EventCallback(*event);
     }
-
 }
 
 void Firebox::Window::SwapBuffers()

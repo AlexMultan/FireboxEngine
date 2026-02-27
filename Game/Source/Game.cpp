@@ -1,4 +1,5 @@
 #include "Engine/Firebox.h"
+#include "Engine/Input/Input.h"
 
 class ExampleLayer : public Firebox::Layer
 {
@@ -16,7 +17,10 @@ public:
 
 	void OnUpdate() override
 	{
-		
+		if (Firebox::Input::IsKeyPressed(Firebox::FBK_KEY_D))
+		{
+			FIREBOX_TRACE("D key is being pressed!");
+		}
 	}
 
 	void OnDetach() override
