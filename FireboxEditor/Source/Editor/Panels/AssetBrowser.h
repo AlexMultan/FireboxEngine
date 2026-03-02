@@ -15,6 +15,7 @@ namespace FireboxEditor {
 		bool m_ShowFolderButton = true;
 
 	public:
+		AssetBrowser();
 		AssetBrowser(const char* name);
 		~AssetBrowser();
 

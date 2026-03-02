@@ -1,4 +1,4 @@
-#include "Window.h"
+﻿#include "Window.h"
 #include "glad/glad.h"
 #include "Engine/Core/Log.h"
 #include "Engine/Events/SDLEventTranslator.h"

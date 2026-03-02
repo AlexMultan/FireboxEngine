@@ -1,8 +1,10 @@
 #include "MenuBar.h"
 #include "imgui.h"
 #include "Editor/Build/GameRunner.h"
+#include "Engine/Input/Input.h"
 
 #include <windows.h>
+#include <commdlg.h>
 
 FireboxEditor::MenuBar::MenuBar()
 {
@@ -51,9 +53,15 @@ void FireboxEditor::MenuBar::RenderMenuBar()
             {
 
             }
+
             if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
             {
 
+            }
+
+            if (ImGui::MenuItem("Exit"))
+            {
+                std::exit(EXIT_SUCCESS);
             }
             ImGui::EndMenu();
         }

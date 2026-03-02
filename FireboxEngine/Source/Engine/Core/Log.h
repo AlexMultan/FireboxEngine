@@ -11,6 +11,7 @@
 #define FIREBOX_CORE_WARN(...)  ::Firebox::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define FIREBOX_CORE_ERROR(...) ::Firebox::Log::GetCoreLogger()->error(__VA_ARGS__)
 #define FIREBOX_CORE_CRITICAL(...) ::Firebox::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#define FIREBOX_CORE_ASSERT_LOG(...) ::Firebox::Log::GetCoreLogger()->debug(__VA_ARGS__)
 
 #define FIREBOX_TRACE(...) ::Firebox::Log::GetClientLogger()->trace(__VA_ARGS__)
 #define FIREBOX_INFO(...)  ::Firebox::Log::GetClientLogger()->info(__VA_ARGS__)
@@ -23,6 +24,7 @@
 #define FIREBOX_EDITOR_WARN(...)  ::Firebox::Log::GetEditorLogger()->warn(__VA_ARGS__)
 #define FIREBOX_EDITOR_ERROR(...) ::Firebox::Log::GetEditorLogger()->error(__VA_ARGS__)
 #define FIREBOX_EDITOR_CRITICAL(...) ::Firebox::Log::GetEditorLogger()->critical(__VA_ARGS__)
+#define FIREBOX_EDITOR_ASSERT_LOG(...) ::Firebox::Log::GetEditorLogger()->debug(__VA_ARGS__)
 
 #define STACK(x)::Firebox::Log::AddStackSize(x)
 

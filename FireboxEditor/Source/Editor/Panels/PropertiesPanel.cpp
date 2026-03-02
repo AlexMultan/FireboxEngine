@@ -1,5 +1,11 @@
 #include "PropertiesPanel.h"
 #include "Engine/Core/Log.h"
+#include "Engine/Utils/DebugTools.h"
+
+FireboxEditor::PropertiesPanel::PropertiesPanel()
+{
+
+}
 
 FireboxEditor::PropertiesPanel::PropertiesPanel(const char* name) : m_Name(name)
 {
@@ -25,7 +31,7 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 	if (ImGui::Button("Spawn"))
 	{
-		FIREBOX_EDITOR_INFO("Spawned Entity!");
+		FIREBOX_CONSOLE_PRINT("Spawned Entity!");
 	}
 	ImGui::SameLine();
 	ImGui::Text("Spawn Sprite Entity");

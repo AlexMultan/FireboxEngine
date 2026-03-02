@@ -1,6 +1,11 @@
 #include "AssetBrowser.h"
 #include "Engine/Core/Log.h"
 
+FireboxEditor::AssetBrowser::AssetBrowser()
+{
+
+}
+
 FireboxEditor::AssetBrowser::AssetBrowser(const char* name) : m_Name(name)
 {
     

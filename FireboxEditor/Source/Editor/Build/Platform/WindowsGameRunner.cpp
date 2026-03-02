@@ -1,5 +1,6 @@
 #include "WindowsGameRunner.h"
 #include "Engine/Core/Log.h"
+#include "Engine/Utils/Assert.h"
 
 FireboxEditor::WindowsGameRunner::WindowsGameRunner(const std::string& editorRelativePath, const std::string& gamePath)
     :m_RelativePath(editorRelativePath), m_GamePath(gamePath)
@@ -24,6 +25,7 @@ void FireboxEditor::WindowsGameRunner::RunOnWindows()
         file.replace(pos, m_RelativePath.length(), m_GamePath);
         pos += m_GamePath.length();
     }
+    ASSERT_EDITOR(std::filesystem::exists(std::filesystem::path(file)), "Game executable not found!");
     FIREBOX_EDITOR_INFO("[WINDOWS] Opened: {0}", file);
     std::system(file.c_str());
 }

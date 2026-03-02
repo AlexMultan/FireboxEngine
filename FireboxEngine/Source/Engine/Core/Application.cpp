@@ -1,5 +1,6 @@
 #include "glad/glad.h"
 #include "Application.h"
+#include "Engine/Input/Input.h"
 
 Firebox::Application* Firebox::Application::s_Instance = nullptr;
 
@@ -8,15 +9,6 @@ Firebox::Application::Application()
     s_Instance = this;
     m_Window = std::make_unique<Window>(WindowProperties("Firebox Editor", 1600, 900));
     m_Window->Create();
-
-    m_Window->SetEventCallback([this](Event& e)
-        {
-            for (auto it = m_LayerStack.begin(); it != m_LayerStack.end(); ++it)
-            {
-                if (e.Handled) break;
-                (*it)->OnEvent(e);
-            }
-        });
 }
 
 Firebox::Application::~Application()
@@ -50,7 +42,6 @@ void Firebox::Application::Run()
             }
         });
 
-
     while (m_Window->IsRunning())
     {
         m_Window->PerformanceCounterStart();
@@ -72,6 +63,8 @@ void Firebox::Application::Run()
         {
             layer->OnEditorUIRender();
         }
+
+        Firebox::Input::OnInputUpdate();
 
         m_Window->SwapBuffers();
         m_Window->PerformanceCounterEnd();

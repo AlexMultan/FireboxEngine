@@ -1,13 +1,18 @@
 #pragma once
 #include "Engine/Core/Log.h"
 
-#ifdef ASSERT(condition, message)\
-	do{\		if(!(condition))\
-		{\
-		FIREBOX_CORE_ERROR(L"ASSERTION: {0} | {1} | {2}:{3}", #condition, message, __FILE__, __LINE__)\
-			__debugbreak()\
-		}\
-	}while(0)
-#else
-	#define ASSERT(condition, message)
-#endif
+#include <iostream>
+
+#define ASSERT(condition, message)\
+	if(!(condition))\
+	{\
+		FIREBOX_CORE_ASSERT_LOG("ASSERTION: {0} | {1} | {2}:{3}", #condition, message, __FILE__, __LINE__);\
+		__debugbreak();\
+	}
+
+#define ASSERT_EDITOR(condition, message)\
+	if(!(condition))\
+	{\
+		FIREBOX_EDITOR_ASSERT_LOG("ASSERTION: {0} | {1} | {2}:{3}", #condition, message, __FILE__, __LINE__);\
+		__debugbreak();\
+	}

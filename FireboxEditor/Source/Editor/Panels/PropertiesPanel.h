@@ -18,6 +18,7 @@ namespace FireboxEditor {
 		float m_DragStrength = 1.0f;
 
 	public:
+		PropertiesPanel();
 		PropertiesPanel(const char* name);
 		~PropertiesPanel();
 

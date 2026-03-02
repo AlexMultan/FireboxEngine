@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Engine/Core/Core.h"
+#include "Engine/Events/Event.h"
+
 #include "SDL3/SDL.h"
 #include <functional>
 #include <vector>
-
-#include "Engine/Events/Event.h"
 
 namespace Firebox {
 

@@ -1,6 +1,8 @@
 #include "EditorViewport.h"
 #include "Engine/Core/Application.h"
 #include "Engine/Core/Log.h"
+#include "Engine/Input/Input.h"
+#include "Engine/Utils/DebugTools.h"
 
 #include "glm/glm.hpp"
 #include "imgui_impl_sdl3.h"
@@ -12,14 +14,9 @@
 #include <iostream>
 
 FireboxEditor::EditorViewport::EditorViewport() 
-    : Layer("EditorLayer"), io(nullptr), m_AssetBrowser("Asset Browser"), m_PropertiesPanel("PropertiesPanel")
+    : Layer("EditorLayer"), io(nullptr)
 {
-	m_MenuBar = FireboxEditor::MenuBar();
-    m_DebuggerPanel = FireboxEditor::Debugger();
-    STACK(m_AssetBrowser);
-    STACK(m_PropertiesPanel);
-    STACK(m_MenuBar);
-    STACK(m_DebuggerPanel);
+   
 }
 
 FireboxEditor::EditorViewport::~EditorViewport()
@@ -61,6 +58,18 @@ void FireboxEditor::EditorViewport::OnAttach()
 
     ImGui_ImplSDL3_InitForOpenGL(sdlWindow, glContext);
     ImGui_ImplOpenGL3_Init();
+
+    m_AssetBrowser = FireboxEditor::AssetBrowser("Asset Browser");
+    m_PropertiesPanel = FireboxEditor::PropertiesPanel("Properties");
+    m_MenuBar = FireboxEditor::MenuBar();
+    m_DebuggerPanel = FireboxEditor::Debugger();
+
+    STACK(m_AssetBrowser);
+    STACK(m_PropertiesPanel);
+    STACK(m_MenuBar);
+    STACK(m_DebuggerPanel);
+
+    Firebox::Console::Init();
 }
 
 void FireboxEditor::EditorViewport::OnDetach()
@@ -69,6 +78,14 @@ void FireboxEditor::EditorViewport::OnDetach()
     ImGui_ImplSDL3_Shutdown();
     ImGui::DestroyPlatformWindows();
     ImGui::DestroyContext();
+}
+
+void FireboxEditor::EditorViewport::OnUpdate()
+{
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_W))
+    {
+        FIREBOX_CONSOLE_PRINT("Hello");
+    }
 }
 
 void FireboxEditor::EditorViewport::OnEvent(Firebox::Event& event)
@@ -126,6 +143,7 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     m_AssetBrowser.RenderPanel();
     m_PropertiesPanel.RenderPanel();
     m_DebuggerPanel.RenderPanel();
+    m_ConsolePanel.RenderPanel();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

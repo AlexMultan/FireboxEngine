@@ -2,8 +2,6 @@
 #include "Engine/Core/Log.h"
 
 #include "imgui.h"
-
-#include <windows.h>
 #include <string>
 
 FireboxEditor::Debugger::Debugger()
