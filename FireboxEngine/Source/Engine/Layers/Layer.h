@@ -9,9 +9,9 @@ namespace Firebox {
 	class FIREBOX_API Layer
 	{
 	protected:
-		std::string m_DebugName;
+		String m_DebugName;
 	public:
-		Layer(const std::string& name = "Layer");
+		Layer(const String& name = "Layer");
 		virtual ~Layer();
 
 		virtual void OnAttach() {}
@@ -21,7 +21,7 @@ namespace Firebox {
 		virtual void OnEditorUIRender() {}
 		virtual void OnEvent(Event& event) {}
 
-		inline const std::string& GetLayerName() const 
+		inline const String& GetLayerName() const 
 		{ 
 			return m_DebugName; 
 		}

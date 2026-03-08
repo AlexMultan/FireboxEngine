@@ -1,27 +1,19 @@
 #include "DebugTools.h"
+#include "Engine/Core/Log.h"
 
-size_t Firebox::Console::s_MessageCount;
-std::vector<std::string> Firebox::Console::s_Messages;
+std::deque<String> Firebox::Console::s_Messages;
 
-void Firebox::Console::Init()
-{
-	s_Messages.clear();
-	s_MessageCount = 1;
-}
-
-const std::vector<std::string>& Firebox::Console::GetMessages()
+const std::deque<String>& Firebox::Console::GetMessages()
 {
 	return s_Messages;
 }
 
-void Firebox::Console::AddDebugMessage(const std::string& message)
+void Firebox::Console::AddDebugMessage(const String& message)
 {
-	s_Messages.reserve(s_MessageCount);
-	s_Messages.emplace_back(message);
+	s_Messages.push_front(message);
 }
 
 void Firebox::Console::ClearConsole()
 {
 	s_Messages.clear();
-	s_MessageCount = 1;
 }

@@ -7,19 +7,19 @@ namespace Firebox {
     class WindowResizeEvent : public Event
     {
     public:
-        WindowResizeEvent(uint32_t width, uint32_t height)
+        WindowResizeEvent(uint width, uint height)
             : m_Width(width), m_Height(height)
         {
         }
 
-        uint32_t GetWidth()  const { return m_Width; }
-        uint32_t GetHeight() const { return m_Height; }
+        uint GetWidth()  const { return m_Width; }
+        uint GetHeight() const { return m_Height; }
 
         EVENT_CLASS_TYPE(WindowResize)
             EVENT_CLASS_CATEGORY(EventCategory::Application)
 
     private:
-        uint32_t m_Width, m_Height;
+        uint m_Width, m_Height;
     };
 
     class WindowCloseEvent : public Event

@@ -200,6 +200,7 @@ project "FireboxEditor"
         "FireboxEngine/ThirdParty/GLM",
         "FireboxEngine/ThirdParty/ImGui",
         "FireboxEngine/Source",
+        "%{IncludeDir.Glad}",
         "%{prj.name}/Source"
     }
 

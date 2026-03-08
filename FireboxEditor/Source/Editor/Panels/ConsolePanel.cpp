@@ -27,11 +27,14 @@ void FireboxEditor::ConsolePanel::RenderPanel()
 
 	ImGui::Separator();
 
-	for (std::string message : Firebox::Console::GetMessages())
+	if (!Firebox::Console::GetMessages().empty() && Firebox::Console::GetMessages().size() > 0)
 	{
-		ImGui::Text(message.c_str());
+		for (String msg : Firebox::Console::GetMessages())
+		{
+			ImGui::Text(msg.c_str());
+		}
 	}
-
+	
 	ImGui::End(); // Console Panel End
 }
 

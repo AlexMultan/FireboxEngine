@@ -16,7 +16,7 @@ FireboxEditor::MenuBar::~MenuBar()
 
 void FireboxEditor::MenuBar::RenderMenuBar()
 {
-    if (ImGui::BeginMenuBar())
+    if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("File"))
         {
@@ -102,6 +102,6 @@ void FireboxEditor::MenuBar::RenderMenuBar()
 
             ImGui::EndMenu();
         }
-        ImGui::EndMenuBar();
+        ImGui::EndMainMenuBar();
     }
 }

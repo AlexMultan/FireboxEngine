@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Engine/Core/Core.h"
-#include "imgui.h"
 #include "Editor/Panels/IPanel.h"
 #include "glm/glm.hpp"
 #include <string>

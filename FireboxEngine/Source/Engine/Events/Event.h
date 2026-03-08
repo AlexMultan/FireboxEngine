@@ -1,4 +1,3 @@
-// Engine/Events/Event.h
 #pragma once
 
 #include "Engine/Core/Core.h"
@@ -10,17 +9,13 @@ namespace Firebox {
     enum class EventType
     {
         None = 0,
-        // Window
         WindowClose, WindowResize, WindowFocus, WindowLostFocus, WindowMoved,
-        // App
         AppTick, AppUpdate, AppRender,
-        // Keyboard
         KeyPressed, KeyReleased, KeyTyped,
-        // Mouse
         MouseButtonPressed, MouseButtonReleased, MouseMoved, MouseScrolled
     };
 
-    enum class EventCategory : uint32_t
+    enum class EventCategory : uint
     {
         None = 0,
         Application = 1 << 0,
@@ -33,13 +28,13 @@ namespace Firebox {
     inline EventCategory operator|(EventCategory a, EventCategory b)
     {
         return static_cast<EventCategory>(
-            static_cast<uint32_t>(a) | static_cast<uint32_t>(b)
+            static_cast<uint>(a) | static_cast<uint>(b)
             );
     }
 
     inline bool operator&(EventCategory a, EventCategory b)
     {
-        return static_cast<uint32_t>(a) & static_cast<uint32_t>(b);
+        return static_cast<uint>(a) & static_cast<uint>(b);
     }
 
 #define EVENT_CLASS_TYPE(type) \
@@ -60,7 +55,7 @@ namespace Firebox {
         virtual EventType     GetEventType()      const = 0;
         virtual const char* GetName()           const = 0;
         virtual EventCategory GetCategoryFlags()  const = 0;
-        virtual std::string   ToString()          const { return GetName(); }
+        virtual String   ToString()          const { return GetName(); }
 
         bool IsInCategory(EventCategory category) const
         {

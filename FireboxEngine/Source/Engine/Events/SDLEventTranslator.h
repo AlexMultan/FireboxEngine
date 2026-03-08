@@ -12,47 +12,47 @@ namespace Firebox {
     class SDLEventTranslator
     {
     public:
-        static std::unique_ptr<Event> Translate(const SDL_Event& sdlEvent)
+        static Scope<Event> Translate(const SDL_Event& sdlEvent)
         {
             switch (sdlEvent.type)
             {
             case SDL_EVENT_KEY_DOWN:
-                return std::make_unique<KeyPressedEvent>(
+                return CreateScope<KeyPressedEvent>(
                     static_cast<KeyCode>(sdlEvent.key.key),
                     sdlEvent.key.repeat
                 );
             case SDL_EVENT_KEY_UP:
-                return std::make_unique<KeyReleasedEvent>(
+                return CreateScope<KeyReleasedEvent>(
                     static_cast<KeyCode>(sdlEvent.key.key)
                 );
             case SDL_EVENT_TEXT_INPUT:
-                return std::make_unique<KeyTypedEvent>(
+                return CreateScope<KeyTypedEvent>(
                     static_cast<KeyCode>(sdlEvent.text.text[0])
                 );
 
             case SDL_EVENT_MOUSE_MOTION:
-                return std::make_unique<MouseMovedEvent>(
+                return CreateScope<MouseMovedEvent>(
                     sdlEvent.motion.x, sdlEvent.motion.y
                 );
             case SDL_EVENT_MOUSE_WHEEL:
-                return std::make_unique<MouseScrolledEvent>(
+                return CreateScope<MouseScrolledEvent>(
                     sdlEvent.wheel.x, sdlEvent.wheel.y
                 );
             case SDL_EVENT_MOUSE_BUTTON_DOWN:
-                return std::make_unique<MouseButtonPressedEvent>(
+                return CreateScope<MouseButtonPressedEvent>(
                     sdlEvent.button.button
                 );
             case SDL_EVENT_MOUSE_BUTTON_UP:
-                return std::make_unique<MouseButtonReleasedEvent>(
+                return CreateScope<MouseButtonReleasedEvent>(
                     sdlEvent.button.button
                 );
 
             case SDL_EVENT_WINDOW_RESIZED:
-                return std::make_unique<WindowResizeEvent>(
+                return CreateScope<WindowResizeEvent>(
                     sdlEvent.window.data1, sdlEvent.window.data2
                 );
             case SDL_EVENT_QUIT:
-                return std::make_unique<WindowCloseEvent>();
+                return CreateScope<WindowCloseEvent>();
 
             default:
                 return nullptr;

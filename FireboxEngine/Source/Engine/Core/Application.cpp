@@ -1,6 +1,7 @@
 #include "glad/glad.h"
 #include "Application.h"
 #include "Engine/Input/Input.h"
+#include "Engine/Utils/DebugTools.h"
 
 Firebox::Application* Firebox::Application::s_Instance = nullptr;
 
@@ -9,6 +10,10 @@ Firebox::Application::Application()
     s_Instance = this;
     m_Window = std::make_unique<Window>(WindowProperties("Firebox Editor", 1600, 900));
     m_Window->Create();
+    m_Renderer2D = CreateRef<Renderer2D>();
+
+    FIREBOX_CONSOLE_PRINT(Utilities::ToString(m_Window->GetWindowSize()));
+    std::cout << Utilities::ToString(m_Window->GetWindowSize()) << "\n";
 }
 
 Firebox::Application::~Application()
@@ -52,7 +57,7 @@ void Firebox::Application::Run()
             layer->OnUpdate();
         }
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        m_Renderer2D->Render();
 
         for (Layer* layer : m_LayerStack)
         {

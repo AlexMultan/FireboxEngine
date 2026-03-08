@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Engine/Core/Core.h"
 #include "SDL3/SDL.h"
 
 namespace Firebox {

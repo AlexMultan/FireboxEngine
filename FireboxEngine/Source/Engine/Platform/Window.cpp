@@ -53,8 +53,6 @@ void Firebox::Window::Create()
     {
         FIREBOX_CORE_CRITICAL("Failed to initialize GLAD");
     }
-
-    glClearColor(0.42f, 0.56f, 0.91f, 1.0f);
 }
 
 void Firebox::Window::PollEvents()
@@ -63,10 +61,12 @@ void Firebox::Window::PollEvents()
     while (SDL_PollEvent(&sdlEvent))
     {
         if (m_RawEventCallback)
+        {
             m_RawEventCallback(&sdlEvent);
+        }
 
         auto event = SDLEventTranslator::Translate(sdlEvent);
-        if (!event) continue;
+        if (!event) { continue; }
 
         EventDispatcher dispatcher(*event);
         dispatcher.Dispatch<WindowCloseEvent>([this](WindowCloseEvent& e)
@@ -76,7 +76,9 @@ void Firebox::Window::PollEvents()
             });
 
         if (m_EventCallback)
+        {
             m_EventCallback(*event);
+        }
     }
 }
 
@@ -109,6 +111,6 @@ void Firebox::Window::PerformanceCounterEnd()
     double elapsed = (double)(m_PerformanceCounterEnd - m_PerformanceCounterStart) / SDL_GetPerformanceFrequency() * 1000.0;
     if (elapsed < (1000 / m_MaxFPS))
     {
-        SDL_Delay((uint32_t)((1000 / m_MaxFPS) - elapsed));
+        SDL_Delay((uint)((1000 / m_MaxFPS) - elapsed));
     } 
 }

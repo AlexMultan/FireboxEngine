@@ -25,7 +25,7 @@ namespace Firebox {
 
         bool IsRepeat() const { return m_IsRepeat; }
 
-        std::string ToString() const override
+        String ToString() const override
         {
             return "KeyPressedEvent: " + std::to_string((int)m_KeyCode) +
                 (m_IsRepeat ? " (repeat)" : "");
@@ -42,7 +42,7 @@ namespace Firebox {
     public:
         KeyReleasedEvent(KeyCode keyCode) : KeyEvent(keyCode) {}
 
-        std::string ToString() const override
+        String ToString() const override
         {
             return "KeyReleasedEvent: " + std::to_string((int)m_KeyCode);
         }

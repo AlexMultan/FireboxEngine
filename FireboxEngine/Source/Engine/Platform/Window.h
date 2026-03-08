@@ -5,7 +5,6 @@
 
 #include "SDL3/SDL.h"
 #include <functional>
-#include <vector>
 
 namespace Firebox {
 
@@ -15,7 +14,7 @@ namespace Firebox {
 	struct WindowProperties
 	{
 		const char* title;
-		uint32_t width, height;
+		uint width, height;
 	};
 
 	class FIREBOX_API Window
@@ -29,8 +28,8 @@ namespace Firebox {
 
 		WindowProperties m_WindowProps;
 
-		uint64_t m_PerformanceCounterStart;
-		uint64_t m_PerformanceCounterEnd;
+		uint64 m_PerformanceCounterStart;
+		uint64 m_PerformanceCounterEnd;
 		double m_MaxFPS = 144;
 
 		EventCallbackFn m_EventCallback;
@@ -56,14 +55,19 @@ namespace Firebox {
 			return m_Running;
 		}
 
-		inline const uint32_t GetWindowWidth() const
+		inline const uint GetWindowWidth() const
 		{
 			return m_WindowProps.width;
 		}
 
-		inline const uint32_t GetWindowHeight() const
+		inline const uint GetWindowHeight() const
 		{
 			return m_WindowProps.height;
+		}
+
+		inline const Vector2& GetWindowSize() const
+		{
+			return Vector2(m_WindowProps.width, m_WindowProps.height);
 		}
 
 		inline SDL_Window* GetWindow()

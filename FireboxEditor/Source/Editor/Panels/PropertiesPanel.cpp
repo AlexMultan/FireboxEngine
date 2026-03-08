@@ -1,6 +1,6 @@
 #include "PropertiesPanel.h"
-#include "Engine/Core/Log.h"
 #include "Engine/Utils/DebugTools.h"
+#include "imgui.h"
 
 FireboxEditor::PropertiesPanel::PropertiesPanel()
 {

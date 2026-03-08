@@ -4,14 +4,8 @@
 #include "Engine/Input/Input.h"
 #include "Engine/Utils/DebugTools.h"
 
-#include "glm/glm.hpp"
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_opengl3.h"
-
-#include <memory>
-#include <filesystem>
-#include <windows.h>
-#include <iostream>
 
 FireboxEditor::EditorViewport::EditorViewport() 
     : Layer("EditorLayer"), io(nullptr)
@@ -58,18 +52,24 @@ void FireboxEditor::EditorViewport::OnAttach()
 
     ImGui_ImplSDL3_InitForOpenGL(sdlWindow, glContext);
     ImGui_ImplOpenGL3_Init();
+    m_MenuBar = FireboxEditor::MenuBar();
 
     m_AssetBrowser = FireboxEditor::AssetBrowser("Asset Browser");
     m_PropertiesPanel = FireboxEditor::PropertiesPanel("Properties");
-    m_MenuBar = FireboxEditor::MenuBar();
     m_DebuggerPanel = FireboxEditor::Debugger();
+    m_ViewportPanel = FireboxEditor::ViewportPanel("Viewport",
+        Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->GetViewportTextureBuffer());
+
+    Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->SetViewportSize(m_ViewportPanel.GetWindowSize());
+    Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->SetUseFramebuffer(true);
+
+    FIREBOX_CORE_INFO("Texture ID: {0}", Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->GetViewportTextureBuffer());
+
 
     STACK(m_AssetBrowser);
     STACK(m_PropertiesPanel);
     STACK(m_MenuBar);
     STACK(m_DebuggerPanel);
-
-    Firebox::Console::Init();
 }
 
 void FireboxEditor::EditorViewport::OnDetach()
@@ -103,14 +103,18 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
 
+    // This shit is a fucking mess! Need to clean this fucker up.
+
+    m_MenuBar.RenderMenuBar();
+
     m_DockNodeFlags = ImGuiDockNodeFlags_PassthruCentralNode;
     m_WindowFlags = ImGuiWindowFlags_NoDocking;
 
-    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    //ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-    ImGui::SetNextWindowPos(viewport->Pos);
-    ImGui::SetNextWindowSize(viewport->Size);
-    ImGui::SetNextWindowViewport(viewport->ID);
+    //ImGui::SetNextWindowPos(viewport->Pos);
+    //ImGui::SetNextWindowSize(viewport->Size);
+    //ImGui::SetNextWindowViewport(viewport->ID);
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -132,13 +136,18 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
         ImGui::End();
     }
 
-    ImGuiWindowFlags viewportWindowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse;
+    //ImGuiWindowFlags viewportWindowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse;
 
-    if (ImGui::Begin("Viewport", nullptr, viewportWindowFlags))
+    /*if (ImGui::Begin("Viewport", nullptr, viewportWindowFlags))
     {
         m_MenuBar.RenderMenuBar();
         ImGui::End();
-    }
+    }*/
+
+    
+
+    //Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->SetViewportSize(m_ViewportPanel.GetWindowSize());
+    m_ViewportPanel.RenderPanel();
 
     m_AssetBrowser.RenderPanel();
     m_PropertiesPanel.RenderPanel();

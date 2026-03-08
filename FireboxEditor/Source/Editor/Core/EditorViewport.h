@@ -1,18 +1,14 @@
 #pragma once
 
-#include "Engine/Core/Core.h"
 #include "Engine/Layers/Layer.h"
 #include "Editor/Panels/AssetBrowser.h"
 #include "Editor/Panels/PropertiesPanel.h"
 #include "Editor/UI/MenuBar.h"
 #include "Editor/Panels/Debugger.h"
 #include "Editor/Panels/ConsolePanel.h"
+#include "Editor/Panels/ViewportPanel.h"
 
 #include "imgui.h"
-#include "SDL3/SDL.h"
-
-#include <chrono>
-#include <thread>
 
 namespace FireboxEditor {
 
@@ -29,10 +25,16 @@ namespace FireboxEditor {
 		MenuBar m_MenuBar;
 		Debugger m_DebuggerPanel;
 		ConsolePanel m_ConsolePanel;
+		ViewportPanel m_ViewportPanel;
+
+		uint m_FBO;
+		uint m_ViewportTextureBuffer;
 
 	public:
 		EditorViewport();
 		~EditorViewport();
+
+		void OnGenFrameBuffer();
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;

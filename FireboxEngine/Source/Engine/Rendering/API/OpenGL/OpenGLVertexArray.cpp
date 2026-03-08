@@ -13,7 +13,7 @@ Firebox::OpenGLVertexArray::~OpenGLVertexArray()
 
 void Firebox::OpenGLVertexArray::AddVertexArray(const OpenGLVertexBuffer& vbo, const OpenGLVertexBufferLayout& layout)
 {
-
+	
 }
 
 void Firebox::OpenGLVertexArray::Bind() const

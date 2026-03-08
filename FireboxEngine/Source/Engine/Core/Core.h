@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Engine/Utils/Types.h"
+
 #ifdef FIREBOX_PLATFORM_WIN64
 	#ifdef FIREBOX_BUILD_DLL
 		#define FIREBOX_API __declspec(dllexport)
@@ -11,5 +13,3 @@
 #else
 	#error Firebox Engine only supports Windows(for now)
 #endif
-
-#define BIT(x) (1 << x)

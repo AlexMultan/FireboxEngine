@@ -12,7 +12,7 @@ namespace Firebox {
         float GetX() const { return m_X; }
         float GetY() const { return m_Y; }
 
-        std::string ToString() const override
+        String ToString() const override
         {
             return "MouseMovedEvent: " + std::to_string(m_X) + ", " + std::to_string(m_Y);
         }
