@@ -19,6 +19,7 @@ namespace Firebox {
 		virtual void OnUpdate() {}
 		virtual void OnRender() {}
 		virtual void OnEditorUIRender() {}
+		virtual void OnSecondWindowRender() {}
 		virtual void OnEvent(Event& event) {}
 
 		inline const String& GetLayerName() const 

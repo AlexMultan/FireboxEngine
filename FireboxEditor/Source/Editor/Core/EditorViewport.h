@@ -40,6 +40,7 @@ namespace FireboxEditor {
 		virtual void OnDetach() override;
 		virtual void OnUpdate() override;
 		virtual void OnEditorUIRender() override;
+		virtual void OnSecondWindowRender() override;
 		virtual void OnEvent(Firebox::Event& event) override;
 
 	};

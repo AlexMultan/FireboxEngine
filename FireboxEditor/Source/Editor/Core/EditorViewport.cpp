@@ -65,7 +65,6 @@ void FireboxEditor::EditorViewport::OnAttach()
 
     FIREBOX_CORE_INFO("Texture ID: {0}", Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->GetViewportTextureBuffer());
 
-
     STACK(m_AssetBrowser);
     STACK(m_PropertiesPanel);
     STACK(m_MenuBar);
@@ -110,11 +109,11 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     m_DockNodeFlags = ImGuiDockNodeFlags_PassthruCentralNode;
     m_WindowFlags = ImGuiWindowFlags_NoDocking;
 
-    //ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-    //ImGui::SetNextWindowPos(viewport->Pos);
-    //ImGui::SetNextWindowSize(viewport->Size);
-    //ImGui::SetNextWindowViewport(viewport->ID);
+    ImGui::SetNextWindowSize(viewport->Size);
+    ImGui::SetNextWindowViewport(viewport->ID);
+    ImGui::SetNextWindowPos(viewport->Pos);
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -133,21 +132,21 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     {
         ImGuiID dockspaceID = ImGui::GetID("Root");
         ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), m_DockNodeFlags);
-        ImGui::End();
+        
     }
+    ImGui::End();
+    /*ImGuiWindowFlags viewportWindowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse;
 
-    //ImGuiWindowFlags viewportWindowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse;
-
-    /*if (ImGui::Begin("Viewport", nullptr, viewportWindowFlags))
+    if (ImGui::Begin("Viewport", nullptr, viewportWindowFlags))
     {
         m_MenuBar.RenderMenuBar();
         ImGui::End();
     }*/
 
-    
-
-    //Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->SetViewportSize(m_ViewportPanel.GetWindowSize());
     m_ViewportPanel.RenderPanel();
+
+
+    Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->SetViewportSize(m_ViewportPanel.GetWindowSize());
 
     m_AssetBrowser.RenderPanel();
     m_PropertiesPanel.RenderPanel();
@@ -156,6 +155,11 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+}
+
+void FireboxEditor::EditorViewport::OnSecondWindowRender()
+{
     if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         Firebox::Window& backupMainWindow = Firebox::Application::Get().GetWindow();
@@ -165,6 +169,5 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
         ImGui::RenderPlatformWindowsDefault();
         SDL_GL_MakeCurrent(backupSDLWindow, backupCurrentContext);
     }
-
 }
 

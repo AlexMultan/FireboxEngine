@@ -97,7 +97,25 @@ void Firebox::RendererAPI::RenderQuad()
 
 void Firebox::RendererAPI::ResizeFramebuffer(uint32_t width, uint32_t height)
 {
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	if (m_ViewportTextureBuffer)
+		glDeleteTextures(1, &m_ViewportTextureBuffer);
+
+	glGenTextures(1, &m_ViewportTextureBuffer);
 	glBindTexture(GL_TEXTURE_2D, m_ViewportTextureBuffer);
+
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ViewportTextureBuffer, 0);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		FIREBOX_CORE_ERROR("Framebuffer is not complete!");
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }

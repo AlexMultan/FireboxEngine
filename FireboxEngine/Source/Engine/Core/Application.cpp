@@ -64,6 +64,10 @@ void Firebox::Application::Run()
             layer->OnRender();
         }
 
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         for (Layer* layer : m_LayerStack)
         {
             layer->OnEditorUIRender();
@@ -72,6 +76,12 @@ void Firebox::Application::Run()
         Firebox::Input::OnInputUpdate();
 
         m_Window->SwapBuffers();
+
+        for (Layer* layer : m_LayerStack)
+        {
+            layer->OnSecondWindowRender();
+        }
+
         m_Window->PerformanceCounterEnd();
     }
     for (Layer* layer : m_LayerStack)

@@ -44,7 +44,7 @@ namespace Firebox {
 		void RenderQuad();
 		void ResizeFramebuffer(uint32_t width, uint32_t height);
 
-		inline uint GetViewportTextureBuffer()
+		inline uint GetViewportTextureBuffer() const
 		{
 			return m_ViewportTextureBuffer;
 		}
