@@ -12,6 +12,8 @@ namespace Firebox {
 	{
 	public:
 		inline static uint8 s_PreviousKeyState[SDL_SCANCODE_COUNT];
+		inline static SDL_MouseButtonFlags s_PreviousMouseState;
+		inline static SDL_MouseButtonFlags s_CurrentMouseState;
 
 		inline static void OnInputUpdate()
 		{
@@ -21,7 +23,11 @@ namespace Firebox {
 			{
 				s_PreviousKeyState[i] = static_cast<uint8>(currentKeyState[i]);
 			}
+
+			s_PreviousMouseState = s_CurrentMouseState;
+
 			SDL_PumpEvents();
+			s_CurrentMouseState = SDL_GetMouseState(nullptr, nullptr);
 			currentKeyState = SDL_GetKeyboardState(nullptr);
 		}
 
@@ -45,14 +51,31 @@ namespace Firebox {
 
 		inline static bool IsMouseButtonDown(MouseCode mouseCode)
 		{
-			return SDL_GetMouseState(nullptr, nullptr) & SDL_BUTTON_MASK(mouseCode);
+			return (s_CurrentMouseState & SDL_BUTTON_MASK(mouseCode)) != 0;
 		}
 
-		inline static glm::vec2 GetMousePosition()
+		inline static bool IsMouseButtonClicked(MouseCode mouseCode)
+		{
+			return (s_CurrentMouseState & SDL_BUTTON_MASK(mouseCode)) != 0 && (s_PreviousMouseState & SDL_BUTTON_MASK(mouseCode)) == 0;
+		}
+
+		inline static bool IsMouseButtonUp(MouseCode mouseCode)
+		{
+			return (s_CurrentMouseState & SDL_BUTTON_MASK(mouseCode)) == 0;
+		}
+
+		inline static bool IsMouseButtonReleased(MouseCode mouseCode)
+		{
+			bool wasDown = (s_PreviousMouseState & SDL_BUTTON_MASK(mouseCode)) != 0;
+			bool isDown = (s_CurrentMouseState & SDL_BUTTON_MASK(mouseCode)) != 0;
+			return wasDown && !isDown;
+		}
+
+		inline static Vector2 GetMousePosition()
 		{
 			float x, y;
 			SDL_GetMouseState(&x, &y);
-			return glm::vec2(x, y);
+			return Vector2(x, y);
 		}
 
 	};

@@ -30,6 +30,8 @@ namespace FireboxEditor {
 		uint m_FBO;
 		uint m_ViewportTextureBuffer;
 
+		/*float m_CameraSpeed = 0.05f;*/
+
 	public:
 		EditorViewport();
 		~EditorViewport();
@@ -38,7 +40,7 @@ namespace FireboxEditor {
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
-		virtual void OnUpdate() override;
+		virtual void OnUpdate(float deltaTime) override;
 		virtual void OnEditorUIRender() override;
 		virtual void OnSecondWindowRender() override;
 		virtual void OnEvent(Firebox::Event& event) override;

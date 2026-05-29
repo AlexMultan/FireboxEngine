@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Utils/Types.h"
+#include "Engine/Utils/Timer.h"
 
 #ifdef FIREBOX_PLATFORM_WIN64
 	#ifdef FIREBOX_BUILD_DLL

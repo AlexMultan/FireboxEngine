@@ -3,6 +3,7 @@
 #include "Engine/Utils/OpenGLDebugger.h"
 
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
 #include <fstream>
@@ -104,4 +105,9 @@ void Firebox::OpenGLShader::UseShader()
 void Firebox::OpenGLShader::SetFloat4(const String& name, float r, float g, float b, float a)
 {
 	glUniform4f(glGetUniformLocation(ID, name.c_str()), r, g, b, a);
+}
+
+void Firebox::OpenGLShader::SetMat4(const String& name, const Mat4& matrix)
+{
+	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
 }

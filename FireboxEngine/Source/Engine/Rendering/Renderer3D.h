@@ -1,20 +1,20 @@
 #pragma once
 
 #include "Engine/Rendering/API/RendererAPI.h"
-#include "Engine/Layers/Layer.h"
 
 namespace Firebox {
 
-	class FIREBOX_API Renderer2D
+	class FIREBOX_API Renderer3D
 	{
 	private:
 		RendererAPI* m_RendererAPI;
 
 	public:
-		Renderer2D();
-		~Renderer2D();
+		Renderer3D();
+		~Renderer3D();
 
-		void Render();
+		void OnTick(float deltaTime);
+		void OnRender();
 
 		inline RendererAPI* GetRendererAPI()
 		{

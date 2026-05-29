@@ -14,6 +14,7 @@ IncludeDir["SDL"] = "FireboxEngine/ThirdParty/SDL/include"
 IncludeDir["Glad"] = "FireboxEngine/ThirdParty/Glad/include"
 IncludeDir["imgui"] = "FireboxEngine/ThirdParty/ImGui"
 IncludeDir["glm"] = "FireboxEngine/ThirdParty/GLM"
+IncludeDir["stb"] = "FireboxEngine/ThirdParty/stb"
 
 include "FireboxEngine/ThirdParty/Glad"
 include "FireboxEngine/ThirdParty/ImGui"
@@ -36,6 +37,7 @@ project "FireboxEngine"
         "%{IncludeDir.Glad}",
         "%{IncludeDir.imgui}",
         "%{IncludeDir.glm}",
+        "%{IncludeDir.stb}",
         "%{prj.name}/Source"
     }
 
@@ -127,6 +129,7 @@ project "Game"
         "FireboxEngine/ThirdParty/SDL/include",
         "FireboxEngine/ThirdParty/GLM",
         "FireboxEngine/ThirdParty/ImGui",
+        "FireboxEngine/ThirdParty/stb",
         "FireboxEngine/Source"
     }
 
@@ -199,6 +202,7 @@ project "FireboxEditor"
         "FireboxEngine/ThirdParty/SDL/include",
         "FireboxEngine/ThirdParty/GLM",
         "FireboxEngine/ThirdParty/ImGui",
+        "FireboxEngine/ThirdParty/stb",
         "FireboxEngine/Source",
         "%{IncludeDir.Glad}",
         "%{prj.name}/Source"

@@ -15,5 +15,6 @@ namespace Firebox {
 
 		void UseShader();
 		void SetFloat4(const String& name, float r, float g, float b, float a);
+		void SetMat4(const String& name, const Mat4& matrix);
 	};
 }

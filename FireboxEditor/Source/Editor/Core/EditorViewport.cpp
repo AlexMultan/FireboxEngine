@@ -43,6 +43,7 @@ void FireboxEditor::EditorViewport::OnAttach()
     style.FontScaleDpi = window.GetMainScale();
     io->ConfigDpiScaleFonts = true;
     io->ConfigDpiScaleViewports = true;
+	io->ConfigDockingAlwaysTabBar = true;
 
     if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
@@ -58,12 +59,12 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_PropertiesPanel = FireboxEditor::PropertiesPanel("Properties");
     m_DebuggerPanel = FireboxEditor::Debugger();
     m_ViewportPanel = FireboxEditor::ViewportPanel("Viewport",
-        Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->GetViewportTextureBuffer());
+        Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetViewportTextureBuffer());
 
-    Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->SetViewportSize(m_ViewportPanel.GetWindowSize());
-    Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->SetUseFramebuffer(true);
+    Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetViewportSize(m_ViewportPanel.GetWindowSize());
+    Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetEditorViewportRendering(true);
 
-    FIREBOX_CORE_INFO("Texture ID: {0}", Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->GetViewportTextureBuffer());
+    FIREBOX_CORE_INFO("Texture ID: {0}", Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetViewportTextureBuffer());
 
     STACK(m_AssetBrowser);
     STACK(m_PropertiesPanel);
@@ -79,12 +80,29 @@ void FireboxEditor::EditorViewport::OnDetach()
     ImGui::DestroyContext();
 }
 
-void FireboxEditor::EditorViewport::OnUpdate()
+void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
 {
+    /*Vector3 camPos = Vector3(0.0f, 0.0f, 0.0f);
     if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_W))
     {
-        FIREBOX_CONSOLE_PRINT("Hello");
+        camPos += m_CameraSpeed * Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetCameraFront();
+        Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetCameraPosition(camPos);
     }
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_S))
+    {
+        camPos -= m_CameraSpeed * Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetCameraFront();
+        Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetCameraPosition(camPos);
+    }
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_A))
+    {
+        camPos -= m_CameraSpeed * Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetCameraRightVector();
+        Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetCameraPosition(camPos);
+    }
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_D))
+    {
+        camPos += m_CameraSpeed * Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetCameraRightVector();
+        Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetCameraPosition(camPos);
+    }*/
 }
 
 void FireboxEditor::EditorViewport::OnEvent(Firebox::Event& event)
@@ -102,6 +120,8 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
 
+    Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->ClearEditorViewportRenderingCache();
+
     // This shit is a fucking mess! Need to clean this fucker up.
 
     m_MenuBar.RenderMenuBar();
@@ -111,9 +131,15 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
 
     ImGuiViewport* viewport = ImGui::GetMainViewport();
 
-    ImGui::SetNextWindowSize(viewport->Size);
+    float menuBarHeight = ImGui::GetFrameHeight();
+
+    ImVec2 rootPos = viewport->Pos;
+    rootPos.y += menuBarHeight;
+    ImGui::SetNextWindowPos(rootPos);
+    ImVec2 rootSize = viewport->Size;
+    rootSize.y -= menuBarHeight;
+    ImGui::SetNextWindowSize(rootSize);
     ImGui::SetNextWindowViewport(viewport->ID);
-    ImGui::SetNextWindowPos(viewport->Pos);
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -146,12 +172,15 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     m_ViewportPanel.RenderPanel();
 
 
-    Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->SetViewportSize(m_ViewportPanel.GetWindowSize());
+    Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetViewportSize(m_ViewportPanel.GetWindowSize());
 
     m_AssetBrowser.RenderPanel();
     m_PropertiesPanel.RenderPanel();
     m_DebuggerPanel.RenderPanel();
     m_ConsolePanel.RenderPanel();
+
+    Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetCubePosition(m_PropertiesPanel.GetPositionParameter());
+    Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetCameraSpeed(m_ViewportPanel.GetCamaraSpeedParameter());
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

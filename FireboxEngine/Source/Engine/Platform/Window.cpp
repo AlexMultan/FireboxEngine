@@ -5,7 +5,7 @@
 
 Firebox::Window::Window(const WindowProperties& windowProps) : m_Window(nullptr), m_WindowProps(windowProps)
 {
-
+    
 }
 
 Firebox::Window::~Window()
@@ -100,6 +100,33 @@ void Firebox::Window::SetVSyncEnabled(bool enable)
     }
 }
 
+void Firebox::Window::SetDisplayMode(DisplayMode displayMode)
+{
+    switch (displayMode)
+    {
+    case DisplayMode::Windowed:
+        m_WindowProps.width = m_SDLDisplayMode.w;
+        m_WindowProps.height = m_SDLDisplayMode.h;
+        SDL_SetWindowFullscreen(m_Window, false);
+		m_DisplayMode = DisplayMode::Windowed;
+        break;
+    case DisplayMode::Maximized:
+#ifdef FIREBOX_PLATFORM_WIN64
+        m_SDLDisplayMode.w = GetCurrentMonitorResolution(GetHWND()).workAreaWidth;
+        m_SDLDisplayMode.h = GetCurrentMonitorResolution(GetHWND()).workAreaHeight;
+#else
+        m_SDLDisplayMode.w = 1920;
+        m_SDLDisplayMode.h = 1080;
+#endif
+        m_SDLDisplayMode.format = SDL_PIXELFORMAT_RGBA8888;
+        SDL_MaximizeWindow(m_Window);
+		m_DisplayMode = DisplayMode::Maximized;
+        break;
+    default:
+        break;
+    }
+}
+
 void Firebox::Window::PerformanceCounterStart()
 {
     m_PerformanceCounterStart = SDL_GetPerformanceCounter();
@@ -114,3 +141,46 @@ void Firebox::Window::PerformanceCounterEnd()
         SDL_Delay((uint)((1000 / m_MaxFPS) - elapsed));
     } 
 }
+
+#ifdef FIREBOX_PLATFORM_WIN64
+
+HWND Firebox::Window::GetHWND()
+{
+	HWND hwnd = nullptr;
+	SDL_PropertiesID props = SDL_GetWindowProperties(m_Window);
+	if (props != 0)
+	{
+		hwnd = (HWND)SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr);
+	}
+
+	if (hwnd != nullptr)
+	{
+		return hwnd;
+	}
+	else
+	{
+		FIREBOX_CORE_ERROR("Failed to get HWND from SDL_Window properties.");
+		return nullptr;
+	}
+}
+
+Firebox::MonitorInfo Firebox::Window::GetCurrentMonitorResolution(HWND hwnd)
+{
+    HMONITOR hMonitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+
+    MONITORINFO monitorInfo;
+    monitorInfo.cbSize = sizeof(MONITORINFO);
+
+    if (GetMonitorInfo(hMonitor, &monitorInfo))
+    {
+        int width = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
+        int height = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
+
+        int workAreaWidth = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
+        int workAreaHeight = monitorInfo.rcWork.bottom - monitorInfo.rcWork.top;
+
+        return MonitorInfo{ width, height, workAreaWidth, workAreaHeight };
+    }
+}
+
+#endif

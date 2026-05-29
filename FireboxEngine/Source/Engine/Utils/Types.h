@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <concepts>
 
 typedef uint8_t uint8;
 typedef uint16_t uint16;
@@ -38,17 +39,6 @@ constexpr Scope<T> CreateScope(Args&&... args)
 using Vector2 = glm::vec2;
 using Vector3 = glm::vec3;
 using Vector4 = glm::vec4;
-
-namespace Utilities {
-
-	static inline const String ToString(const Vector2& vec2)
-	{
-		return "(" + std::to_string(vec2.x) + ", " + std::to_string(vec2.y) + ")";
-	}
-
-	static inline const String& ToString(const Vector3& vec3)
-	{
-		return "(" + std::to_string(vec3.x) + ", " + std::to_string(vec3.y) + ", " + std::to_string(vec3.z);
-	}
-}
-
+using Mat2 = glm::mat2;
+using Mat3 = glm::mat3;
+using Mat4 = glm::mat4;

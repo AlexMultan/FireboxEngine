@@ -17,16 +17,16 @@ public:
 		FIREBOX_WARN("Application has started!");
 	}
 
-	void OnUpdate() override
+	void OnUpdate(float deltaTime) override
 	{
 		if (Firebox::Input::IsMouseButtonDown(Firebox::FBK_MOUSE_BUTTON_RIGHT))
 		{
 			FIREBOX_INFO("Right mouse button is pressed!");
 		}
 
-		if (Firebox::Input::IsKeyUp(Firebox::FBK_KEY_E))
+		if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_E))
 		{
-			FIREBOX_TRACE("Released E");
+			FIREBOX_TRACE("Pressing E");
 		}
 
 		if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_SPACE))
@@ -51,7 +51,7 @@ public:
 	Game()
 	{
 		PushLayer(new ExampleLayer());
-		Firebox::Application::Get().GetRenderer2D().GetRendererAPI()->SetUseFramebuffer(false);
+		Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetEditorViewportRendering(false);
 	}
 	
 	~Game()
