@@ -1,6 +1,7 @@
 #include "ViewportPanel.h"
 #include "Engine/Core/Application.h"
 #include "Engine/Input/Input.h"
+#include "Engine/Core/Log.h"
 
 #include "imgui.h"
 
@@ -51,7 +52,7 @@ void FireboxEditor::ViewportPanel::RenderPanel()
 	uint32_t activeTexID = Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetViewportTextureBuffer();
 	ImGui::Image((ImTextureID)(uintptr_t)activeTexID, ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
 
-	if (ImGui::IsWindowFocused())
+	if (Utils::InRange(ImGui::GetMousePos().x, 0.0f, m_ViewportSize.x) && Utils::InRange(ImGui::GetMousePos().y, 0.0f, m_ViewportSize.y))
 		Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetIsViewportFocused(true);
 	else
 		Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetIsViewportFocused(false);

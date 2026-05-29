@@ -20,7 +20,7 @@ void Firebox::Renderer3D::OnTick(float deltaTime)
 void Firebox::Renderer3D::OnRender()
 {
 	m_RendererAPI->BindBuffers();
-	m_RendererAPI->SetScreenColor(Vector4(0.39f, 0.58f, 0.93, 1.0f));
+	m_RendererAPI->SetScreenColor(Vector4(0.086f, 0.086f, 0.086f, 1.0f));
 	m_RendererAPI->Clear();
 
 	m_RendererAPI->RenderQuad();

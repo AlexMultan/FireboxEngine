@@ -27,17 +27,17 @@ project "FireboxEngine"
     objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
 
     files{
-        "%{prj.name}/Source/Engine/**.h",
-        "%{prj.name}/Source/Engine/**.cpp"
+        "%{prj.name}/Source/Engine/**/**.h",
+        "%{prj.name}/Source/Engine/**/**.cpp"
     }
 
     includedirs{
         "%{prj.name}/ThirdParty/spdlog/include",
-        "%{IncludeDir.SDL}",
-        "%{IncludeDir.Glad}",
-        "%{IncludeDir.imgui}",
-        "%{IncludeDir.glm}",
-        "%{IncludeDir.stb}",
+        IncludeDir["SDL"],
+        IncludeDir["Glad"],
+        IncludeDir["imgui"],
+        IncludeDir["glm"],
+        IncludeDir["stb"],
         "%{prj.name}/Source"
     }
 

@@ -4,7 +4,9 @@
 #include "Engine/Input/KeyCodes.h"
 #include "Engine/Input/MouseCodes.h"
 
-#include "glm/glm.hpp"
+#include <glm/glm.hpp>
+#include <SDL3/SDL_mouse.h>
+#include <SDL3/SDL_video.h>
 
 namespace Firebox {
 
@@ -14,6 +16,10 @@ namespace Firebox {
 		inline static uint8 s_PreviousKeyState[SDL_SCANCODE_COUNT];
 		inline static SDL_MouseButtonFlags s_PreviousMouseState;
 		inline static SDL_MouseButtonFlags s_CurrentMouseState;
+
+		inline static float s_RelativeMouseX = 0.0f;
+		inline static float s_RelativeMouseY = 0.0f;
+		inline static bool s_IsRelativeMode = false;
 
 		inline static void OnInputUpdate()
 		{
@@ -29,6 +35,16 @@ namespace Firebox {
 			SDL_PumpEvents();
 			s_CurrentMouseState = SDL_GetMouseState(nullptr, nullptr);
 			currentKeyState = SDL_GetKeyboardState(nullptr);
+
+			if (s_IsRelativeMode)
+			{
+				SDL_GetRelativeMouseState(&s_RelativeMouseX, &s_RelativeMouseY);
+			}
+			else
+			{
+				s_RelativeMouseX = 0.0f;
+				s_RelativeMouseY = 0.0f;
+			}
 		}
 
 		inline static bool IsKeyDown(KeyCode keycode)
@@ -78,5 +94,18 @@ namespace Firebox {
 			return Vector2(x, y);
 		}
 
+		inline static void SetRelativeMouseMode(bool enabled)
+		{
+			s_IsRelativeMode = enabled;
+			SDL_SetWindowRelativeMouseMode(SDL_GL_GetCurrentWindow(), enabled);
+
+			s_RelativeMouseX = 0.0f;
+			s_RelativeMouseY = 0.0f;
+		}
+
+		inline static Vector2 GetMouseDelta()
+		{
+			return Vector2(s_RelativeMouseX, s_RelativeMouseY);
+		}
 	};
 }

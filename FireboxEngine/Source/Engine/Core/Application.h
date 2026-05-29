@@ -2,7 +2,7 @@
 
 #include "Engine/Core/Core.h"
 #include "Engine/Layers/LayerStack.h"
-#include "Engine/Platform/Window.h"
+#include "Engine/Core/Window.h"
 #include "Engine/Rendering/Renderer3D.h"
 
 #include <memory>

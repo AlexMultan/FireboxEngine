@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Engine/Rendering/API/RendererAPI.h"
+#include "Engine/Rendering/RendererAPI.h"
 
 namespace Firebox {
 

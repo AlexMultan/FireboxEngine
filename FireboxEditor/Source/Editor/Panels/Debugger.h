@@ -12,5 +12,6 @@ namespace FireboxEditor {
 		~Debugger();
 
 		virtual void RenderPanel () override;
+
 	};
 }

@@ -42,3 +42,26 @@ using Vector4 = glm::vec4;
 using Mat2 = glm::mat2;
 using Mat3 = glm::mat3;
 using Mat4 = glm::mat4;
+
+namespace Utils {
+
+	static inline bool InRange(float value, float min, float max)
+	{
+		return value >= min && value <= max;
+	}
+
+	static inline bool InRange(int value, int min, int max)
+	{
+		return value >= min && value <= max;
+	}
+
+	static inline bool InRange(double value, double min, double max)
+	{
+		return value >= min && value <= max;
+	}
+
+	static inline bool InRange(const Vector2& value, const Vector2& min, const Vector2& max)
+	{
+		return value.x >= min.x && value.x <= max.x && value.y >= min.y && value.y <= max.y;
+	}
+}

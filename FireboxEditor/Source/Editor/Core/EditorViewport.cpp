@@ -30,9 +30,9 @@ void FireboxEditor::EditorViewport::OnAttach()
     io->ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
     io->ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
-	io->FontDefault = io->Fonts->AddFontFromFileTTF("Resources/Fonts/Arial/arial.ttf", 16.0f);
+	io->FontDefault = io->Fonts->AddFontFromFileTTF("Resources/Fonts/Ubuntu_Sans/static/UbuntuSans-Medium.ttf", 17.0f);
 
-    ImGui::StyleColorsDark();
+    ImGui::FireboxEditorStyleClassic();
 
     Firebox::Window& window = Firebox::Application::Get().GetWindow();
     SDL_Window* sdlWindow = window.GetWindow();
@@ -41,6 +41,7 @@ void FireboxEditor::EditorViewport::OnAttach()
     ImGuiStyle& style = ImGui::GetStyle();
     style.ScaleAllSizes(window.GetMainScale());
     style.FontScaleDpi = window.GetMainScale();
+    style.TabRounding = 0.0f;
     io->ConfigDpiScaleFonts = true;
     io->ConfigDpiScaleViewports = true;
 	io->ConfigDockingAlwaysTabBar = true;
@@ -170,7 +171,7 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     }*/
 
     m_ViewportPanel.RenderPanel();
-
+	m_ViewportPanel.SetMenuBarHeight(menuBarHeight);
 
     Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetViewportSize(m_ViewportPanel.GetWindowSize());
 

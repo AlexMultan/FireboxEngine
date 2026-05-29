@@ -13,6 +13,7 @@ namespace FireboxEditor {
 		Vector2 m_ViewportSize;
 		bool m_IsFocused = false;
 		float m_CameraSpeed = 0.05f;
+		float m_MenuBarHeight = 0.0f;
 
 	public:
 		ViewportPanel();
@@ -34,6 +35,11 @@ namespace FireboxEditor {
 		inline const float GetCamaraSpeedParameter() const
 		{
 			return m_CameraSpeed;
+		}
+
+		inline void SetMenuBarHeight(float height)
+		{
+			m_MenuBarHeight = height;
 		}
 	};
 }
