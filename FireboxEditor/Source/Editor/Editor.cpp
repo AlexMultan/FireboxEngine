@@ -8,7 +8,7 @@ public:
 	Editor()
 	{
 		PushLayer(new FireboxEditor::EditorViewport());
-		
+		Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetEditorViewportRendering(true);
 	}
 
 	~Editor()

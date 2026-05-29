@@ -1,5 +1,13 @@
 #include "PropertiesPanel.h"
-#include "Engine/Core/Log.h"
+#include "Engine/Utils/DebugTools.h"
+#include "../UI/FloatParameters.h"
+
+#include <imgui.h>
+
+FireboxEditor::PropertiesPanel::PropertiesPanel()
+{
+
+}
 
 FireboxEditor::PropertiesPanel::PropertiesPanel(const char* name) : m_Name(name)
 {
@@ -14,21 +22,11 @@ FireboxEditor::PropertiesPanel::~PropertiesPanel()
 void FireboxEditor::PropertiesPanel::RenderPanel()
 {
 	ImGui::Begin(m_Name.c_str());
+	FloatParameters float3;
 
-	ImGui::InputFloat("Drag Strength", &m_DragStrength, 0.0f, 0.0f, "%.2f");
-
-	ImGui::Separator();
-	ImGui::DragFloat3("Position", &m_PositionParameter.x, m_DragStrength, -10000.0f, 10000.0f, "%.2f");
-	ImGui::DragFloat3("Rotation", &m_RotationParameter.x, m_DragStrength, -10000.0f, 10000.0f, "%.2f");
-	ImGui::DragFloat3("Scale", &m_ScaleParameter.x, m_DragStrength, -10000.0f, 10000.0f, "%.2f");
-	ImGui::Separator();
-
-	if (ImGui::Button("Spawn"))
-	{
-		FIREBOX_CORE_INFO("Spawned Entity!");
-	}
-	ImGui::SameLine();
-	ImGui::Text("Spawn Sprite Entity");
+	float3.Float3(&m_PositionParameter, "Location");
+	float3.Float3(&m_RotationParameter, "Rotation");
+	float3.Float3(&m_ScaleParameter, "Scale");
 
 	ImGui::End();
 }

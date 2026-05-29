@@ -2,26 +2,27 @@
 
 #include <string>
 #include "Engine/Core/Core.h"
-#include "SDL3/SDL.h"
+#include "Engine/Events/Event.h"
 
 namespace Firebox {
 
 	class FIREBOX_API Layer
 	{
 	protected:
-		std::string m_DebugName;
+		String m_DebugName;
 	public:
-		Layer(const std::string& name = "Layer");
+		Layer(const String& name = "Layer");
 		virtual ~Layer();
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(float deltaTime) {}
 		virtual void OnRender() {}
 		virtual void OnEditorUIRender() {}
-		virtual void OnEvent(SDL_Event& event) {}
+		virtual void OnSecondWindowRender() {}
+		virtual void OnEvent(Event& event) {}
 
-		inline const std::string& GetLayerName() const 
+		inline const String& GetLayerName() const 
 		{ 
 			return m_DebugName; 
 		}

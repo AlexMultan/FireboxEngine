@@ -1,5 +1,9 @@
 #include "glad/glad.h"
 #include "Application.h"
+#include "Engine/Input/Input.h"
+#include "Engine/Utils/DebugTools.h"
+#include "Engine/Utils/Timer.h"
+#include "Engine/Utils/String.h"
 
 Firebox::Application* Firebox::Application::s_Instance = nullptr;
 
@@ -8,13 +12,11 @@ Firebox::Application::Application()
     s_Instance = this;
     m_Window = std::make_unique<Window>(WindowProperties("Firebox Editor", 1600, 900));
     m_Window->Create();
-    m_Window->SetEventCallback([this](SDL_Event& event)
-        {
-            for (Layer* layer : m_LayerStack)
-            {
-                layer->OnEvent(event);
-            }
-        });
+    m_Window->SetDisplayMode(DisplayMode::Maximized);
+    m_Renderer3D = CreateRef<Renderer3D>();
+
+    //FIREBOX_CONSOLE_PRINT(Utilities::ToString(m_Window->GetWindowSize()));
+    std::cout << Utils::ToString(m_Window->GetWindowSize()) << "\n";
 }
 
 Firebox::Application::~Application()
@@ -39,17 +41,32 @@ void Firebox::Application::Run()
         layer->OnAttach();
     }
 
+	Timer timer;
+
+    m_Window->SetEventCallback([this](Event& e)
+        {
+            for (auto it = m_LayerStack.begin(); it != m_LayerStack.end(); ++it)
+            {
+                if (e.Handled) break;
+                (*it)->OnEvent(e);
+            }
+        });
+
     while (m_Window->IsRunning())
     {
         m_Window->PerformanceCounterStart();
         m_Window->PollEvents();
 
+		timer.Tick();
+
+        m_Renderer3D->OnTick(timer.GetDeltaTime());
+
         for (Layer* layer : m_LayerStack)
         {
-            layer->OnUpdate();
+            layer->OnUpdate(timer.GetDeltaTime());
         }
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        m_Renderer3D->OnRender();
 
         for (Layer* layer : m_LayerStack)
         {
@@ -61,7 +78,15 @@ void Firebox::Application::Run()
             layer->OnEditorUIRender();
         }
 
+        Firebox::Input::OnInputUpdate();
+
         m_Window->SwapBuffers();
+
+        for (Layer* layer : m_LayerStack)
+        {
+            layer->OnSecondWindowRender();
+        }
+
         m_Window->PerformanceCounterEnd();
     }
     for (Layer* layer : m_LayerStack)

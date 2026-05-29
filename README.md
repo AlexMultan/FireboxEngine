@@ -1,6 +1,6 @@
 # Firebox Engine
 
-A simple 2D game engine built in C++ using SDL3 and OpenGL, developed alongside a pixel art roguelike game.
+A simple 3D game engine built in C++ using SDL3 and OpenGL
 
 ## Dependencies
 
