@@ -16,7 +16,6 @@ namespace Firebox {
 		LayerStack m_LayerStack;
 		std::unique_ptr<Window> m_Window;
 		std::string m_WindowName;
-		Ref<Renderer3D> m_Renderer3D;
 
 	public:
 		Application();
@@ -36,12 +35,6 @@ namespace Firebox {
 		{ 
 			return *m_Window; 
 		}
-
-		Renderer3D& GetRenderer3D()
-		{
-			return *m_Renderer3D;
-		}
-
 	};
 
 	Application* CreateApp();

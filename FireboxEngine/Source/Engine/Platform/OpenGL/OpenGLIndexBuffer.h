@@ -1,32 +1,22 @@
 #pragma once
 
-#include "glad/glad.h"
-#include <cstdio>
-#include <iostream>
+#include "Engine/Rendering/Resources/IndexBuffer.h"
 
 namespace Firebox {
 
-	class OpenGLIndexBuffer
+	class OpenGLIndexBuffer : public IndexBuffer
 	{
-	private:
-		uint32_t m_RendererID;
-		uint32_t m_Count;
-
 	public:
-		OpenGLIndexBuffer(uint32_t count, const uint32_t* data);
+		OpenGLIndexBuffer(const uint* indices, uint count);
 		~OpenGLIndexBuffer();
 
-		inline uint32_t GetRendererID() const
-		{
-			return m_RendererID;
-		}
+		virtual void Bind() override;
+		virtual void Unbind() override;
+		virtual uint GetCount() const override { return m_Count; }
+		virtual uint GetBufferID() const { return m_RendererID; }
 
-		inline uint32_t GetCount() const
-		{
-			return m_Count;
-		}
-
-		void BindBuffer() const;
-		void UnbindBuffer() const;
+	private:
+		uint m_RendererID = 0;
+		uint m_Count = 0;
 	};
 }

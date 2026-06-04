@@ -3,9 +3,15 @@
 #include "Engine/Core/Log.h"
 #include "Engine/Input/Input.h"
 #include "Engine/Utils/DebugTools.h"
+#include "Engine/Rendering/Resources/PrimitiveShapes.h"
+#include "Engine/Platform/OpenGL/Shaders/BaseShader.h"
 
 #include "imgui_impl_sdl3.h"
 #include "imgui_impl_opengl3.h"
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_video.h>
+#include <glad/glad.h>
+
 
 FireboxEditor::EditorViewport::EditorViewport() 
     : Layer("EditorLayer"), io(nullptr)
@@ -30,12 +36,13 @@ void FireboxEditor::EditorViewport::OnAttach()
     io->ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
     io->ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
-	io->FontDefault = io->Fonts->AddFontFromFileTTF("Resources/Fonts/Ubuntu_Sans/static/UbuntuSans-Medium.ttf", 17.0f);
+	io->FontDefault = io->Fonts->AddFontFromFileTTF("FireboxEditor/Resources/Fonts/Ubuntu_Sans/static/UbuntuSans-Medium.ttf", 17.0f);
+    m_TransformPropertiesFont = io->Fonts->AddFontFromFileTTF("FireboxEditor/Resources/Fonts/Ubuntu_Sans/static/UbuntuSans-SemiBold.ttf", 17.0f);
 
     ImGui::FireboxEditorStyleClassic();
 
     Firebox::Window& window = Firebox::Application::Get().GetWindow();
-    SDL_Window* sdlWindow = window.GetWindow();
+    SDL_Window* sdlWindow = window.GetSDLWindow();
     SDL_GLContext glContext = window.GetGLContext();
 
     ImGuiStyle& style = ImGui::GetStyle();
@@ -54,23 +61,30 @@ void FireboxEditor::EditorViewport::OnAttach()
 
     ImGui_ImplSDL3_InitForOpenGL(sdlWindow, glContext);
     ImGui_ImplOpenGL3_Init();
+
     m_MenuBar = FireboxEditor::MenuBar();
 
     m_AssetBrowser = FireboxEditor::AssetBrowser("Asset Browser");
+    m_OutlinerPanel = FireboxEditor::OutlinerPanel("Outliner");
+
     m_PropertiesPanel = FireboxEditor::PropertiesPanel("Properties");
-    m_DebuggerPanel = FireboxEditor::Debugger();
-    m_ViewportPanel = FireboxEditor::ViewportPanel("Viewport",
-        Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetViewportTextureBuffer());
+    if (!m_TransformPropertiesFont) { return; }
 
-    Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetViewportSize(m_ViewportPanel.GetWindowSize());
-    Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetEditorViewportRendering(true);
+    m_ViewportPanel = FireboxEditor::ViewportPanel("Viewport");
+    m_Framebuffer = Firebox::Framebuffer::Create({ 800, 600 });
+    m_EditorCamera = CreateScope<Firebox::PerspectiveCamera>(60.0f, 16.0f / 9.0f,
+        0.1f, 1000.0f);
+    m_CubeMesh = CreateRef<Firebox::Mesh>(Firebox::PrimitiveShapes::Cube().vertices, Firebox::PrimitiveShapes::Cube().indices);
+    m_CubeMaterial = CreateRef<Firebox::Material>(Firebox::Renderer3D::GetBaseShader());
+    m_CubeMaterial->SetDiffuseTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/wood_shutter_diff_2k.png"));
+    m_CubeMaterial->SetSpecularTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/wood_shutter_spec_2k.png"));
+    m_CubeTransform.Position = Vector3(0.0f, 0.0f, 2.0f);
+    m_CubeTransform.Rotation = Vector3(0.0f, 0.0f, 0.0f);
+    m_CubeTransform.Scale = Vector3(1.0f, 1.0f, 1.0f);
+    m_DirectionalLight.Direction = Vector3(-0.2f, -1.0f, -0.3f);
+    m_DirectionalLight.Color = Vector3(1.0f, 1.0f, 0.9f);
 
-    FIREBOX_CORE_INFO("Texture ID: {0}", Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetViewportTextureBuffer());
-
-    STACK(m_AssetBrowser);
-    STACK(m_PropertiesPanel);
-    STACK(m_MenuBar);
-    STACK(m_DebuggerPanel);
+    m_PropertiesPanel.SetTransformPropertiesFont(m_TransformPropertiesFont);
 }
 
 void FireboxEditor::EditorViewport::OnDetach()
@@ -83,27 +97,18 @@ void FireboxEditor::EditorViewport::OnDetach()
 
 void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
 {
-    /*Vector3 camPos = Vector3(0.0f, 0.0f, 0.0f);
-    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_W))
-    {
-        camPos += m_CameraSpeed * Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetCameraFront();
-        Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetCameraPosition(camPos);
-    }
-    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_S))
-    {
-        camPos -= m_CameraSpeed * Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetCameraFront();
-        Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetCameraPosition(camPos);
-    }
-    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_A))
-    {
-        camPos -= m_CameraSpeed * Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetCameraRightVector();
-        Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetCameraPosition(camPos);
-    }
-    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_D))
-    {
-        camPos += m_CameraSpeed * Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->GetCameraRightVector();
-        Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetCameraPosition(camPos);
-    }*/
+    m_EditorCamera->OnUpdate(deltaTime);
+    
+}
+
+void FireboxEditor::EditorViewport::OnRender(float deltaTime)
+{
+    m_Framebuffer->BindFramebuffer();
+    Firebox::Renderer3D::BeginScene(*m_EditorCamera, m_DirectionalLight);
+    Firebox::Renderer3D::DrawMesh(m_CubeMesh, m_CubeMaterial, m_CubeTransform);
+
+    Firebox::Renderer3D::EndScene();
+    m_Framebuffer->UnbindFramebuffer();
 }
 
 void FireboxEditor::EditorViewport::OnEvent(Firebox::Event& event)
@@ -121,18 +126,15 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
 
-    Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->ClearEditorViewportRenderingCache();
-
     // This shit is a fucking mess! Need to clean this fucker up.
 
     m_MenuBar.RenderMenuBar();
+    float menuBarHeight = ImGui::GetFrameHeight();
 
     m_DockNodeFlags = ImGuiDockNodeFlags_PassthruCentralNode;
     m_WindowFlags = ImGuiWindowFlags_NoDocking;
 
     ImGuiViewport* viewport = ImGui::GetMainViewport();
-
-    float menuBarHeight = ImGui::GetFrameHeight();
 
     ImVec2 rootPos = viewport->Pos;
     rootPos.y += menuBarHeight;
@@ -162,30 +164,20 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
         
     }
     ImGui::End();
-    /*ImGuiWindowFlags viewportWindowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoCollapse;
 
-    if (ImGui::Begin("Viewport", nullptr, viewportWindowFlags))
-    {
-        m_MenuBar.RenderMenuBar();
-        ImGui::End();
-    }*/
+    // Gotta wrap up RenderPanel() calls in some layer so it gets called only once in here and renders every panel there is, instead of calling it separately  
 
-    m_ViewportPanel.RenderPanel();
+    m_ViewportPanel.RenderViewport(m_Framebuffer);
 	m_ViewportPanel.SetMenuBarHeight(menuBarHeight);
 
-    Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetViewportSize(m_ViewportPanel.GetWindowSize());
 
     m_AssetBrowser.RenderPanel();
     m_PropertiesPanel.RenderPanel();
-    m_DebuggerPanel.RenderPanel();
     m_ConsolePanel.RenderPanel();
-
-    Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetCubePosition(m_PropertiesPanel.GetPositionParameter());
-    Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetCameraSpeed(m_ViewportPanel.GetCamaraSpeedParameter());
-
+    m_OutlinerPanel.RenderPanel();
+    m_CubeTransform.Position = m_PropertiesPanel.GetPositionParameter();
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
 }
 
 void FireboxEditor::EditorViewport::OnSecondWindowRender()
@@ -193,7 +185,7 @@ void FireboxEditor::EditorViewport::OnSecondWindowRender()
     if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         Firebox::Window& backupMainWindow = Firebox::Application::Get().GetWindow();
-        SDL_Window* backupSDLWindow = backupMainWindow.GetWindow();
+        SDL_Window* backupSDLWindow = backupMainWindow.GetSDLWindow();
         SDL_GLContext backupCurrentContext = backupMainWindow.GetGLContext();
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault();

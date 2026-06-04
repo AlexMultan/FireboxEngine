@@ -3,7 +3,7 @@
 #include "Engine/Core/Log.h"
 #include "Engine/Events/SDLEventTranslator.h"
 
-Firebox::Window::Window(const WindowProperties& windowProps) : m_Window(nullptr), m_WindowProps(windowProps)
+Firebox::Window::Window(const WindowProperties& windowProps) : m_SDLWindow(nullptr), m_WindowProps(windowProps)
 {
     
 }
@@ -11,7 +11,7 @@ Firebox::Window::Window(const WindowProperties& windowProps) : m_Window(nullptr)
 Firebox::Window::~Window()
 {
     SDL_GL_DestroyContext(m_GLContext);
-    SDL_DestroyWindow(m_Window);
+    SDL_DestroyWindow(m_SDLWindow);
     SDL_Quit();
 }
 
@@ -32,22 +32,22 @@ void Firebox::Window::Create()
     m_MainScale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
     SDL_WindowFlags windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
 
-    m_Window = SDL_CreateWindow(
+    m_SDLWindow = SDL_CreateWindow(
         m_WindowProps.title, (int)(m_WindowProps.width * m_MainScale), (int)(m_WindowProps.height * m_MainScale), windowFlags);
 
-    if (m_Window == NULL)
+    if (m_SDLWindow == NULL)
     {
         FIREBOX_CORE_CRITICAL("Could not create window: %s", SDL_GetError());
     }
 
-    m_GLContext = SDL_GL_CreateContext(m_Window);
+    m_GLContext = SDL_GL_CreateContext(m_SDLWindow);
     if (!m_GLContext)
     {
         FIREBOX_CORE_CRITICAL("OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
-        SDL_DestroyWindow(m_Window);
+        SDL_DestroyWindow(m_SDLWindow);
         SDL_Quit();
     }
-    SDL_GL_MakeCurrent(m_Window, m_GLContext);
+    SDL_GL_MakeCurrent(m_SDLWindow, m_GLContext);
 
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
     {
@@ -84,7 +84,7 @@ void Firebox::Window::PollEvents()
 
 void Firebox::Window::SwapBuffers()
 {
-    SDL_GL_SwapWindow(m_Window);
+    SDL_GL_SwapWindow(m_SDLWindow);
 }
 
 void Firebox::Window::SetMaxFPS(const double& fps)
@@ -107,7 +107,7 @@ void Firebox::Window::SetDisplayMode(DisplayMode displayMode)
     case DisplayMode::Windowed:
         m_WindowProps.width = m_SDLDisplayMode.w;
         m_WindowProps.height = m_SDLDisplayMode.h;
-        SDL_SetWindowFullscreen(m_Window, false);
+        SDL_SetWindowFullscreen(m_SDLWindow, false);
 		m_DisplayMode = DisplayMode::Windowed;
         break;
     case DisplayMode::Maximized:
@@ -119,7 +119,7 @@ void Firebox::Window::SetDisplayMode(DisplayMode displayMode)
         m_SDLDisplayMode.h = 1080;
 #endif
         m_SDLDisplayMode.format = SDL_PIXELFORMAT_RGBA8888;
-        SDL_MaximizeWindow(m_Window);
+        SDL_MaximizeWindow(m_SDLWindow);
 		m_DisplayMode = DisplayMode::Maximized;
         break;
     default:
@@ -147,7 +147,7 @@ void Firebox::Window::PerformanceCounterEnd()
 HWND Firebox::Window::GetHWND()
 {
 	HWND hwnd = nullptr;
-	SDL_PropertiesID props = SDL_GetWindowProperties(m_Window);
+	SDL_PropertiesID props = SDL_GetWindowProperties(m_SDLWindow);
 	if (props != 0)
 	{
 		hwnd = (HWND)SDL_GetPointerProperty(props, SDL_PROP_WINDOW_WIN32_HWND_POINTER, nullptr);

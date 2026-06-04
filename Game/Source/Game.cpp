@@ -51,7 +51,6 @@ public:
 	Game()
 	{
 		PushLayer(new ExampleLayer());
-		Firebox::Application::Get().GetRenderer3D().GetRendererAPI()->SetEditorViewportRendering(false);
 	}
 	
 	~Game()

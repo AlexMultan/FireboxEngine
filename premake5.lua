@@ -25,7 +25,7 @@ project "FireboxEngine"
 
     targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
     objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
-
+    
     files{
         "%{prj.name}/Source/Engine/**/**.h",
         "%{prj.name}/Source/Engine/**/**.cpp"
@@ -69,12 +69,12 @@ project "FireboxEngine"
         defines "FIREBOX_BUILD_DLL"
         postbuildcommands{
             "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{COPYFILE} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{COPYFILE} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
 
             "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Game",
-            "{COPYFILE} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Game",
-            "{COPYFILE} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Game"
+            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Game",
+            "{COPY} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Game"
         }
 
     filter "configurations:Shipping"
@@ -82,9 +82,9 @@ project "FireboxEngine"
         defines "FIREBOX_STATIC"
         postbuildcommands{
             "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{COPYFILE} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
             "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Game",
-            "{COPYFILE} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Game"
+            "{COPY} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Game"
         }
 
     filter "configurations:Debug"

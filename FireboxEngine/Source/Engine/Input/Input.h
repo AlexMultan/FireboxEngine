@@ -31,7 +31,6 @@ namespace Firebox {
 			}
 
 			s_PreviousMouseState = s_CurrentMouseState;
-
 			SDL_PumpEvents();
 			s_CurrentMouseState = SDL_GetMouseState(nullptr, nullptr);
 			currentKeyState = SDL_GetKeyboardState(nullptr);
