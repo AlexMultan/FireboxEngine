@@ -29,13 +29,18 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 	Vector2 size = Vector2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 	if (size.x > 0.0f && size.y > 0.0f)
 	{
-		if (m_PendingViewportSize.x > 0.0f && m_PendingViewportSize.y &&
+		/*if (m_PendingViewportSize.x > 0.0f && m_PendingViewportSize.y &&
 			(m_PendingViewportSize.x != m_ViewportSize.x || m_PendingViewportSize.y != m_ViewportSize.y))
 		{
 			m_ViewportSize = m_PendingViewportSize;
-			framebuffer->ResizeFramebuffer(m_ViewportSize.x, m_ViewportSize.y);
+			
 		}
-		m_PendingViewportSize = size;
+		m_PendingViewportSize = size;*/
+		if (size.x != m_ViewportSize.x || size.y != m_ViewportSize.y)
+		{
+			m_ViewportSize = Vector2(size.x, size.y);
+			framebuffer->ResizeFramebuffer(size.x, size.y);
+		}
 	}
 	ImGui::Image((ImTextureID)(uintptr_t)framebuffer->GetColorAttachement(), ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
 
@@ -57,12 +62,15 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 	}
 	ImGui::PopStyleVar();
 
-	if (ImGui::BeginPopup("ViewportSettingsPopup"))
+	ImGuiWindowFlags popupFlags = ImGuiWindowFlags_NoMove;
+	if (ImGui::BeginPopup("ViewportSettingsPopup", popupFlags))
 	{
 		ImGui::TextDisabled("Camera Settings");
 		ImGui::Separator();
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
-		ImGui::SliderFloat("Camera Speed", &m_CameraSpeed, 0.01f, 1.0f);
+		ImGui::SliderFloat("Camera Speed", &m_CameraSpeed, 1.0f, 10.0f, "%.1f");
+		ImGui::Separator();
+		ImGui::SliderFloat("Speed Multiplier", &m_CameraSpeedMultiplier, 1.0f, 10.0f, "%.1f");
 		ImGui::PopStyleColor();
 		ImGui::EndPopup();
 	}

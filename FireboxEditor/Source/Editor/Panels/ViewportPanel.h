@@ -7,15 +7,6 @@ namespace FireboxEditor {
 
 	class ViewportPanel
 	{
-	private:
-		String m_Name = "Viewport";
-		uint m_TextureID;
-		Vector2 m_ViewportSize{ 0.0f, 0.0f };
-		Vector2 m_PendingViewportSize = Vector2(0.0f, 0.0f);
-		bool m_IsFocused = false;
-		float m_CameraSpeed = 0.05f;
-		float m_MenuBarHeight = 0.0f;
-
 	public:
 		ViewportPanel();
 		ViewportPanel(const char* name);
@@ -23,24 +14,20 @@ namespace FireboxEditor {
 
 		void RenderViewport(const Ref<Firebox::Framebuffer>& framebuffer);
 
-		inline const Vector2& GetViewportSize()
-		{
-			return m_ViewportSize;
-		}
+		inline const Vector2& GetViewportSize() { return m_ViewportSize; }
+		inline bool IsFocused() const { return m_IsFocused; }
+		inline const float GetCamaraSpeedParam() const { return m_CameraSpeed; }
+		inline const float GetCamaraSpeedMultiplierParam() const { return m_CameraSpeedMultiplier; }
+		inline void SetMenuBarHeight(float height) { m_MenuBarHeight = height; }
 
-		inline bool IsFocused() const
-		{
-			return m_IsFocused;
-		}
-
-		inline const float GetCamaraSpeedParameter() const
-		{
-			return m_CameraSpeed;
-		}
-
-		inline void SetMenuBarHeight(float height)
-		{
-			m_MenuBarHeight = height;
-		}
+	private:
+		String m_Name = "Viewport";
+		uint m_TextureID;
+		Vector2 m_ViewportSize{ 0.0f, 0.0f };
+		Vector2 m_PendingViewportSize = Vector2(0.0f, 0.0f);
+		bool m_IsFocused = false;
+		float m_CameraSpeed = 2.5f;
+		float m_CameraSpeedMultiplier = 1.0f;
+		float m_MenuBarHeight = 0.0f;
 	};
 }

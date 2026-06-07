@@ -1,6 +1,8 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
 #include <string>
@@ -24,6 +26,9 @@ using Ref = std::shared_ptr<T>;
 template<typename T>
 using Scope = std::unique_ptr<T>;
 
+template<typename T>
+using WeakRef = std::weak_ptr<T>;
+
 template<typename T, typename... Args>
 constexpr Ref<T> CreateRef(Args&&... args)
 {
@@ -42,6 +47,7 @@ using Vector4 = glm::vec4;
 using Mat2 = glm::mat2;
 using Mat3 = glm::mat3;
 using Mat4 = glm::mat4;
+using Quat = glm::quat;
 
 namespace Utils {
 

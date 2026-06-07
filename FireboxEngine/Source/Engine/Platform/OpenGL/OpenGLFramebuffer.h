@@ -12,6 +12,7 @@ namespace Firebox::OpenGL {
 		virtual void BindFramebuffer() override;
 		virtual void UnbindFramebuffer() override;
 		virtual void ResizeFramebuffer(uint width, uint height) override;
+		virtual void ClearFramebuffer() override;
 		virtual uint GetColorAttachement() const override { return m_ColorAttachment; }
 
 	private:

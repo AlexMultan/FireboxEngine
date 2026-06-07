@@ -12,6 +12,7 @@ namespace Firebox {
 		virtual Mat4 GetProjectionMatrix() const override;
 		inline float GetFOV() const { return m_FOV; }
 		inline float GetAspectRatio() const { return m_AspectRatio; }
+		inline void SetAspectRatio(float aspectRatio) { m_AspectRatio = aspectRatio; }
 		inline float GetNearPlane() const { return m_NearPlane; }
 		inline float GetFarPlane() const { return m_FarPlane; }
 

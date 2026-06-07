@@ -6,29 +6,15 @@
 
 void Firebox::Camera::OnUpdate(float deltaTime)
 {
-	if (Firebox::Input::IsKeyDown(FBK_KEY_W))
+	if(m_EnableInput)
 	{
-		m_Position += m_CameraSpeed * m_Front;
-		FIREBOX_CORE_TRACE(Utils::ToString(m_Position));
+		ProcessKeyboardInput(deltaTime);
+		ProcessMouseMovement();
 	}
-
-	if (Firebox::Input::IsKeyDown(FBK_KEY_S))
+	else
 	{
-		m_Position -= m_CameraSpeed * m_Front;
+		m_FirstMouseMovement = true;
 	}
-
-	if (Firebox::Input::IsKeyDown(FBK_KEY_A))
-	{
-		m_Position -= m_CameraSpeed * m_Right;
-	}
-
-	if (Firebox::Input::IsKeyDown(FBK_KEY_D))
-	{
-		m_Position += m_CameraSpeed * m_Right;
-	}
-
-	//ProcessKeyboardInput(deltaTime);
-	ProcessMouseMovement();
 	m_ViewMatrix = glm::lookAt(m_Position, m_Position + m_Front, m_Up);
 }
 
@@ -45,22 +31,24 @@ void Firebox::Camera::CalculateCameraVectors()
 
 void Firebox::Camera::ProcessKeyboardInput(float deltaTime)
 {
-	switch (m_MovementDirection)
+	if (Firebox::Input::IsKeyDown(FBK_KEY_W))
 	{
-		case CameraMovement::Forward:
-			m_Position += m_CameraSpeed * m_Front;
-			FIREBOX_CORE_TRACE(Utils::ToString(m_Position));
+		m_Position += (m_CameraSpeed * m_Front) * deltaTime;
+	}
 
-		case CameraMovement::Backward:
-			m_Position -= m_CameraSpeed * m_Front;
+	if (Firebox::Input::IsKeyDown(FBK_KEY_S))
+	{
+		m_Position -= (m_CameraSpeed * m_Front) * deltaTime;
+	}
 
-		case CameraMovement::Left:
-			m_Position -= m_CameraSpeed * m_Right;
+	if (Firebox::Input::IsKeyDown(FBK_KEY_A))
+	{
+		m_Position -= (m_CameraSpeed * m_Right) * deltaTime;
+	}
 
-		case CameraMovement::Right:
-			m_Position += m_CameraSpeed * m_Right;
-		default:
-			break;
+	if (Firebox::Input::IsKeyDown(FBK_KEY_D))
+	{
+		m_Position += (m_CameraSpeed * m_Right) * deltaTime;
 	}
 	
 }

@@ -281,7 +281,7 @@ void ImGui::FireboxEditorStyleClassic(ImGuiStyle* dst)
     colors[ImGuiCol_SliderGrabActive] = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
     colors[ImGuiCol_Button] = ImVec4(0.09f, 0.09f, 0.09f, 0.7f);
     colors[ImGuiCol_ButtonHovered] = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);
-    colors[ImGuiCol_ButtonActive] = ImVec4(0.19f, 0.19f, 0.19f, 1.00f);
+    colors[ImGuiCol_ButtonActive] = ImVec4(0.29f, 0.47f, 0.85f, 1.00f);
     colors[ImGuiCol_Header] = ImVec4(0.36f, 0.36f, 0.36f, 0.31f);
     colors[ImGuiCol_HeaderHovered] = ImVec4(0.39f, 0.39f, 0.39f, 0.80f);
     colors[ImGuiCol_HeaderActive] = ImVec4(0.47f, 0.47f, 0.47f, 1.00f);

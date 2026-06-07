@@ -33,8 +33,9 @@ namespace Firebox {
 		const Vector3& GetFront() const { return m_Front; }
 		const Mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		virtual Mat4 GetProjectionMatrix() const { return Mat4(1.0f); }
-		void SetPosition(const Vector3& position) { m_Position = position; RecalculateViewMatrix(); }
-		void SetCameraSpeed(float speed) { m_CameraSpeed = speed; }
+		inline void SetPosition(const Vector3& position) { m_Position = position; RecalculateViewMatrix(); }
+		inline void SetCameraSpeed(float speed) { m_CameraSpeed = speed; }
+		inline void SetInputEnabled(bool enable) { m_EnableInput = enable; }
 
 	protected:
 		CameraMovement m_MovementDirection = CameraMovement::Forward;
@@ -42,6 +43,7 @@ namespace Firebox {
 		float m_Pitch = 0.0f;
 		float m_CameraSpeed = 0.2f;
 		float m_MouseSensitivity = 0.1f;
+		bool m_EnableInput = true;
 
 		Vector3 m_Position = Vector3(0.0f, 0.0f, 0.0f);
 		Vector3 m_Front = Vector3(0.0f, 0.0f, -1.0f);

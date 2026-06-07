@@ -28,14 +28,51 @@ void Firebox::OpenGL::OpenGLFramebuffer::UnbindFramebuffer()
 
 void Firebox::OpenGL::OpenGLFramebuffer::ResizeFramebuffer(uint width, uint height)
 {
-	m_Specs.Width = width;
+	/*m_Specs.Width = width;
 	m_Specs.Height = height;
-	Invalidate();
+	Invalidate();*/
+
+	m_Specs = { width, height };
+	glViewport(0, 0, width, height);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	if (m_ColorAttachment)
+		glDeleteTextures(1, &m_ColorAttachment);
+
+	glGenTextures(1, &m_ColorAttachment);
+	glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
+
+	glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		FIREBOX_CORE_ERROR("Framebuffer is not complete!");
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Firebox::OpenGL::OpenGLFramebuffer::ClearFramebuffer()
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT || GL_DEPTH_BUFFER_BIT);
 }
 
 void Firebox::OpenGL::OpenGLFramebuffer::Invalidate()
 {
-	if (m_FBO)
+	/*if (m_FBO)
 	{
 		glDeleteFramebuffers(1, &m_FBO);
 		glDeleteTextures(1, &m_ColorAttachment);
@@ -61,5 +98,26 @@ void Firebox::OpenGL::OpenGLFramebuffer::Invalidate()
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		FIREBOX_CORE_ERROR("Framebuffer is not complete!");
 
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
+
+	glGenFramebuffers(1, &m_FBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
+
+	glGenTextures(1, &m_ColorAttachment);
+	glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 800, 600, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		FIREBOX_CORE_ERROR("Framebuffer is not complete!");
+
+	glGenRenderbuffers(1, &m_RBO);
+	glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 800, 600);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
