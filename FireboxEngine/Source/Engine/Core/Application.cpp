@@ -13,7 +13,6 @@ Firebox::Application::Application()
     m_Window = std::make_unique<Window>(WindowProperties("Firebox Editor", 1600, 900));
     m_Window->Create();
     m_Window->SetDisplayMode(DisplayMode::Maximized);
-    m_Renderer3D = CreateRef<Renderer3D>();
 
     //FIREBOX_CONSOLE_PRINT(Utilities::ToString(m_Window->GetWindowSize()));
     std::cout << Utils::ToString(m_Window->GetWindowSize()) << "\n";
@@ -36,11 +35,12 @@ void Firebox::Application::PushOverlay(Layer* layer)
 
 void Firebox::Application::Run()
 {
+    Firebox::Renderer3D::Init();
     for (Layer* layer : m_LayerStack)
     {
+        FIREBOX_CORE_TRACE("BaseShader in OnAttach: {0}", (uint64_t)Firebox::Renderer3D::GetBaseShader().get());
         layer->OnAttach();
     }
-
 	Timer timer;
 
     m_Window->SetEventCallback([this](Event& e)
@@ -59,18 +59,14 @@ void Firebox::Application::Run()
 
 		timer.Tick();
 
-        m_Renderer3D->OnTick(timer.GetDeltaTime());
-
         for (Layer* layer : m_LayerStack)
         {
             layer->OnUpdate(timer.GetDeltaTime());
         }
 
-        m_Renderer3D->OnRender();
-
         for (Layer* layer : m_LayerStack)
         {
-            layer->OnRender();
+            layer->OnRender(timer.GetDeltaTime());
         }
 
         for (Layer* layer : m_LayerStack)
@@ -82,15 +78,11 @@ void Firebox::Application::Run()
 
         m_Window->SwapBuffers();
 
-        for (Layer* layer : m_LayerStack)
-        {
-            layer->OnSecondWindowRender();
-        }
-
         m_Window->PerformanceCounterEnd();
     }
     for (Layer* layer : m_LayerStack)
     {
         layer->OnDetach();
     }
+    Firebox::Renderer3D::Shutdown();
 }

@@ -33,7 +33,7 @@ namespace Firebox {
 	{
 		
 	private:
-		SDL_Window* m_Window;
+		SDL_Window* m_SDLWindow;
 		SDL_GLContext m_GLContext;
 		SDL_DisplayMode m_SDLDisplayMode;
 		DisplayMode m_DisplayMode = DisplayMode::Maximized;
@@ -87,9 +87,9 @@ namespace Firebox {
 			return Vector2(m_WindowProps.width, m_WindowProps.height);
 		}
 
-		inline SDL_Window* GetWindow()
+		inline SDL_Window* GetSDLWindow()
 		{
-			return m_Window;
+			return m_SDLWindow;
 		}
 
 		inline SDL_GLContext& GetGLContext()

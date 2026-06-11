@@ -1,21 +1,25 @@
 #pragma once
 
-#include "OpenGLVertexBuffer.h"
-#include "OpenGLVertexBufferLayout.h"
+#include "Engine/Rendering/Resources/VertexArray.h"
 
 namespace Firebox {
 
-	class OpenGLVertexArray
+	class OpenGLVertexArray : public VertexArray
 	{
-	private:
-		uint32_t m_RendererID;
-
 	public:
 		OpenGLVertexArray();
 		~OpenGLVertexArray();
 
-		void AddVertexArray(const OpenGLVertexBuffer& vbo, const OpenGLVertexBufferLayout& layout);
-		void Bind() const;
-		void Unbind() const;
+		virtual void Bind() const override;
+		virtual void Unbind() const override;
+		virtual void AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) override;
+		virtual void SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer) override;
+		virtual const Ref<IndexBuffer>& GetIndexBuffer() const override { return m_IndexBuffer; }
+		virtual uint GetID() override { return m_RendererID; }
+
+	private:
+		uint32_t m_RendererID = 0;
+		Ref<IndexBuffer> m_IndexBuffer;
+		DynamicArray<Ref<VertexBuffer>> m_VertexBuffers;
 	};
 }

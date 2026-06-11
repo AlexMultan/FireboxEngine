@@ -15,9 +15,14 @@ IncludeDir["Glad"] = "FireboxEngine/ThirdParty/Glad/include"
 IncludeDir["imgui"] = "FireboxEngine/ThirdParty/ImGui"
 IncludeDir["glm"] = "FireboxEngine/ThirdParty/GLM"
 IncludeDir["stb"] = "FireboxEngine/ThirdParty/stb"
+IncludeDir["entt"] = "FireboxEngine/ThirdParty/entt/include"
+--IncludeDir["assimp"] = "FireboxEngine/ThirdParty/assimp/include"
+--IncludeDir["ImGuizmo"] = "FireboxEngine/ThirdParty/ImGuizmo/src"
 
 include "FireboxEngine/ThirdParty/Glad"
 include "FireboxEngine/ThirdParty/ImGui"
+--include "FireboxEngine/ThirdParty/assimp"
+--include "FireboxEngine/ThirdParty/ImGuizmo"
 
 project "FireboxEngine"
     location "FireboxEngine"
@@ -25,7 +30,7 @@ project "FireboxEngine"
 
     targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
     objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
-
+    
     files{
         "%{prj.name}/Source/Engine/**/**.h",
         "%{prj.name}/Source/Engine/**/**.cpp"
@@ -38,6 +43,9 @@ project "FireboxEngine"
         IncludeDir["imgui"],
         IncludeDir["glm"],
         IncludeDir["stb"],
+        IncludeDir["entt"],
+        --IncludeDir["assimp"],
+        --IncludeDir["ImGuizmo"],
         "%{prj.name}/Source"
     }
 
@@ -49,7 +57,9 @@ project "FireboxEngine"
         "SDL3",
         "opengl32.lib",
         "Glad",
-        "imgui"
+        "imgui",
+        --"assimp"
+        --"ImGuizmo"
     }
 
     libdirs{
@@ -69,12 +79,12 @@ project "FireboxEngine"
         defines "FIREBOX_BUILD_DLL"
         postbuildcommands{
             "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{COPYFILE} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{COPYFILE} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
 
             "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Game",
-            "{COPYFILE} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Game",
-            "{COPYFILE} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Game"
+            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Game",
+            "{COPY} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Game"
         }
 
     filter "configurations:Shipping"
@@ -82,9 +92,9 @@ project "FireboxEngine"
         defines "FIREBOX_STATIC"
         postbuildcommands{
             "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{COPYFILE} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
             "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Game",
-            "{COPYFILE} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Game"
+            "{COPY} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Game"
         }
 
     filter "configurations:Debug"
@@ -130,6 +140,9 @@ project "Game"
         "FireboxEngine/ThirdParty/GLM",
         "FireboxEngine/ThirdParty/ImGui",
         "FireboxEngine/ThirdParty/stb",
+        "FireboxEngine/ThirdParty/entt/include",
+        --"FireboxEngine/ThirdParty/ImGuizmo/src",
+        --"FireboxEngine/ThirdParty/assimp/include",
         "FireboxEngine/Source"
     }
 
@@ -203,6 +216,9 @@ project "FireboxEditor"
         "FireboxEngine/ThirdParty/GLM",
         "FireboxEngine/ThirdParty/ImGui",
         "FireboxEngine/ThirdParty/stb",
+        "FireboxEngine/ThirdParty/entt/include",
+        --"FireboxEngine/ThirdParty/assimp/include",
+        --"FireboxEngine/ThirdParty/ImGuizmo/src",
         "FireboxEngine/Source",
         "%{IncludeDir.Glad}",
         "%{prj.name}/Source"

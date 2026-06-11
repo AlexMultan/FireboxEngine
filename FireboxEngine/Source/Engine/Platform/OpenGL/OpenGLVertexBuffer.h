@@ -1,26 +1,26 @@
 #pragma once
 
-#include "glad/glad.h"
-#include <cstdio>
-#include <iostream>
+#include "Engine/Rendering/Resources/VertexBuffer.h"
+
 
 namespace Firebox {
 
-	class OpenGLVertexBuffer
+	class OpenGLVertexBuffer : public VertexBuffer
 	{
-	private:
-		uint32_t m_RendererID;
-
 	public:
-		OpenGLVertexBuffer(size_t bufferSize, const void* data);
+		OpenGLVertexBuffer(uint size);
+		OpenGLVertexBuffer(const void* data, uint size);
 		~OpenGLVertexBuffer();
 
-		inline uint32_t GetRendererID() const
-		{
-			return m_RendererID;
-		}
+		virtual void BindBuffer() const override;
+		virtual void UnbindBuffer() const override;
+		virtual void SetBufferData(const void* data, uint size) override;
+		virtual const BufferLayout& GetLayout() const override { return m_Layout; }
+		virtual void SetLayout(const BufferLayout& layout) override { m_Layout = layout; }
+		virtual uint GetBufferID() const { return m_RendererID; }
 
-		void BindBuffer() const;
-		void UnbindBuffer() const;
+	private:
+		uint m_RendererID = 0;
+		BufferLayout m_Layout;
 	};
 }

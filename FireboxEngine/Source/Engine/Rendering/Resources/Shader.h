@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Engine/Core/Core.h"
-#include "Engine/Utils/Types.h"
 
 namespace Firebox {
 
@@ -11,13 +10,17 @@ namespace Firebox {
 		virtual ~Shader() = default;
 
 		virtual void UseShader() = 0;
-		virtual void SetFloat4(const String& name, float r, float g, float b, float a) = 0;
+		virtual void SetFloat(const String& name, float value) = 0;
+		virtual void SetInt(const String& name, int value) = 0;
+		virtual void SetVector3(const String& name, Vector3 vector3) = 0;
+		virtual void SetVector4(const String& name, Vector4 vector4) = 0;
+		virtual void SetMat3(const String& name, const Mat3& matrix) = 0;
 		virtual void SetMat4(const String& name, const Mat4& matrix) = 0;
 
-		virtual uint64 GetID() const = 0;
+		virtual uint GetID() const = 0;
 
-		static Scope<Shader> Create(const char* vertexShaderPath, const char* fragmentShaderPath);
-		static Scope<Shader> CreateFromSource(const char* vertexSrc, const char* fragmentSrc);
+		static Ref<Shader> Create(const char* vertexShaderPath, const char* fragmentShaderPath);
+		static Ref<Shader> CreateFromSource(const char* vertexSrc, const char* fragmentSrc);
 
 	};
 }
