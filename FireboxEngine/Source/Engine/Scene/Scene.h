@@ -16,10 +16,10 @@ namespace Firebox {
 
 		Entity CreateEntity(const String& name);
 		void OnUpdate(float deltaTime);
+		void GetAllEntities();
 
 	private:
 		entt::registry m_Registry;
-
 		friend class Entity;
 	};
 }

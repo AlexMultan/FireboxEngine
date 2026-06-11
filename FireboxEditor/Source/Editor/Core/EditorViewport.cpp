@@ -7,11 +7,10 @@
 #include "Engine/Rendering/Resources/PrimitiveShapes.h"
 #include "Engine/Platform/OpenGL/Shaders/BaseShader.h"
 
-#include "imgui_impl_sdl3.h"
-#include "imgui_impl_opengl3.h"
+#include <imgui_impl_sdl3.h>
+#include <imgui_impl_opengl3.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_video.h>
-#include <glad/glad.h>
 
 
 FireboxEditor::EditorViewport::EditorViewport() 
@@ -89,39 +88,37 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_CubeTag = "Wall Cube";
 
     m_SecondCubeMaterial = CreateRef<Firebox::Material>(Firebox::Renderer3D::GetBaseShader());
-    m_SecondCubeMaterial->SetDiffuseTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/T_MinecraftGrass.jpg"));
-    m_SecondCubeMaterial->SetSpecularTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/T_MinecraftGrass.jpg"));
+    m_SecondCubeMaterial->SetDiffuseTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/forrest_ground_01_diff_2k.png"));
+    m_SecondCubeMaterial->SetSpecularTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/forrest_ground_01_rough_2k.png"));
     m_SecondCubeTransform.Position = Vector3(1.0f, 2.0f, 3.0f);
     m_SecondCubeTransform.Rotation = Vector3(0.0f, 0.0f, 0.0f);
     m_SecondCubeTransform.Scale = Vector3(1.0f, 1.0f, 1.0f);
     m_SecondCubeTag = "Minecraft Grass Cube";
 
-    entityCube = m_CurrentScene->CreateEntity("Minecraft Block");
-    entityCube.AddComponent<MeshComponent>(m_CubeMesh);
-    entityCube.AddComponent<MaterialComponent>(m_SecondCubeMaterial);
+    m_CubeEntity = m_CurrentScene->CreateEntity("Minecraft Block");
+    m_CubeEntity.AddComponent<MeshComponent>(m_CubeMesh);
+    m_CubeEntity.AddComponent<MaterialComponent>(m_SecondCubeMaterial);
     //entityCube.AddComponent<TagComponent>();
 
     //m_OutlinerPanel.SetEntityTag(entityCube.GetComponent<TagComponent>().Tag.c_str());
 
-    if (entityCube.HasComponent<TransformComponent>())
+    if (m_CubeEntity.HasComponent<TransformComponent>())
     {
         FIREBOX_EDITOR_WARN("I have a transform component!");
     }
 
-    if (entityCube.HasComponent<TagComponent>())
+    if (m_CubeEntity.HasComponent<TagComponent>())
     {
         FIREBOX_EDITOR_WARN("I have a tag component!");
     }
 
-    FIREBOX_EDITOR_INFO("Tag is {0}", entityCube.GetComponent<TagComponent>().Tag);
-    FIREBOX_EDITOR_INFO("UUID is {0}", entityCube.GetID());
-
-    std::cout << entityCube.GetID() << "\n";
+    FIREBOX_EDITOR_INFO("Tag is {0}", m_CubeEntity.GetComponent<TagComponent>().Tag);
+    FIREBOX_EDITOR_INFO("UUID is {0}", m_CubeEntity.GetComponent<IdComponent>().GetId());
 
     m_DirectionalLight.Direction = Vector3(-0.2f, -1.0f, -0.3f);
     m_DirectionalLight.Color = Vector3(1.0f, 1.0f, 0.9f);
 
-    m_PropertiesPanel.SetCubeTranformParam(entityCube.GetComponent<TransformComponent>());
+    m_PropertiesPanel.SetCubeTranformParam(m_CubeEntity.GetComponent<TransformComponent>());
 
     m_PropertiesPanel.SetTransformPropertiesFont(m_TransformPropertiesFont);
 }
@@ -147,19 +144,21 @@ void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
         SDL_ShowCursor();
     }
     m_EditorCamera->OnUpdate(deltaTime);
-    m_EditorCamera->SetCameraSpeed(m_ViewportPanel.GetCamaraSpeedParam() * m_ViewportPanel.GetCamaraSpeedMultiplierParam());
+    m_EditorCamera->SetCameraSpeed(m_ViewportPanel.GetCamaraSpeedParam());
     if(m_ViewportPanel.GetViewportSize().x > 0.0f && m_ViewportPanel.GetViewportSize().y > 0.0f)
         m_EditorCamera->SetAspectRatio(m_ViewportPanel.GetViewportSize().x / m_ViewportPanel.GetViewportSize().y);
-    entityCube.GetComponent<TransformComponent>() = m_PropertiesPanel.GetCubeTransformParam();
+    m_CubeEntity.GetComponent<TransformComponent>() = m_PropertiesPanel.GetCubeTransformParam();
 }
 
 void FireboxEditor::EditorViewport::OnRender(float deltaTime)
 {
     m_Framebuffer->BindFramebuffer();
+
     Firebox::Renderer3D::BeginScene(*m_EditorCamera, m_DirectionalLight);
     Firebox::Renderer3D::DrawMesh(m_CubeMesh, m_CubeMaterial, m_CubeTransform);
     m_CurrentScene->OnUpdate(deltaTime);
     Firebox::Renderer3D::EndScene();
+
     m_Framebuffer->UnbindFramebuffer();
 }
 
@@ -177,15 +176,12 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
-    m_Framebuffer->ClearFramebuffer();
-
-    // This shit is a fucking mess! Need to clean this fucker up.
 
     m_MenuBar.RenderMenuBar();
     float menuBarHeight = ImGui::GetFrameHeight();
 
 
-    m_DockNodeFlags = ImGuiDockNodeFlags_PassthruCentralNode;
+    m_DockNodeFlags = ImGuiDockNodeFlags_None;
     m_WindowFlags = ImGuiWindowFlags_NoDocking;
 
     ImGuiViewport* viewport = ImGui::GetMainViewport();
@@ -202,9 +198,6 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     m_WindowFlags |= ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove;
     m_WindowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-    if (m_DockNodeFlags & ImGuiDockNodeFlags_PassthruCentralNode)
-        m_WindowFlags |= ImGuiWindowFlags_NoBackground;
 
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(1.0f, 0.0f));
     ImGui::Begin("Root", nullptr, m_WindowFlags);
@@ -223,7 +216,6 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
 
     m_ViewportPanel.RenderViewport(m_Framebuffer);
     m_ViewportPanel.SetMenuBarHeight(menuBarHeight);
-
     m_AssetBrowser.RenderPanel();
     m_PropertiesPanel.RenderPanel();
     m_ConsolePanel.RenderPanel();
@@ -231,10 +223,7 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
 
-void FireboxEditor::EditorViewport::OnSecondWindowRender()
-{
     if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
         Firebox::Window& backupMainWindow = Firebox::Application::Get().GetWindow();

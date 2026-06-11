@@ -4,8 +4,10 @@
 #include "Engine/Utils/Assert.h"
 
 Firebox::Renderer3D::Renderer3DData Firebox::Renderer3D::s_Data;
+Ref<Firebox::Grid> Firebox::Renderer3D::s_Grid = nullptr;
 Ref<Firebox::Shader> Firebox::Renderer3D::GetBaseShader() { return s_Data.BaseShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetLightShader() { return s_Data.LightShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetGridShader() { return s_Data.GridShader; }
 
 void Firebox::Renderer3D::Init()
 {
@@ -17,7 +19,9 @@ void Firebox::Renderer3D::Init()
 	FIREBOX_CORE_TRACE("Creating BaseShader...");
 	s_Data.BaseShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::BaseVertex, Firebox::Shaders::GLSL::BaseFragment);
 	s_Data.LightShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::LightVertex, Firebox::Shaders::GLSL::LightFragment);
+	s_Data.GridShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::GridVertexShader, Firebox::Shaders::GLSL::GridFragmentShader);
 	ASSERT(s_Data.BaseShader, "BaseShader is null after creation!");
+	s_Grid = CreateRef<Firebox::Grid>();
 }
 
 void Firebox::Renderer3D::Shutdown()
@@ -44,11 +48,22 @@ void Firebox::Renderer3D::EndScene()
 			return a.Material->GetShader()->GetID() < b.Material->GetShader()->GetID();
 		});
 	Flush();
+	//DrawGrid();
 }
 
 void Firebox::Renderer3D::DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform)
 {
 	s_Data.RenderQueue.push_back({ mesh->GetVertexArray(), material, transform.GetTransform(), transform.GetInverseNormal() });
+}
+
+void Firebox::Renderer3D::DrawGrid()
+{
+	s_Data.GridShader->UseShader();
+	s_Data.GridShader->SetMat4("u_ViewProjection", s_Data.ViewProjectionMatrix);
+	s_Data.GridShader->SetMat4("u_Model", Mat4(1.0f));
+
+	if(s_Grid)[[likely]]
+		s_Data.RendererAPI->DrawIndexed(s_Grid->GetVertexArray());
 }
 
 void Firebox::Renderer3D::Flush()

@@ -3,6 +3,19 @@
 #include "Engine/Core/Core.h"
 #include "Engine/Rendering/Resources/Mesh.h"
 #include "Engine/Rendering/Resources/Material.h"
+#include "Engine/Core/UUID.h"
+
+struct IdComponent
+{
+private:
+	Firebox::UUID m_Id;
+
+public:
+	IdComponent() = default;
+	IdComponent(const IdComponent&) = default;
+	
+	const uint64& GetId() { return m_Id; }
+};
 
 struct TransformComponent
 {

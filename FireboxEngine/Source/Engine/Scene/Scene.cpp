@@ -19,6 +19,7 @@ namespace Firebox {
 	Entity Scene::CreateEntity(const String& name)
 	{
 		Entity entity = { m_Registry.create(), this };
+		entity.AddComponent<IdComponent>();
 		entity.AddComponent<TransformComponent>();
 		auto& tag = entity.AddComponent<TagComponent>();
 		if (name.empty())
@@ -41,6 +42,10 @@ namespace Firebox {
 			auto [transform, mesh, material] = group.get<TransformComponent, MeshComponent, MaterialComponent>(entity);
 			Firebox::Renderer3D::DrawMesh(mesh.Mesh, material.Material, transform);
 		}
+	}
+	void Scene::GetAllEntities()
+	{
+		
 	}
 }
 

@@ -29,7 +29,6 @@ namespace FireboxEditor {
 		virtual void OnUpdate(float deltaTime) override;
 		virtual void OnRender(float deltaTime) override;
 		virtual void OnEditorUIRender() override;
-		virtual void OnSecondWindowRender() override;
 		virtual void OnEvent(Firebox::Event& event) override;
 
  
@@ -59,6 +58,6 @@ namespace FireboxEditor {
 		String m_SecondCubeTag;
 		TransformComponent m_SecondCubeTransform;
 		Firebox::DirectionalLightComponent m_DirectionalLight;
-		Firebox::Entity entityCube{};
+		Firebox::Entity m_CubeEntity{};
 	};
 }

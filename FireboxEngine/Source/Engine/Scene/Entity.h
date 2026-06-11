@@ -2,7 +2,6 @@
 
 #include "Scene.h"
 #include "Engine/Utils/Assert.h"
-#include "Engine/Core/UUID.h"
 
 #include <utility>
 
@@ -40,11 +39,11 @@ namespace Firebox {
 			return m_Scene->m_Registry.remove<T>(m_Handle);
 		}
 
-		inline const uint64& GetID() const { return m_UUID; }
+		//inline const uint64& GetID() const { return m_UUID; }
 
 	private:
 		entt::entity m_Handle;
 		Scene* m_Scene = nullptr;
-		UUID m_UUID{};
+		//UUID m_UUID{};
 	};
 }

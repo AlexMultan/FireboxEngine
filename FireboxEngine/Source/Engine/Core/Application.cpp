@@ -78,11 +78,6 @@ void Firebox::Application::Run()
 
         m_Window->SwapBuffers();
 
-        for (Layer* layer : m_LayerStack)
-        {
-            layer->OnSecondWindowRender();
-        }
-
         m_Window->PerformanceCounterEnd();
     }
     for (Layer* layer : m_LayerStack)

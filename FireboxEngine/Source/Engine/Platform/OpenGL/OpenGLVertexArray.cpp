@@ -47,8 +47,7 @@ void Firebox::OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertex
 	vertexBuffer->BindBuffer();
 
 	const auto& layout = vertexBuffer->GetLayout();
-	uint attributeIndex = 0;
-	for(uint i = 0; i < layout.GetElements().size(); i++)
+	for(size_t i = 0; i < layout.GetElements().size(); i++)
 	{
 		const auto& element = layout.GetElements()[i];
 		glEnableVertexAttribArray(i);

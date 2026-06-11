@@ -126,4 +126,45 @@ namespace Firebox::Shaders::GLSL {
 			FragColor = vec4(1.0);
 		}
 	)";
+
+	inline constexpr const char* GridVertexShader = R"(#version 440 core
+		
+		layout(location = 0) in vec3 aPos;
+
+		const float gridSize = 2.0;
+			
+		uniform mat4 u_ViewProjection;
+		uniform mat4 u_Model;
+		out vec2 coords;
+
+		void main() 
+		{	
+			vec4 worldPos = vec4(aPos, 1.0);
+			worldPos.xyz *= gridSize;
+
+			gl_Position = u_ViewProjection * u_Model * worldPos;
+			coords = worldPos.xz;
+		}
+	)";
+
+	inline constexpr const char* GridFragmentShader = R"(#version 440 core
+		
+		in vec2 coords;
+		out vec4 FragColor;
+
+		const float gridSize = 2.0f;
+		const float cellSize = 1.0;
+		const float halfCellSize = cellSize * 0.5;
+
+		const float subcellSize = 0.1;
+		const float halfSubcellSize = subcellSize * 0.5;	
+
+		void main() 
+		{
+			vec2 cellCoords = mod(gl_FragCoord.xy + halfCellSize, cellSize);
+			vec2 subcellCoords = mod(gl_FragCoord.xy + halfSubcellSize, subcellSize);
+	
+			FragColor = vec4(normalize(subcellCoords) / gridSize + 0.5, 0.0, 1.0);
+		}
+	)";
 }
