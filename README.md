@@ -50,7 +50,7 @@ A custom 3D game engine built from scratch in C++, featuring a standalone editor
  
 1. Clone the repository:
 ```bash
-   git clone `--recursive` https://github.com/AlexMultan/FireboxEngine.git
+   git clone --recursive https://github.com/AlexMultan/FireboxEngine.git
 ```
 
 To generate Visual Studio project files run 
