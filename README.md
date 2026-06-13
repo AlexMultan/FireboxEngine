@@ -10,15 +10,15 @@ A custom 3D game engine built from scratch in C++, featuring a standalone editor
 
 ## Features
  
-- **Editor** — Dedicated editor application with dockable ImGui panels, a viewport, properties panel, debugger, and integrated logging
-- **Entity Component System** — Built on top of [EnTT](https://github.com/skypjack/entt) with a UUID-based entity identity system and core components: `Transform`, `Tag`, `Mesh`, `Material`, `Id` and `Light`
-- **3D Renderer** — MVP transform pipeline, texture support, orbiting editor camera, delta time, and aspect-ratio-correct viewport rendering
-- **Graphics-Agnostic API** — Renderer abstracted behind a graphics API layer for future backend flexibility
-- **Event & Input System** — Event system with SDL event translation and input handling
-- **Layer System** — Engine core organized around a composable layer stack
-- **Shader Pipeline** — Embedded GLSL shaders with a refactored, structured shader pipeline
-- **Scene System** — Scene management tied into the ECS for entity lifecycle handling
-- **Debugger Panel** — Includes a `STACK` macro for tracking stack-allocated objects and displaying their sizes at runtime
+- **Editor** - Dedicated editor application with dockable ImGui panels, a viewport, properties panel, debugger, and integrated logging
+- **Entity Component System** - Built on top of [EnTT](https://github.com/skypjack/entt) with a UUID-based entity identity system and core components: `Transform`, `Tag`, `Mesh`, `Material`, `Id` and `Light`
+- **3D Renderer** - MVP transform pipeline, texture support, orbiting editor camera, delta time, and aspect-ratio-correct viewport rendering
+- **Graphics-Agnostic API** - Renderer abstracted behind a graphics API layer for future backend flexibility
+- **Event & Input System** - Event system with SDL event translation and input handling
+- **Layer System** - Engine core organized around a composable layer stack
+- **Shader Pipeline** - Embedded GLSL shaders with a refactored, structured shader pipeline
+- **Scene System** - Scene management tied into the ECS for entity lifecycle handling
+- **Debugger Panel** - Includes a `STACK` macro for tracking stack-allocated objects and displaying their sizes at runtime
 
 ## Dependencies
 
@@ -50,7 +50,7 @@ A custom 3D game engine built from scratch in C++, featuring a standalone editor
  
 1. Clone the repository:
 ```bash
-   git clone `--recursive` https://github.com/AlexMultan/FireboxEngine.git
+   git clone --recursive https://github.com/AlexMultan/FireboxEngine.git
 ```
 
 To generate Visual Studio project files run 
