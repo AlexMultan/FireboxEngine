@@ -58,7 +58,7 @@ To generate Visual Studio project files run
 
 3. Open the generated `.sln` in Visual Studio and build the solution.
 
-4. In the Solution Explorer, right click on the FireboxEngine solution and select ``Build Solution`` or press ``Ctrl+Shit+B`` to build the solution.
+4. In the Solution Explorer, right click on the FireboxEngine solution and select ``Build Solution`` or press ``Ctrl+Shift+B`` to build the solution.
 
 5. Set FireboxEditor as a startup project if it isn't set already.
 
