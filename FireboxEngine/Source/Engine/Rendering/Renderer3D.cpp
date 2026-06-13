@@ -48,7 +48,7 @@ void Firebox::Renderer3D::EndScene()
 			return a.Material->GetShader()->GetID() < b.Material->GetShader()->GetID();
 		});
 	Flush();
-	//DrawGrid();
+	DrawGrid();
 }
 
 void Firebox::Renderer3D::DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform)
@@ -61,8 +61,9 @@ void Firebox::Renderer3D::DrawGrid()
 	s_Data.GridShader->UseShader();
 	s_Data.GridShader->SetMat4("u_ViewProjection", s_Data.ViewProjectionMatrix);
 	s_Data.GridShader->SetMat4("u_Model", Mat4(1.0f));
+	s_Data.GridShader->SetVector3("u_CamPos", s_Data.CameraPosition);
 
-	if(s_Grid)[[likely]]
+	if (s_Grid) [[likely]]
 		s_Data.RendererAPI->DrawIndexed(s_Grid->GetVertexArray());
 }
 

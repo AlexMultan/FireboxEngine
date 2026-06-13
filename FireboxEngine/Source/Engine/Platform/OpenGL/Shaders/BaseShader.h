@@ -86,10 +86,10 @@ namespace Firebox::Shaders::GLSL {
 			vec3 ambient = pointLight.ambient * texture(u_Material.diffuse, TexCoords).rgb;
 			vec3 diffuse = pointLight.diffuse * diff * texture(u_Material.diffuse, TexCoords).rgb;
 			vec3 specular = pointLight.specular * spec * texture(u_Material.specular, TexCoords).rgb;
-			float distance    = length(pointLight.position - fragPos);
+			float distance = length(pointLight.position - fragPos);
 			float attenuation = 1.0 / (pointLight.constant + pointLight.linear * distance + pointLight.quadratic * (distance * distance));    
-			ambient  *= attenuation;  
-			diffuse   *= attenuation;
+			ambient *= attenuation;  
+			diffuse *= attenuation;
 			specular *= attenuation;   
 			return (ambient + diffuse + specular);
 		}
@@ -131,40 +131,67 @@ namespace Firebox::Shaders::GLSL {
 		
 		layout(location = 0) in vec3 aPos;
 
-		const float gridSize = 2.0;
+		const float gridSize = 100.0;
 			
 		uniform mat4 u_ViewProjection;
 		uniform mat4 u_Model;
+		uniform vec3 u_CamPos;
 		out vec2 coords;
+		out vec3 camPos;
 
 		void main() 
 		{	
 			vec4 worldPos = vec4(aPos, 1.0);
 			worldPos.xyz *= gridSize;
+			worldPos.xz += u_CamPos.xz;
 
 			gl_Position = u_ViewProjection * u_Model * worldPos;
 			coords = worldPos.xz;
+			camPos = u_CamPos;
 		}
 	)";
 
 	inline constexpr const char* GridFragmentShader = R"(#version 440 core
 		
 		in vec2 coords;
+		in vec3 camPos;
 		out vec4 FragColor;
 
-		const float gridSize = 2.0f;
-		const float cellSize = 1.0;
+		const float gridSize = 100.0;
+		const float cellSize = 2.0;
 		const float halfCellSize = cellSize * 0.5;
 
 		const float subcellSize = 0.1;
 		const float halfSubcellSize = subcellSize * 0.5;	
 
+		const vec3 subGridColor = vec3(0.3, 0.3, 0.3);
+		const vec3 mainGridColor = vec3(0.55, 0.55, 0.55);
+
+		const float maxFadeDistance = 25.0;
+
 		void main() 
-		{
-			vec2 cellCoords = mod(gl_FragCoord.xy + halfCellSize, cellSize);
-			vec2 subcellCoords = mod(gl_FragCoord.xy + halfSubcellSize, subcellSize);
+		{		
+			float camDist = length(coords - camPos.xz);
+			float opacityFalloff = smoothstep(1.0, 0.0, camDist / maxFadeDistance);
+
+			vec2 cellUV = mod(coords, cellSize);
+			vec2 subUV = mod(cellUV, subcellSize);
+
+			float mainGridThickness = 0.01;
+			float subGridThickness = 0.002;
+
+			float mainLineX = step(cellUV.x, mainGridThickness) + step(cellSize - mainGridThickness, cellUV.x);
+			float mainLineY = step(cellUV.y, mainGridThickness) + step(cellSize - mainGridThickness, cellUV.y);
+			float isMainGrid = clamp(mainLineX + mainLineY, 0.0, 1.0);
 	
-			FragColor = vec4(normalize(subcellCoords) / gridSize + 0.5, 0.0, 1.0);
+			float subLineX = step(subUV.x, subGridThickness) + step(subcellSize - subGridThickness, subUV.x);
+			float subLineY = step(subUV.y, subGridThickness) + step(subcellSize - subGridThickness, subUV.y);
+			float isSubGrid = clamp(subLineX + subLineY, 0.0, 1.0);
+
+			vec3 gridRGB = mix(subGridColor, mainGridColor, isMainGrid);
+			float gridAlpha = clamp(isMainGrid + isSubGrid, 0.0, 1.0);
+			
+			FragColor = vec4(gridRGB * opacityFalloff, gridAlpha);
 		}
 	)";
 }

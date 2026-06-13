@@ -19,7 +19,9 @@ namespace Firebox::OpenGL {
 		void Invalidate();
 
 		uint m_ColorAttachment = 0;
+		uint m_MsColorTex = 0;
 		uint m_FBO = 0;
+		uint m_MsFBO = 0;
 		uint m_RBO = 0;
 
 		FramebufferSpecification m_Specs;
