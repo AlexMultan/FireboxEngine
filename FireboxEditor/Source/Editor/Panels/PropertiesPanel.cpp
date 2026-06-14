@@ -19,7 +19,7 @@ FireboxEditor::PropertiesPanel::~PropertiesPanel()
 
 }
 
-void FireboxEditor::PropertiesPanel::RenderPanel()
+void FireboxEditor::PropertiesPanel::RenderPanel(TransformComponent& transformComp)
 {
 	ImGui::Begin(m_Name.c_str());
 	FloatParameters float3;
@@ -34,9 +34,9 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 		if (transformTree)
 		{
-			float3.Float3(&m_CubeTransformParam.Position, "Location", m_TransformPropertiesFont);
-			float3.Float3(&m_CubeTransformParam.Rotation, "Rotation", m_TransformPropertiesFont);
-			float3.Float3(&m_CubeTransformParam.Scale, "Scale", m_TransformPropertiesFont);
+			float3.Float3(&transformComp.Position, "Location", m_TransformPropertiesFont);
+			float3.Float3(&transformComp.Rotation, "Rotation", m_TransformPropertiesFont);
+			float3.Float3(&transformComp.Scale, "Scale", m_TransformPropertiesFont);
 			ImGui::TreePop();
 		}
 

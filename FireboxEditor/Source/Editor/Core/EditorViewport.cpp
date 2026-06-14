@@ -9,9 +9,7 @@
 
 #include <imgui_impl_sdl3.h>
 #include <imgui_impl_opengl3.h>
-#include <SDL3/SDL.h>
-#include <SDL3/SDL_video.h>
-
+#include <ImGuizmo.h>
 
 FireboxEditor::EditorViewport::EditorViewport() 
     : Layer("EditorLayer"), io(nullptr)
@@ -89,7 +87,7 @@ void FireboxEditor::EditorViewport::OnAttach()
 
     m_SecondCubeMaterial = CreateRef<Firebox::Material>(Firebox::Renderer3D::GetBaseShader());
     m_SecondCubeMaterial->SetDiffuseTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/forrest_ground_01_diff_2k.png"));
-    m_SecondCubeMaterial->SetSpecularTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/forrest_ground_01_rough_2k.png"));
+    m_SecondCubeMaterial->SetSpecularTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/forrest_ground_01_diff_2k.png"));
     m_SecondCubeTransform.Position = Vector3(1.0f, 2.0f, 3.0f);
     m_SecondCubeTransform.Rotation = Vector3(0.0f, 0.0f, 0.0f);
     m_SecondCubeTransform.Scale = Vector3(1.0f, 1.0f, 1.0f);
@@ -118,8 +116,6 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_DirectionalLight.Direction = Vector3(-0.2f, -1.0f, -0.3f);
     m_DirectionalLight.Color = Vector3(1.0f, 1.0f, 0.9f);
 
-    m_PropertiesPanel.SetCubeTranformParam(m_CubeEntity.GetComponent<TransformComponent>());
-
     m_PropertiesPanel.SetTransformPropertiesFont(m_TransformPropertiesFont);
 }
 
@@ -147,7 +143,7 @@ void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
     m_EditorCamera->SetCameraSpeed(m_ViewportPanel.GetCamaraSpeedParam());
     if(m_ViewportPanel.GetViewportSize().x > 0.0f && m_ViewportPanel.GetViewportSize().y > 0.0f)
         m_EditorCamera->SetAspectRatio(m_ViewportPanel.GetViewportSize().x / m_ViewportPanel.GetViewportSize().y);
-    m_CubeEntity.GetComponent<TransformComponent>() = m_PropertiesPanel.GetCubeTransformParam();
+    //m_CubeEntity.GetComponent<TransformComponent>() = m_PropertiesPanel.GetCubeTransformParam();
 }
 
 void FireboxEditor::EditorViewport::OnRender(float deltaTime)
@@ -176,6 +172,7 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplSDL3_NewFrame();
     ImGui::NewFrame();
+    ImGuizmo::BeginFrame();
 
     m_MenuBar.RenderMenuBar();
     float menuBarHeight = ImGui::GetFrameHeight();
@@ -213,11 +210,13 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     ImGui::End();
 
     // Gotta wrap up RenderPanel() calls in some layer so it gets called only once in here and renders every panel there is, instead of calling it separately  
+    
+    m_ViewportPanel.RenderViewport(m_Framebuffer, m_EditorCamera->GetViewMatrix(), m_EditorCamera->GetProjectionMatrix(), 
+        m_CubeEntity.GetComponent<TransformComponent>());
 
-    m_ViewportPanel.RenderViewport(m_Framebuffer);
     m_ViewportPanel.SetMenuBarHeight(menuBarHeight);
     m_AssetBrowser.RenderPanel();
-    m_PropertiesPanel.RenderPanel();
+    m_PropertiesPanel.RenderPanel(m_CubeEntity.GetComponent<TransformComponent>());
     m_ConsolePanel.RenderPanel();
     m_OutlinerPanel.RenderOutlinerPanel();
     

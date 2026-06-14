@@ -1,7 +1,9 @@
 ﻿#include "Window.h"
-#include "glad/glad.h"
 #include "Engine/Core/Log.h"
 #include "Engine/Events/SDLEventTranslator.h"
+
+#include <glad/glad.h>
+#include <stb_image.h>
 
 Firebox::Window::Window(const WindowProperties& windowProps) : m_SDLWindow(nullptr), m_WindowProps(windowProps)
 {
@@ -10,6 +12,8 @@ Firebox::Window::Window(const WindowProperties& windowProps) : m_SDLWindow(nullp
 
 Firebox::Window::~Window()
 {
+    SDL_DestroySurface(m_WindowIcon);
+    stbi_image_free(m_WindowIconPixels);
     SDL_GL_DestroyContext(m_GLContext);
     SDL_DestroyWindow(m_SDLWindow);
     SDL_Quit();
@@ -34,12 +38,24 @@ void Firebox::Window::Create()
     m_MainScale = SDL_GetDisplayContentScale(SDL_GetPrimaryDisplay());
     SDL_WindowFlags windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
 
+    int width, height, channels;
+    m_WindowIconPixels = stbi_load("FireboxEditor/Resources/Icons/FireboxEngineLogo32x32.png", &width, &height, &channels, 4);
+    if (m_WindowIconPixels)
+    {
+        m_WindowIcon = SDL_CreateSurfaceFrom(width, height, SDL_PIXELFORMAT_RGBA32, m_WindowIconPixels, width * 4);
+    }
+
     m_SDLWindow = SDL_CreateWindow(
         m_WindowProps.title, (int)(m_WindowProps.width * m_MainScale), (int)(m_WindowProps.height * m_MainScale), windowFlags);
 
     if (m_SDLWindow == NULL)
     {
         FIREBOX_CORE_CRITICAL("Could not create window: %s", SDL_GetError());
+    }
+
+    if (!SDL_SetWindowIcon(m_SDLWindow, m_WindowIcon))
+    {
+        std::cerr << "Failed to set window icon: " << SDL_GetError() << "\n";
     }
 
     m_GLContext = SDL_GL_CreateContext(m_SDLWindow);
@@ -104,6 +120,7 @@ void Firebox::Window::SetVSyncEnabled(bool enable)
 
 void Firebox::Window::SetDisplayMode(DisplayMode displayMode)
 {
+    if (!m_SDLWindow) return;
     switch (displayMode)
     {
     case DisplayMode::Windowed:
@@ -113,17 +130,24 @@ void Firebox::Window::SetDisplayMode(DisplayMode displayMode)
 		m_DisplayMode = DisplayMode::Windowed;
         break;
     case DisplayMode::Maximized:
+    {
 #ifdef FIREBOX_PLATFORM_WIN64
-        m_SDLDisplayMode.w = GetCurrentMonitorResolution(GetHWND()).workAreaWidth;
-        m_SDLDisplayMode.h = GetCurrentMonitorResolution(GetHWND()).workAreaHeight;
+        HWND hwnd = GetHWND();
+        if (hwnd)
+        {
+            auto info = GetCurrentMonitorResolution(hwnd);
+            m_SDLDisplayMode.w = info.workAreaWidth;
+            m_SDLDisplayMode.h = info.workAreaHeight;
+        }
 #else
         m_SDLDisplayMode.w = 1920;
         m_SDLDisplayMode.h = 1080;
 #endif
         m_SDLDisplayMode.format = SDL_PIXELFORMAT_RGBA8888;
         SDL_MaximizeWindow(m_SDLWindow);
-		m_DisplayMode = DisplayMode::Maximized;
+        m_DisplayMode = DisplayMode::Maximized;
         break;
+    }
     default:
         break;
     }

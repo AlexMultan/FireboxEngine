@@ -158,11 +158,10 @@ namespace Firebox::Shaders::GLSL {
 		out vec4 FragColor;
 
 		const float gridSize = 100.0;
-		const float cellSize = 2.0;
-		const float halfCellSize = cellSize * 0.5;
 
-		const float subcellSize = 0.1;
-		const float halfSubcellSize = subcellSize * 0.5;	
+		const float cellSize = 1.0;
+
+		const float subcellSize = cellSize * 0.2;
 
 		const vec3 subGridColor = vec3(0.3, 0.3, 0.3);
 		const vec3 mainGridColor = vec3(0.55, 0.55, 0.55);
@@ -177,8 +176,8 @@ namespace Firebox::Shaders::GLSL {
 			vec2 cellUV = mod(coords, cellSize);
 			vec2 subUV = mod(cellUV, subcellSize);
 
-			float mainGridThickness = 0.01;
-			float subGridThickness = 0.002;
+			float mainGridThickness = 0.008;
+			float subGridThickness = 0.003;
 
 			float mainLineX = step(cellUV.x, mainGridThickness) + step(cellSize - mainGridThickness, cellUV.x);
 			float mainLineY = step(cellUV.y, mainGridThickness) + step(cellSize - mainGridThickness, cellUV.y);
@@ -189,7 +188,7 @@ namespace Firebox::Shaders::GLSL {
 			float isSubGrid = clamp(subLineX + subLineY, 0.0, 1.0);
 
 			vec3 gridRGB = mix(subGridColor, mainGridColor, isMainGrid);
-			float gridAlpha = clamp(isMainGrid + isSubGrid, 0.0, 1.0);
+			float gridAlpha = clamp(isMainGrid + isSubGrid, 0.0, 0.2);
 			
 			FragColor = vec4(gridRGB * opacityFalloff, gridAlpha);
 		}

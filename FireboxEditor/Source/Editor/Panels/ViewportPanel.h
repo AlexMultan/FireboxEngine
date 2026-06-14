@@ -1,9 +1,17 @@
 #pragma once
 
 #include "Engine/Core/Core.h"
-#include <Engine/Rendering/Resources/Framebuffer.h>
+#include "Engine/Rendering/Resources/Framebuffer.h"
+#include "Engine/Components/Components.h"
 
 namespace FireboxEditor {
+
+	enum class GizmoTransformType : uint
+	{
+		Translate = 0,
+		Rotate = 1,
+		Scale = 2
+	};
 
 	class ViewportPanel
 	{
@@ -12,7 +20,8 @@ namespace FireboxEditor {
 		ViewportPanel(const char* name);
 		~ViewportPanel();
 
-		void RenderViewport(const Ref<Firebox::Framebuffer>& framebuffer);
+		void RenderViewport(const Ref<Firebox::Framebuffer>& framebuffer, const Mat4& viewMatrix, const Mat4& projectionMatrix, 
+			TransformComponent& transformComp);
 
 		inline const Vector2& GetViewportSize() { return m_ViewportSize; }
 		inline bool IsFocused() const { return m_IsFocused; }
@@ -26,5 +35,7 @@ namespace FireboxEditor {
 		bool m_IsFocused = false;
 		float m_CameraSpeed = 2.0f;
 		float m_MenuBarHeight = 0.0f;
+
+		GizmoTransformType m_GizmoTransformType = GizmoTransformType::Translate;
 	};
 }

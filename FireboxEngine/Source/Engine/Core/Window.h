@@ -31,24 +31,6 @@ namespace Firebox {
 
 	class FIREBOX_API Window
 	{
-		
-	private:
-		SDL_Window* m_SDLWindow;
-		SDL_GLContext m_GLContext;
-		SDL_DisplayMode m_SDLDisplayMode;
-		DisplayMode m_DisplayMode = DisplayMode::Maximized;
-		bool m_Running = true;
-		float m_MainScale;
-
-		WindowProperties m_WindowProps;
-
-		uint64 m_PerformanceCounterStart;
-		uint64 m_PerformanceCounterEnd;
-		double m_MaxFPS = 144;
-
-		EventCallbackFn m_EventCallback;
-		RawEventCallbackFn m_RawEventCallback;
-
 	public:
 		Window(const WindowProperties& windowProps);
 		virtual ~Window();
@@ -106,5 +88,24 @@ namespace Firebox {
 		{
 			m_Running = isRunning;
 		}
+
+	private:
+		SDL_Window* m_SDLWindow;
+		SDL_GLContext m_GLContext;
+		SDL_DisplayMode m_SDLDisplayMode;
+		DisplayMode m_DisplayMode = DisplayMode::Maximized;
+		unsigned char* m_WindowIconPixels = nullptr;
+		SDL_Surface* m_WindowIcon = nullptr;
+		bool m_Running = true;
+		float m_MainScale;
+
+		WindowProperties m_WindowProps;
+
+		uint64 m_PerformanceCounterStart;
+		uint64 m_PerformanceCounterEnd;
+		double m_MaxFPS = 144;
+
+		EventCallbackFn m_EventCallback;
+		RawEventCallbackFn m_RawEventCallback;
 	};
 }

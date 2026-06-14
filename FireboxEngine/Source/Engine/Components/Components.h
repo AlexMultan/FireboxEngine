@@ -34,9 +34,9 @@ struct TransformComponent
 	{
 		Mat4 model = Mat4(1.0f);
 		model = glm::translate(model, Position);
+		model = glm::rotate(model, glm::radians(Rotation.z), { 0.0f, 0.0f, 1.0f });
+		model = glm::rotate(model, glm::radians(Rotation.y), { 0.0f, 1.0f, 0.0f });
 		model = glm::rotate(model, glm::radians(Rotation.x), { 1.0f, 0.0f, 0.0f });
-		model = glm::rotate(model, glm::radians(Rotation.y), { 0.0f, 0.0f, 1.0f });
-		model = glm::rotate(model, glm::radians(Rotation.z), { 0.0f, 1.0f, 0.0f });
 		model = glm::scale(model, Scale);
 		return model;
 	}

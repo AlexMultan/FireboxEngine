@@ -17,12 +17,12 @@ IncludeDir["glm"] = "FireboxEngine/ThirdParty/GLM"
 IncludeDir["stb"] = "FireboxEngine/ThirdParty/stb"
 IncludeDir["entt"] = "FireboxEngine/ThirdParty/entt/include"
 --IncludeDir["assimp"] = "FireboxEngine/ThirdParty/assimp/include"
---IncludeDir["ImGuizmo"] = "FireboxEngine/ThirdParty/ImGuizmo/src"
+IncludeDir["ImGuizmo"] = "FireboxEngine/ThirdParty/ImGuizmo/src"
 
 include "FireboxEngine/ThirdParty/Glad"
 include "FireboxEngine/ThirdParty/ImGui"
+include "FireboxEngine/ThirdParty/ImGuizmo"
 --include "FireboxEngine/ThirdParty/assimp"
---include "FireboxEngine/ThirdParty/ImGuizmo"
 
 project "FireboxEngine"
     location "FireboxEngine"
@@ -33,19 +33,19 @@ project "FireboxEngine"
     
     files{
         "%{prj.name}/Source/Engine/**/**.h",
-        "%{prj.name}/Source/Engine/**/**.cpp"
+        "%{prj.name}/Source/Engine/**/**.cpp",
     }
 
     includedirs{
         "%{prj.name}/ThirdParty/spdlog/include",
-        IncludeDir["SDL"],
-        IncludeDir["Glad"],
-        IncludeDir["imgui"],
-        IncludeDir["glm"],
-        IncludeDir["stb"],
-        IncludeDir["entt"],
+        "%{IncludeDir.SDL}",
+        "%{IncludeDir.Glad}",
+        "%{IncludeDir.imgui}",
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.entt}",
+        "%{IncludeDir.stb}",
         --IncludeDir["assimp"],
-        --IncludeDir["ImGuizmo"],
+        "%{IncludeDir.ImGuizmo}",
         "%{prj.name}/Source"
     }
 
@@ -58,8 +58,8 @@ project "FireboxEngine"
         "opengl32.lib",
         "Glad",
         "imgui",
+        "ImGuizmo"
         --"assimp"
-        --"ImGuizmo"
     }
 
     libdirs{
@@ -127,7 +127,7 @@ project "Game"
     
     files{
         "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp"
+        "%{prj.name}/Source/**.cpp",
     }
 
     links{
@@ -141,7 +141,7 @@ project "Game"
         "FireboxEngine/ThirdParty/ImGui",
         "FireboxEngine/ThirdParty/stb",
         "FireboxEngine/ThirdParty/entt/include",
-        --"FireboxEngine/ThirdParty/ImGuizmo/src",
+        "FireboxEngine/ThirdParty/ImGuizmo/src",
         --"FireboxEngine/ThirdParty/assimp/include",
         "FireboxEngine/Source"
     }
@@ -193,7 +193,7 @@ project "FireboxEditor"
     
     files{
         "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp"
+        "%{prj.name}/Source/**.cpp",
     }
 
     links{
@@ -201,7 +201,8 @@ project "FireboxEditor"
         "SDL3",
         "opengl32.lib",
         "Glad",
-        "imgui"
+        "imgui",
+        "ImGuizmo"
     }
 
     dependson { "Game" }
@@ -218,7 +219,7 @@ project "FireboxEditor"
         "FireboxEngine/ThirdParty/stb",
         "FireboxEngine/ThirdParty/entt/include",
         --"FireboxEngine/ThirdParty/assimp/include",
-        --"FireboxEngine/ThirdParty/ImGuizmo/src",
+        "FireboxEngine/ThirdParty/ImGuizmo/src",
         "FireboxEngine/Source",
         "%{IncludeDir.Glad}",
         "%{prj.name}/Source"
