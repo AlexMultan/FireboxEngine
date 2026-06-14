@@ -26,6 +26,7 @@ namespace Firebox {
 		static Ref<Shader> GetBaseShader();
 		static Ref<Shader> GetLightShader();
 		static Ref<Shader> GetGridShader();
+		static void SetGridSize(const float& gridSize);
 
 	private:
 		static void Flush();
@@ -53,5 +54,6 @@ namespace Firebox {
 		static Renderer3DData s_Data;
 
 		static Ref<Grid> s_Grid;
+		static float s_GridSize;
 	};
 }

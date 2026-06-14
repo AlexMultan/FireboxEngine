@@ -143,7 +143,6 @@ void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
     m_EditorCamera->SetCameraSpeed(m_ViewportPanel.GetCamaraSpeedParam());
     if(m_ViewportPanel.GetViewportSize().x > 0.0f && m_ViewportPanel.GetViewportSize().y > 0.0f)
         m_EditorCamera->SetAspectRatio(m_ViewportPanel.GetViewportSize().x / m_ViewportPanel.GetViewportSize().y);
-    //m_CubeEntity.GetComponent<TransformComponent>() = m_PropertiesPanel.GetCubeTransformParam();
 }
 
 void FireboxEditor::EditorViewport::OnRender(float deltaTime)
@@ -151,9 +150,10 @@ void FireboxEditor::EditorViewport::OnRender(float deltaTime)
     m_Framebuffer->BindFramebuffer();
 
     Firebox::Renderer3D::BeginScene(*m_EditorCamera, m_DirectionalLight);
-    Firebox::Renderer3D::DrawMesh(m_CubeMesh, m_CubeMaterial, m_CubeTransform);
     m_CurrentScene->OnUpdate(deltaTime);
     Firebox::Renderer3D::EndScene();
+    Firebox::Renderer3D::SetGridSize(m_ViewportPanel.GetGridSize());
+    Firebox::Renderer3D::DrawGrid();
 
     m_Framebuffer->UnbindFramebuffer();
 }

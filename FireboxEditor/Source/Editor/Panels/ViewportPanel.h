@@ -13,6 +13,12 @@ namespace FireboxEditor {
 		Scale = 2
 	};
 
+	enum class GizmoTransformSpace : uint
+	{
+		Local = 0,
+		World = 1
+	};
+
 	class ViewportPanel
 	{
 	public:
@@ -27,6 +33,7 @@ namespace FireboxEditor {
 		inline bool IsFocused() const { return m_IsFocused; }
 		inline const float GetCamaraSpeedParam() const { return m_CameraSpeed; }
 		inline void SetMenuBarHeight(float height) { m_MenuBarHeight = height; }
+		inline const float& GetGridSize() const { return m_GridSize; }
 
 	private:
 		String m_Name = "Viewport";
@@ -35,7 +42,10 @@ namespace FireboxEditor {
 		bool m_IsFocused = false;
 		float m_CameraSpeed = 2.0f;
 		float m_MenuBarHeight = 0.0f;
+		bool m_Snap = true;
+		float m_GridSize = 1.0f;
 
 		GizmoTransformType m_GizmoTransformType = GizmoTransformType::Translate;
+		GizmoTransformSpace m_GizmoTransformSpace = GizmoTransformSpace::World;
 	};
 }

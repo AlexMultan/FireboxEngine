@@ -136,8 +136,10 @@ namespace Firebox::Shaders::GLSL {
 		uniform mat4 u_ViewProjection;
 		uniform mat4 u_Model;
 		uniform vec3 u_CamPos;
+		uniform float u_CellSize;
 		out vec2 coords;
 		out vec3 camPos;
+		out float cellSize;
 
 		void main() 
 		{	
@@ -148,6 +150,7 @@ namespace Firebox::Shaders::GLSL {
 			gl_Position = u_ViewProjection * u_Model * worldPos;
 			coords = worldPos.xz;
 			camPos = u_CamPos;
+			cellSize = u_CellSize;
 		}
 	)";
 
@@ -155,13 +158,12 @@ namespace Firebox::Shaders::GLSL {
 		
 		in vec2 coords;
 		in vec3 camPos;
+		in float cellSize;
 		out vec4 FragColor;
 
 		const float gridSize = 100.0;
 
-		const float cellSize = 1.0;
-
-		const float subcellSize = cellSize * 0.2;
+		float subcellSize = cellSize * 0.1;
 
 		const vec3 subGridColor = vec3(0.3, 0.3, 0.3);
 		const vec3 mainGridColor = vec3(0.55, 0.55, 0.55);
@@ -176,8 +178,8 @@ namespace Firebox::Shaders::GLSL {
 			vec2 cellUV = mod(coords, cellSize);
 			vec2 subUV = mod(cellUV, subcellSize);
 
-			float mainGridThickness = 0.008;
-			float subGridThickness = 0.003;
+			float mainGridThickness = cellSize * 0.008;
+			float subGridThickness = cellSize * 0.003;
 
 			float mainLineX = step(cellUV.x, mainGridThickness) + step(cellSize - mainGridThickness, cellUV.x);
 			float mainLineY = step(cellUV.y, mainGridThickness) + step(cellSize - mainGridThickness, cellUV.y);

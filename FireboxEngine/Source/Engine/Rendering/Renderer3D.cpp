@@ -8,6 +8,9 @@ Ref<Firebox::Grid> Firebox::Renderer3D::s_Grid = nullptr;
 Ref<Firebox::Shader> Firebox::Renderer3D::GetBaseShader() { return s_Data.BaseShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetLightShader() { return s_Data.LightShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetGridShader() { return s_Data.GridShader; }
+void Firebox::Renderer3D::SetGridSize(const float& gridSize) { s_GridSize = gridSize; }
+
+float Firebox::Renderer3D::s_GridSize = 10.0f;
 
 void Firebox::Renderer3D::Init()
 {
@@ -48,7 +51,7 @@ void Firebox::Renderer3D::EndScene()
 			return a.Material->GetShader()->GetID() < b.Material->GetShader()->GetID();
 		});
 	Flush();
-	DrawGrid();
+	
 }
 
 void Firebox::Renderer3D::DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform)
@@ -62,6 +65,7 @@ void Firebox::Renderer3D::DrawGrid()
 	s_Data.GridShader->SetMat4("u_ViewProjection", s_Data.ViewProjectionMatrix);
 	s_Data.GridShader->SetMat4("u_Model", Mat4(1.0f));
 	s_Data.GridShader->SetVector3("u_CamPos", s_Data.CameraPosition);
+	s_Data.GridShader->SetFloat("u_CellSize", s_GridSize);
 
 	if (s_Grid) [[likely]]
 		s_Data.RendererAPI->DrawIndexed(s_Grid->GetVertexArray());

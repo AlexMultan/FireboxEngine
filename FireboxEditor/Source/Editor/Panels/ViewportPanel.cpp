@@ -2,6 +2,8 @@
 #include "Engine/Core/Application.h"
 #include "Engine/Input/Input.h"
 #include "Engine/Core/Log.h"
+#include "Engine/Utils/DebugTools.h"
+#include "Engine/Utils/String.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -10,6 +12,8 @@
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
+
+#include <stdlib.h>
 
 FireboxEditor::ViewportPanel::ViewportPanel()
 {
@@ -68,6 +72,7 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 	}
 
 	ImGuizmo::OPERATION operation = ImGuizmo::OPERATION::TRANSLATE;
+	ImGuizmo::MODE mode = ImGuizmo::WORLD;
 	
 	switch (m_GizmoTransformType)
 	{
@@ -79,13 +84,16 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 			break;
 		case GizmoTransformType::Scale:
 			operation = ImGuizmo::OPERATION::SCALE;
+			mode = ImGuizmo::LOCAL;
 			break;
 		default:
 			break;
 	}
 
+	float gizmoSnapValues[3] = { m_GridSize * 0.1f, m_GridSize * 0.1f, m_GridSize * 0.1f };
+
 	if (ImGuizmo::Manipulate(glm::value_ptr(viewMatrix), glm::value_ptr(projectionMatrix), operation,
-		ImGuizmo::WORLD, glm::value_ptr(transform)))
+		mode, glm::value_ptr(transform), nullptr, m_Snap ? gizmoSnapValues : nullptr));
 	{
 		float translation[3], rotation[3], scale[3];
 		ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), translation, rotation, scale);
@@ -112,6 +120,17 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 		ImGui::Separator();
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
 		ImGui::SliderFloat("Camera Speed", &m_CameraSpeed, 2.0f, 50.0f, "%.1f");
+		ImGui::Separator();
+		ImGui::Checkbox("Snap", &m_Snap);
+		ImGui::Separator();
+		static const char* snapValues[]{ "1", "5", "10", "50", "100"};
+		static int selectedValue = 2;
+		if (ImGui::Combo("Snap Size", &selectedValue, snapValues, IM_ARRAYSIZE(snapValues)))
+		{
+			FIREBOX_CONSOLE_PRINT(Utils::ToString(selectedValue));
+			float gridSize = atof(snapValues[selectedValue]);
+			m_GridSize = gridSize / 10.0f;
+		}
 		ImGui::PopStyleColor();
 		ImGui::EndPopup();
 	}
