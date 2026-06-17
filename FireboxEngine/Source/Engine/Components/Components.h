@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Engine/Core/Core.h"
+#include "Engine/Rendering/Resources/StaticMesh.h"
 #include "Engine/Rendering/Resources/Mesh.h"
 #include "Engine/Rendering/Resources/Material.h"
 #include "Engine/Core/UUID.h"
@@ -13,7 +14,7 @@ private:
 public:
 	IdComponent() = default;
 	IdComponent(const IdComponent&) = default;
-	
+
 	const uint64& GetId() { return m_Id; }
 };
 
@@ -58,6 +59,11 @@ struct TagComponent
 	}
 };
 
+struct StaticMeshComponent
+{
+	Ref<Firebox::StaticMesh> StaticMesh;
+};
+
 struct MeshComponent
 {
 	Ref<Firebox::Mesh> Mesh;
@@ -67,3 +73,4 @@ struct MaterialComponent
 {
 	Ref<Firebox::Material> Material;
 };
+

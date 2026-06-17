@@ -98,6 +98,10 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_CubeEntity.AddComponent<MaterialComponent>(m_SecondCubeMaterial);
     //entityCube.AddComponent<TagComponent>();
 
+    m_BunnyModel = CreateRef<Firebox::StaticMesh>("FireboxEditor/Resources/Models/SM_Stanford_Bunny.obj");
+    m_BunnyEntity = m_CurrentScene->CreateEntity("Bunny");
+    m_BunnyEntity.AddComponent<StaticMeshComponent>(m_BunnyModel);
+
     //m_OutlinerPanel.SetEntityTag(entityCube.GetComponent<TagComponent>().Tag.c_str());
 
     if (m_CubeEntity.HasComponent<TransformComponent>())

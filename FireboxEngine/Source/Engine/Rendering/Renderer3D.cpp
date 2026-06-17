@@ -8,6 +8,7 @@ Ref<Firebox::Grid> Firebox::Renderer3D::s_Grid = nullptr;
 Ref<Firebox::Shader> Firebox::Renderer3D::GetBaseShader() { return s_Data.BaseShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetLightShader() { return s_Data.LightShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetGridShader() { return s_Data.GridShader; }
+const Ref<Firebox::Material>& Firebox::Renderer3D::GetDefaultMaterial() { return s_Data.DefaultMaterial; }
 void Firebox::Renderer3D::SetGridSize(const float& gridSize) { s_GridSize = gridSize; }
 
 float Firebox::Renderer3D::s_GridSize = 10.0f;
@@ -23,6 +24,8 @@ void Firebox::Renderer3D::Init()
 	s_Data.BaseShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::BaseVertex, Firebox::Shaders::GLSL::BaseFragment);
 	s_Data.LightShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::LightVertex, Firebox::Shaders::GLSL::LightFragment);
 	s_Data.GridShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::GridVertexShader, Firebox::Shaders::GLSL::GridFragmentShader);
+	s_Data.DefaultMaterial = CreateRef<Material>(s_Data.BaseShader);
+	s_Data.DefaultMaterial->SetDiffuseTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/T_Default.png"));
 	ASSERT(s_Data.BaseShader, "BaseShader is null after creation!");
 	s_Grid = CreateRef<Firebox::Grid>();
 }

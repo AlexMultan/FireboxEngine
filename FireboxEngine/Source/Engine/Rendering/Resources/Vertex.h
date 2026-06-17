@@ -2,6 +2,8 @@
 
 #include "Engine/Utils/Types.h"
 
+#define MAX_BONE_INFLUENCE 4
+
 namespace Firebox {
 
 	struct Vertex

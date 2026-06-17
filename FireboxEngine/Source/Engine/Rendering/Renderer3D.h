@@ -26,6 +26,7 @@ namespace Firebox {
 		static Ref<Shader> GetBaseShader();
 		static Ref<Shader> GetLightShader();
 		static Ref<Shader> GetGridShader();
+		static const Ref<Material>& GetDefaultMaterial();
 		static void SetGridSize(const float& gridSize);
 
 	private:
@@ -46,6 +47,7 @@ namespace Firebox {
 			Ref<Shader> BaseShader;
 			Ref<Shader> LightShader;
 			Ref<Shader> GridShader;
+			Ref<Material> DefaultMaterial;
 			Mat4 ViewProjectionMatrix;
 			Vector3 CameraPosition;
 			DirectionalLightComponent DirectionalLight;

@@ -59,5 +59,7 @@ namespace FireboxEditor {
 		TransformComponent m_SecondCubeTransform;
 		Firebox::DirectionalLightComponent m_DirectionalLight;
 		Firebox::Entity m_CubeEntity{};
+		Firebox::Entity m_BunnyEntity{};
+		Ref<Firebox::StaticMesh> m_BunnyModel;
 	};
 }

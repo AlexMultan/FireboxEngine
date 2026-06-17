@@ -16,13 +16,13 @@ IncludeDir["imgui"] = "FireboxEngine/ThirdParty/ImGui"
 IncludeDir["glm"] = "FireboxEngine/ThirdParty/GLM"
 IncludeDir["stb"] = "FireboxEngine/ThirdParty/stb"
 IncludeDir["entt"] = "FireboxEngine/ThirdParty/entt/include"
---IncludeDir["assimp"] = "FireboxEngine/ThirdParty/assimp/include"
+IncludeDir["assimp"] = "FireboxEngine/ThirdParty/assimp/include"
 IncludeDir["ImGuizmo"] = "FireboxEngine/ThirdParty/ImGuizmo/src"
 
 include "FireboxEngine/ThirdParty/Glad"
 include "FireboxEngine/ThirdParty/ImGui"
 include "FireboxEngine/ThirdParty/ImGuizmo"
---include "FireboxEngine/ThirdParty/assimp"
+include "FireboxEngine/ThirdParty/assimp"
 
 project "FireboxEngine"
     location "FireboxEngine"
@@ -44,7 +44,7 @@ project "FireboxEngine"
         "%{IncludeDir.glm}",
         "%{IncludeDir.entt}",
         "%{IncludeDir.stb}",
-        --IncludeDir["assimp"],
+        "%{IncludeDir.assimp}",
         "%{IncludeDir.ImGuizmo}",
         "%{prj.name}/Source"
     }
@@ -58,8 +58,8 @@ project "FireboxEngine"
         "opengl32.lib",
         "Glad",
         "imgui",
-        "ImGuizmo"
-        --"assimp"
+        "ImGuizmo",
+        "assimp"
     }
 
     libdirs{
@@ -142,7 +142,7 @@ project "Game"
         "FireboxEngine/ThirdParty/stb",
         "FireboxEngine/ThirdParty/entt/include",
         "FireboxEngine/ThirdParty/ImGuizmo/src",
-        --"FireboxEngine/ThirdParty/assimp/include",
+        "FireboxEngine/ThirdParty/assimp/include",
         "FireboxEngine/Source"
     }
 
@@ -218,7 +218,7 @@ project "FireboxEditor"
         "FireboxEngine/ThirdParty/ImGui",
         "FireboxEngine/ThirdParty/stb",
         "FireboxEngine/ThirdParty/entt/include",
-        --"FireboxEngine/ThirdParty/assimp/include",
+        "FireboxEngine/ThirdParty/assimp/include",
         "FireboxEngine/ThirdParty/ImGuizmo/src",
         "FireboxEngine/Source",
         "%{IncludeDir.Glad}",
