@@ -25,7 +25,7 @@ void FireboxEditor::WindowsGameRunner::RunOnWindows()
         file.replace(pos, m_RelativePath.length(), m_GamePath);
         pos += m_GamePath.length();
     }
-    ASSERT_EDITOR(std::filesystem::exists(std::filesystem::path(file)), "Game executable not found!");
-    FIREBOX_EDITOR_INFO("[WINDOWS] Opened: {0}", file);
+    FB_ASSERT_EDITOR(std::filesystem::exists(std::filesystem::path(file)), "Game executable not found!");
+    FB_EDITOR_INFO("[WINDOWS] Opened: {0}", file);
     std::system(file.c_str());
 }

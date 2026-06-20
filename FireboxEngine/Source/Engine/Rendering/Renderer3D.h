@@ -23,7 +23,7 @@ namespace Firebox {
 		static void DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform);
 		static void DrawGrid();
 
-		static Ref<Shader> GetBaseShader();
+		static Ref<Shader> GetDefaultShader();
 		static Ref<Shader> GetLightShader();
 		static Ref<Shader> GetGridShader();
 		static const Ref<Material>& GetDefaultMaterial();
@@ -44,7 +44,7 @@ namespace Firebox {
 		{
 			Scope<RendererAPI> RendererAPI;
 			std::vector<RenderCommand> RenderQueue;
-			Ref<Shader> BaseShader;
+			Ref<Shader> DefaultShader;
 			Ref<Shader> LightShader;
 			Ref<Shader> GridShader;
 			Ref<Material> DefaultMaterial;

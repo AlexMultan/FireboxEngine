@@ -2,7 +2,7 @@
 
 namespace Firebox::Shaders::GLSL {
 
-	inline constexpr const char* BaseVertex = R"(#version 440 core
+	inline constexpr const char* DefaultVertex = R"(#version 440 core
 
 		layout (location = 0) in vec3 aPos;
 		layout (location = 1) in vec3 aNormal;
@@ -25,7 +25,7 @@ namespace Firebox::Shaders::GLSL {
 		}
 	)";
 
-	inline constexpr const char* BaseFragment = R"(#version 440 core
+	inline constexpr const char* DefaultFragment = R"(#version 440 core
 
 		out vec4 FragColor;
 

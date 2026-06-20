@@ -43,7 +43,7 @@ Firebox::OpenGLShader::OpenGLShader(const char* vertexSrc, const char* fragmentS
 		}
 		catch (std::ifstream::failure e)
 		{
-			FIREBOX_CORE_ERROR("ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ");
+			FB_CORE_ERROR("ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ");
 		}
 		const char* vShaderCode = vertexCode.c_str();
 		const char* fShaderCode = fragmentCode.c_str();
@@ -54,6 +54,8 @@ Firebox::OpenGLShader::OpenGLShader(const char* vertexSrc, const char* fragmentS
 
 void Firebox::OpenGLShader::Compile(const char* vertexShader, const char* fragmentShader)
 {
+	FB_CORE_TRACE("Compile() called - vertex len: {0}, fragment len: {1}", strlen(vertexShader), strlen(fragmentShader));
+
 	uint32_t vertex, fragment;
 	int success;
 	char infoLog[512];
@@ -67,8 +69,8 @@ void Firebox::OpenGLShader::Compile(const char* vertexShader, const char* fragme
 	if (!success)
 	{
 		glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-		FIREBOX_CORE_ERROR("ERROR::SHADER::VERTEX::COMPILATION_FAILED");
-		FIREBOX_CORE_ERROR(infoLog);
+		FB_CORE_ERROR("ERROR::SHADER::VERTEX::COMPILATION_FAILED");
+		FB_CORE_ERROR(infoLog);
 	}
 
 	fragment = glCreateShader(GL_FRAGMENT_SHADER);
@@ -80,8 +82,8 @@ void Firebox::OpenGLShader::Compile(const char* vertexShader, const char* fragme
 	if (!success)
 	{
 		glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-		FIREBOX_CORE_ERROR("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED");
-		FIREBOX_CORE_ERROR(infoLog);
+		FB_CORE_ERROR("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED");
+		FB_CORE_ERROR(infoLog);
 	}
 
 	ID = glCreateProgram();
@@ -93,8 +95,8 @@ void Firebox::OpenGLShader::Compile(const char* vertexShader, const char* fragme
 	if (!success)
 	{
 		glGetProgramInfoLog(ID, 512, NULL, infoLog);
-		FIREBOX_CORE_ERROR("ERROR::SHADER::PROGRAM::LINKING_FAILED");
-		FIREBOX_CORE_ERROR(infoLog);
+		FB_CORE_ERROR("ERROR::SHADER::PROGRAM::LINKING_FAILED");
+		FB_CORE_ERROR(infoLog);
 	}
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);
@@ -120,7 +122,7 @@ void Firebox::OpenGLShader::SetFloat(const String& name, float value)
 	if (glGetUniformLocation(ID, name.c_str()) == -1)
 	{
 		String msg = "[Shader] Warning: uniform '" + name + "' not found";
-		FIREBOX_CORE_ERROR(msg);
+		FB_CORE_ERROR(msg);
 	}
 }
 
@@ -130,7 +132,7 @@ void Firebox::OpenGLShader::SetInt(const String& name, int value)
 	if (glGetUniformLocation(ID, name.c_str()) == -1)
 	{
 		String msg = "[Shader] Warning: uniform '" + name + "' not found";
-		FIREBOX_CORE_ERROR(msg);
+		FB_CORE_ERROR(msg);
 	}
 }
 
@@ -140,7 +142,7 @@ void Firebox::OpenGLShader::SetVector3(const String& name, Vector3 vector3)
 	if (glGetUniformLocation(ID, name.c_str()) == -1)
 	{
 		String msg = "[Shader] Warning: uniform '" + name + "' not found";
-		FIREBOX_CORE_ERROR(msg);
+		FB_CORE_ERROR(msg);
 	}
 }
 
@@ -150,7 +152,7 @@ void Firebox::OpenGLShader::SetVector4(const String& name, Vector4 vector4)
 	if (glGetUniformLocation(ID, name.c_str()) == -1)
 	{
 		String msg = "[Shader] Warning: uniform '" + name + "' not found";
-		FIREBOX_CORE_ERROR(msg);
+		FB_CORE_ERROR(msg);
 	}
 }
 
@@ -160,7 +162,7 @@ void Firebox::OpenGLShader::SetMat3(const String& name, const Mat3& matrix)
 	if (glGetUniformLocation(ID, name.c_str()) == -1)
 	{
 		String msg = "[Shader] Warning: uniform '" + name + "' not found";
-		FIREBOX_CORE_ERROR(msg);
+		FB_CORE_ERROR(msg);
 	}
 }
 
@@ -170,6 +172,6 @@ void Firebox::OpenGLShader::SetMat4(const String& name, const Mat4& matrix)
 	if (glGetUniformLocation(ID, name.c_str()) == -1)
 	{
 		String msg = "[Shader] Warning: uniform '" + name + "' not found";
-		FIREBOX_CORE_ERROR(msg);
+		FB_CORE_ERROR(msg);
 	}
 }

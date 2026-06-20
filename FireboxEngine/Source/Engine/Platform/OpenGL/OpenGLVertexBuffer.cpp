@@ -7,7 +7,7 @@
 
 Firebox::OpenGLVertexBuffer::OpenGLVertexBuffer(uint size)
 {
-	ASSERT(sizeof(uint32_t) == sizeof(GLuint), "Size in bytes of uint32_t doesn't match the size of GLuint!");
+	FB_ASSERT(sizeof(uint32_t) == sizeof(GLuint), "Size in bytes of uint32_t doesn't match the size of GLuint!");
 	glGenBuffers(1, &m_RendererID);
 	glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 	glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_STATIC_DRAW);
@@ -16,7 +16,7 @@ Firebox::OpenGLVertexBuffer::OpenGLVertexBuffer(uint size)
 
 Firebox::OpenGLVertexBuffer::OpenGLVertexBuffer(const void* data, uint size)
 {
-	ASSERT(sizeof(uint32_t) == sizeof(GLuint), "Size in bytes of uint32_t doesn't match the size of GLuint!");
+	FB_ASSERT(sizeof(uint32_t) == sizeof(GLuint), "Size in bytes of uint32_t doesn't match the size of GLuint!");
 	while (glGetError() != GL_NO_ERROR);
 	glGenBuffers(1, &m_RendererID);
 	glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);

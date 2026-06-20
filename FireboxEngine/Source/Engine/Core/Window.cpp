@@ -50,7 +50,7 @@ void Firebox::Window::Create()
 
     if (m_SDLWindow == NULL)
     {
-        FIREBOX_CORE_CRITICAL("Could not create window: %s", SDL_GetError());
+        FB_CORE_CRITICAL("Could not create window: %s", SDL_GetError());
     }
 
     if (!SDL_SetWindowIcon(m_SDLWindow, m_WindowIcon))
@@ -61,7 +61,7 @@ void Firebox::Window::Create()
     m_GLContext = SDL_GL_CreateContext(m_SDLWindow);
     if (!m_GLContext)
     {
-        FIREBOX_CORE_CRITICAL("OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
+        FB_CORE_CRITICAL("OpenGL context could not be created! SDL Error: %s\n", SDL_GetError());
         SDL_DestroyWindow(m_SDLWindow);
         SDL_Quit();
     }
@@ -69,7 +69,7 @@ void Firebox::Window::Create()
 
     if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress))
     {
-        FIREBOX_CORE_CRITICAL("Failed to initialize GLAD");
+        FB_CORE_CRITICAL("Failed to initialize GLAD");
     }
 }
 
@@ -185,7 +185,7 @@ HWND Firebox::Window::GetHWND()
 	}
 	else
 	{
-		FIREBOX_CORE_ERROR("Failed to get HWND from SDL_Window properties.");
+		FB_CORE_ERROR("Failed to get HWND from SDL_Window properties.");
 		return nullptr;
 	}
 }

@@ -14,32 +14,32 @@ public:
 
 	void OnAttach() override
 	{
-		FIREBOX_WARN("Application has started!");
+		FB_WARN("Application has started!");
 	}
 
 	void OnUpdate(float deltaTime) override
 	{
 		if (Firebox::Input::IsMouseButtonDown(Firebox::FBK_MOUSE_BUTTON_RIGHT))
 		{
-			FIREBOX_INFO("Right mouse button is pressed!");
+			FB_INFO("Right mouse button is pressed!");
 		}
 
 		if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_E))
 		{
-			FIREBOX_TRACE("Pressing E");
+			FB_TRACE("Pressing E");
 		}
 
 		if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_SPACE))
 		{
 			playerPosition.y += 15.0f;
-			FIREBOX_INFO("Key Space Clicked or otherwise Jump action!");
-			FIREBOX_INFO(playerPosition.y);
+			FB_INFO("Key Space Clicked or otherwise Jump action!");
+			FB_INFO(playerPosition.y);
 		}
 	}
 
 	void OnDetach() override
 	{
-		FIREBOX_WARN("Application has shutdown!");
+		FB_WARN("Application has shutdown!");
 	}
 
 };

@@ -1,11 +1,11 @@
 #include "Renderer3D.h"
 #include "Engine/Core/Log.h"
-#include "Engine/Platform/OpenGL/Shaders/BaseShader.h"
+#include "Engine/Platform/OpenGL/Shaders/DefaultShader.h"
 #include "Engine/Utils/Assert.h"
 
 Firebox::Renderer3D::Renderer3DData Firebox::Renderer3D::s_Data;
 Ref<Firebox::Grid> Firebox::Renderer3D::s_Grid = nullptr;
-Ref<Firebox::Shader> Firebox::Renderer3D::GetBaseShader() { return s_Data.BaseShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetDefaultShader() { return s_Data.DefaultShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetLightShader() { return s_Data.LightShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetGridShader() { return s_Data.GridShader; }
 const Ref<Firebox::Material>& Firebox::Renderer3D::GetDefaultMaterial() { return s_Data.DefaultMaterial; }
@@ -15,18 +15,19 @@ float Firebox::Renderer3D::s_GridSize = 10.0f;
 
 void Firebox::Renderer3D::Init()
 {
-	FIREBOX_CORE_TRACE("Renderer3D::Init() called");
-	FIREBOX_CORE_TRACE("Renderer3D::Init start");
+	FB_CORE_TRACE("Renderer3D::Init() called");
+	FB_CORE_TRACE("Renderer3D::Init start");
 	s_Data.RendererAPI = RendererAPI::Create();
-	ASSERT(s_Data.RendererAPI, "RendererAPI is null!");
+	FB_ASSERT(s_Data.RendererAPI, "RendererAPI is null!");
 	s_Data.RendererAPI->Init();
-	FIREBOX_CORE_TRACE("Creating BaseShader...");
-	s_Data.BaseShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::BaseVertex, Firebox::Shaders::GLSL::BaseFragment);
+	FB_CORE_TRACE("Creating BaseShader...");
+	s_Data.DefaultShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::DefaultVertex, Firebox::Shaders::GLSL::DefaultFragment);
 	s_Data.LightShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::LightVertex, Firebox::Shaders::GLSL::LightFragment);
 	s_Data.GridShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::GridVertexShader, Firebox::Shaders::GLSL::GridFragmentShader);
-	s_Data.DefaultMaterial = CreateRef<Material>(s_Data.BaseShader);
+	s_Data.DefaultMaterial = CreateRef<Material>(s_Data.DefaultShader);
 	s_Data.DefaultMaterial->SetDiffuseTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/T_Default.png"));
-	ASSERT(s_Data.BaseShader, "BaseShader is null after creation!");
+	s_Data.DefaultMaterial->SetSpecularTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/T_Default.png"));
+	FB_ASSERT(s_Data.DefaultShader, "BaseShader is null after creation!");
 	s_Grid = CreateRef<Firebox::Grid>();
 }
 
@@ -80,14 +81,14 @@ void Firebox::Renderer3D::Flush()
 	{
 		cmd.Material->BindMaterial();
 
-		s_Data.BaseShader->UseShader();
-		s_Data.BaseShader->SetMat4("u_ViewProjection", s_Data.ViewProjectionMatrix);
-		s_Data.BaseShader->SetVector3("u_ViewPos", s_Data.CameraPosition);
+		s_Data.DefaultShader->UseShader();
+		s_Data.DefaultShader->SetMat4("u_ViewProjection", s_Data.ViewProjectionMatrix);
+		s_Data.DefaultShader->SetVector3("u_ViewPos", s_Data.CameraPosition);
 		
-		s_Data.BaseShader->SetVector3("u_DirectionalLight.direction", s_Data.DirectionalLight.Direction);
-		s_Data.BaseShader->SetVector3("u_DirectionalLight.ambient", s_Data.DirectionalLight.Color * 0.2f);
-		s_Data.BaseShader->SetVector3("u_DirectionalLight.diffuse", s_Data.DirectionalLight.Color);
-		s_Data.BaseShader->SetVector3("u_DirectionalLight.specular", s_Data.DirectionalLight.Color);
+		s_Data.DefaultShader->SetVector3("u_DirectionalLight.direction", s_Data.DirectionalLight.Direction);
+		s_Data.DefaultShader->SetVector3("u_DirectionalLight.ambient", s_Data.DirectionalLight.Color * 0.2f);
+		s_Data.DefaultShader->SetVector3("u_DirectionalLight.diffuse", s_Data.DirectionalLight.Color);
+		s_Data.DefaultShader->SetVector3("u_DirectionalLight.specular", s_Data.DirectionalLight.Color);
 
 		auto activeShader = cmd.Material->GetShader();
 		activeShader->SetMat4("u_Model", cmd.Transform);

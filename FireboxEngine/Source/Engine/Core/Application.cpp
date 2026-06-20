@@ -38,7 +38,7 @@ void Firebox::Application::Run()
     Firebox::Renderer3D::Init();
     for (Layer* layer : m_LayerStack)
     {
-        FIREBOX_CORE_TRACE("BaseShader in OnAttach: {0}", (uint64_t)Firebox::Renderer3D::GetBaseShader().get());
+        FB_CORE_TRACE("BaseShader in OnAttach: {0}", (uint64_t)Firebox::Renderer3D::GetDefaultShader().get());
         layer->OnAttach();
     }
 	Timer timer;

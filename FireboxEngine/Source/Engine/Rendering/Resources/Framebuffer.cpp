@@ -6,10 +6,10 @@ Ref<Firebox::Framebuffer> Firebox::Framebuffer::Create(const FramebufferSpecific
 {
 	switch (RendererAPI::GetAPI())
 	{
-	case RendererAPI::API::None:    FIREBOX_CORE_ASSERT_LOG("RendererAPI::None is not supported"); return nullptr;
+	case RendererAPI::API::None:    FB_CORE_ASSERT_LOG("RendererAPI::None is not supported"); return nullptr;
 	case RendererAPI::API::OpenGL:  return CreateRef<Firebox::OpenGL::OpenGLFramebuffer>(specs);
 	default:
-		FIREBOX_CORE_ASSERT_LOG("Unknown RendererAPI!");
+		FB_CORE_ASSERT_LOG("Unknown RendererAPI!");
 		return nullptr;
 	}
 }

@@ -8,6 +8,7 @@ namespace Firebox {
 	class FIREBOX_API Material
 	{
 	public:
+		Material();
 		Material(const Ref<Shader>& shader);
 
 		void BindMaterial() const;

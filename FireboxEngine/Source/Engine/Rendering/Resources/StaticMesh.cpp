@@ -1,15 +1,27 @@
 #include "StaticMesh.h"
+#include "Engine/Rendering/Renderer3D.h"
 
 namespace Firebox {
 
 	StaticMesh::StaticMesh(const String& path)
+	{
+		LoadModel(path);
+	}
+
+	void StaticMesh::SetMaterial(size_t slotIndex, const Ref<Material>& material)
+	{
+		if (slotIndex < m_Materials.size())
+			m_Materials[slotIndex] = material;
+	}
+
+	void StaticMesh::LoadModel(const String& path)
 	{
 		Assimp::Importer importer;
 		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
-			FIREBOX_CORE_ERROR("ERROR::ASSIMP::{0}", importer.GetErrorString());
+			FB_CORE_ERROR("ERROR::ASSIMP::{0}", importer.GetErrorString());
 			return;
 		}
 
@@ -23,6 +35,19 @@ namespace Firebox {
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
 			m_Meshes.push_back(ProcessMesh(mesh, scene));
+
+			Ref<Material> material;
+			if (mesh->mMaterialIndex > 0)
+			{
+				aiMaterial* aiMat = scene->mMaterials[mesh->mMaterialIndex];
+				material = ProcessMaterial(aiMat);
+			}
+			else if(mesh->mMaterialIndex < 1)
+			{
+				material = Renderer3D::GetDefaultMaterial();
+				FB_CORE_ERROR("I used Default Material");
+			}
+			m_Materials.push_back(material);
 		}
 
 		for (size_t i = 0; i < node->mNumChildren; i++)
@@ -33,7 +58,6 @@ namespace Firebox {
 	{
 		DynamicArray<Vertex> vertices;
 		DynamicArray<uint> indices;
-		DynamicArray<Texture> textures;
 
 		for (size_t i = 0; i < mesh->mNumVertices; i++)
 		{
@@ -61,7 +85,11 @@ namespace Firebox {
 				texVec.y = mesh->mTextureCoords[0][i].y;
 				vertex.TexCoords = texVec;
 			}
-			else { vertex.TexCoords = Vector2(0.0f, 0.0f); }
+			else
+			{
+				vertex.TexCoords = { 0.0f, 0.0f };
+				FB_CORE_ERROR("No UVs found!");
+			}
 
 			vertices.push_back(vertex);
 		}
@@ -72,6 +100,46 @@ namespace Firebox {
 			for (size_t j = 0; j < face.mNumIndices; j++)
 				indices.push_back(face.mIndices[j]);
 		}
+
 		return CreateRef<Mesh>(vertices, indices);
+	}
+
+	Ref<Material> StaticMesh::ProcessMaterial(aiMaterial* mat)
+	{
+		auto material = CreateRef<Material>();
+
+		if (mat->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+		{
+			aiString path;
+			mat->GetTexture(aiTextureType_DIFFUSE, 0, &path);
+			material->SetDiffuseTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
+		}
+
+		if (mat->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+		{
+			aiString path;
+			mat->GetTexture(aiTextureType_SPECULAR, 0, &path);
+			material->SetSpecularTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
+		}
+
+		float shininess = 32.0f;
+		mat->Get(AI_MATKEY_SHININESS, shininess);
+		material->SetShininess(shininess);
+
+		return material;
+	}
+
+	Ref<Texture> StaticMesh::LoadMaterialTexture(const String& path)
+	{
+		for (size_t i = 0; i < m_LoadedTextures.Paths.size(); i++)
+		{
+			if (m_LoadedTextures.Paths[i] == path)
+				return m_LoadedTextures.Textures[i];
+		}
+
+		auto texture = Texture::Create(path);
+		m_LoadedTextures.Paths.push_back(path);
+		m_LoadedTextures.Textures.push_back(texture);
+		return texture;
 	}
 }

@@ -28,7 +28,7 @@ namespace Firebox {
 			case ShaderDataType::Int4:     return 4 * 4;
 			case ShaderDataType::Bool:     return 1;
 		}
-		FIREBOX_CORE_ERROR("Unknown ShaderDataType!");
+		FB_CORE_ERROR("Unknown ShaderDataType!");
 		return 0;
 	}
 
@@ -61,7 +61,7 @@ namespace Firebox {
 			case ShaderDataType::Int4:     return 4;
 			case ShaderDataType::Bool:     return 1;
 			}
-			FIREBOX_CORE_ERROR("Unknown ShaderDataType!");
+			FB_CORE_ERROR("Unknown ShaderDataType!");
 			return 0;
 		}
 		

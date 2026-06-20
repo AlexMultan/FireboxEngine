@@ -61,5 +61,6 @@ namespace FireboxEditor {
 		Firebox::Entity m_CubeEntity{};
 		Firebox::Entity m_BunnyEntity{};
 		Ref<Firebox::StaticMesh> m_BunnyModel;
+		Ref<Firebox::Material> m_BunnyMat;
 	};
 }

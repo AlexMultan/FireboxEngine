@@ -28,14 +28,14 @@ namespace Firebox {
 		template<typename T>
 		T& GetComponent()
 		{
-			ASSERT(HasComponent<T>(), "Entity doesn't have a component");
+			FB_ASSERT(HasComponent<T>(), "Entity doesn't have a component");
 			return m_Scene->m_Registry.get<T>(m_Handle);
 		}
 
 		template<typename T>
 		T& RemoveComponent()
 		{
-			ASSERT(!HasComponent<T>(), "Entity doesn't have a component");
+			FB_ASSERT(!HasComponent<T>(), "Entity doesn't have a component");
 			return m_Scene->m_Registry.remove<T>(m_Handle);
 		}
 

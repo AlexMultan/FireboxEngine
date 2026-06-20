@@ -8,10 +8,10 @@ Scope<Firebox::RendererAPI> Firebox::RendererAPI::Create()
 {
 	switch (s_API)
 	{
-		case API::None:    FIREBOX_CORE_ASSERT_LOG("RendererAPI::None is not supported"); return nullptr;
+		case API::None:    FB_CORE_ASSERT_LOG("RendererAPI::None is not supported"); return nullptr;
 		case API::OpenGL:  return CreateScope<Firebox::OpenGL::OpenGLAPI>();
 		default:
-			FIREBOX_CORE_ASSERT_LOG("Unknown RendererAPI!");
+			FB_CORE_ASSERT_LOG("Unknown RendererAPI!");
 			return nullptr;
 	}
 }

@@ -42,12 +42,12 @@ namespace Firebox {
 		for (auto&& [entity, transform, staticMesh] : m_Registry.view<TransformComponent, StaticMeshComponent>().each())
 		{
 			const auto& meshes = staticMesh.StaticMesh->GetMeshes();
-			//const auto& materials = staticMesh.StaticMesh->GetMaterials();
+			const auto& materials = staticMesh.StaticMesh->GetMaterials();
 
 			for (size_t i = 0; i < meshes.size(); i++)
 			{
 				//const Ref<Material>& mat = (i < materials.size()) ? materials[i] : Renderer3D::GetDefaultMaterial();
-				Renderer3D::DrawMesh(meshes[i], Renderer3D::GetDefaultMaterial(), transform);
+				Renderer3D::DrawMesh(meshes[i], materials[i], transform);
 			}
 		}
 	}

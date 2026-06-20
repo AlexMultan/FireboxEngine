@@ -13,7 +13,7 @@ Firebox::OpenGLTexture::OpenGLTexture(const String& path)
 
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
-	FIREBOX_CORE_TRACE(path.c_str());
+	FB_CORE_TRACE(path.c_str());
 
 	if (data)
 	{
@@ -31,15 +31,15 @@ Firebox::OpenGLTexture::OpenGLTexture(const String& path)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		FIREBOX_CORE_INFO("Width: {0}, Height: {1}, Channels: {2}", width, height, nrChannels);
-		FIREBOX_CORE_INFO("Data ptr: {0}", (void*)data);
+		FB_CORE_INFO("Width: {0}, Height: {1}, Channels: {2}", width, height, nrChannels);
+		FB_CORE_INFO("Data ptr: {0}", (void*)data);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else
 	{
-		FIREBOX_CORE_ERROR("STB reason: {0}", stbi_failure_reason());
-		FIREBOX_CORE_ERROR("Failed to load texture!");
+		FB_CORE_ERROR("STB reason: {0}", stbi_failure_reason());
+		FB_CORE_ERROR("Failed to load texture!");
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);

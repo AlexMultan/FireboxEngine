@@ -1,4 +1,10 @@
 #include "Material.h"
+#include "Engine/Rendering/Renderer3D.h"
+
+Firebox::Material::Material()
+{
+	m_Shader = Firebox::Renderer3D::GetDefaultShader();
+}
 
 Firebox::Material::Material(const Ref<Shader>& shader) : m_Shader(shader)
 {

@@ -96,7 +96,7 @@ void Firebox::OpenGL::OpenGLFramebuffer::Invalidate()
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		FIREBOX_CORE_ERROR("Framebuffer is not complete!");
+		FB_CORE_ERROR("Framebuffer is not complete!");
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

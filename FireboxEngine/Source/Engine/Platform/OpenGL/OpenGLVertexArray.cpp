@@ -17,7 +17,7 @@ static GLenum ShaderDataTypeToOpenGLBaseType(Firebox::ShaderDataType type)
 		case Firebox::ShaderDataType::Int4:     return GL_INT;
 		case Firebox::ShaderDataType::Bool:     return GL_BOOL;
 	}
-	FIREBOX_CORE_ERROR("Unknown ShaderDataType!");
+	FB_CORE_ERROR("Unknown ShaderDataType!");
 	return 0;
 }
 

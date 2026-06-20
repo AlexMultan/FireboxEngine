@@ -9,7 +9,7 @@ namespace Firebox {
 	public:
 		virtual ~Texture() = default;
 
-		static Scope<Texture> Create(const String& path);
+		static Ref<Texture> Create(const String& path);
 		virtual void BindTexture(uint slot) = 0;
 		virtual void UnbindTexture() = 0;
 		virtual void DeleteTexture() = 0;
