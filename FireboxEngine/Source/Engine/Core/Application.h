@@ -4,6 +4,8 @@
 #include "Engine/Layers/LayerStack.h"
 #include "Engine/Core/Window.h"
 #include "Engine/Rendering/Renderer3D.h"
+#include "Engine/Core/EditorPaths.h"
+#include "Engine/Core/EngineAssets.h"
 
 #include <memory>
 

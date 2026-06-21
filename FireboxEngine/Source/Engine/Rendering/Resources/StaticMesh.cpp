@@ -88,7 +88,6 @@ namespace Firebox {
 			else
 			{
 				vertex.TexCoords = { 0.0f, 0.0f };
-				FB_CORE_ERROR("No UVs found!");
 			}
 
 			vertices.push_back(vertex);

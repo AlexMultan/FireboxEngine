@@ -33,8 +33,8 @@ void FireboxEditor::EditorViewport::OnAttach()
     io->ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
     io->ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
-	io->FontDefault = io->Fonts->AddFontFromFileTTF("FireboxEditor/Resources/Fonts/Ubuntu_Sans/static/UbuntuSans-Medium.ttf", 17.0f);
-    m_TransformPropertiesFont = io->Fonts->AddFontFromFileTTF("FireboxEditor/Resources/Fonts/Ubuntu_Sans/static/UbuntuSans-SemiBold.ttf", 17.0f);
+	io->FontDefault = io->Fonts->AddFontFromFileTTF(FireboxEditor::Paths::Resource("Fonts/Ubuntu_Sans/static/UbuntuSans-Medium.ttf").string().c_str(), 17.0f);
+    m_TransformPropertiesFont = io->Fonts->AddFontFromFileTTF(FireboxEditor::Paths::Resource("Fonts/Ubuntu_Sans/static/UbuntuSans-SemiBold.ttf").string().c_str(), 17.0f);
 
     ImGui::FireboxEditorStyleClassic();
 
@@ -78,8 +78,8 @@ void FireboxEditor::EditorViewport::OnAttach()
 
     m_CubeMesh = CreateRef<Firebox::Mesh>(Firebox::PrimitiveShapes::Cube().vertices, Firebox::PrimitiveShapes::Cube().indices);
     m_CubeMaterial = CreateRef<Firebox::Material>(Firebox::Renderer3D::GetDefaultShader());
-    m_CubeMaterial->SetDiffuseTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/wood_shutter_diff_2k.png"));
-    m_CubeMaterial->SetSpecularTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/wood_shutter_spec_2k.png"));
+    m_CubeMaterial->SetDiffuseTexture(Firebox::Texture::Create(FireboxEditor::Paths::Resource("Textures/wood_shutter_diff_2k.png").string()));
+    m_CubeMaterial->SetSpecularTexture(Firebox::Texture::Create(FireboxEditor::Paths::Resource("Textures/wood_shutter_diff_2k.png").string()));
     m_CubeTransform.Position = Vector3(0.0f, 0.0f, -2.0f);
     m_CubeTransform.Rotation = Vector3(0.0f, 0.0f, 0.0f);
     m_CubeTransform.Scale = Vector3(1.0f, 1.0f, 1.0f);
@@ -98,7 +98,7 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_CubeEntity.AddComponent<MaterialComponent>(Firebox::Renderer3D::GetDefaultMaterial());
     //entityCube.AddComponent<TagComponent>();
 
-    m_BunnyModel = CreateRef<Firebox::StaticMesh>("FireboxEditor/Resources/Models/SM_Homer.obj");
+    m_BunnyModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_StanfordBunny.obj").string());
     m_BunnyMat = CreateRef<Firebox::Material>(Firebox::Renderer3D::GetDefaultShader());
     m_BunnyEntity = m_CurrentScene->CreateEntity("Bunny");
     m_BunnyEntity.AddComponent<StaticMeshComponent>(m_BunnyModel);

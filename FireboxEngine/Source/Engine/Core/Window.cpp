@@ -1,6 +1,7 @@
 ﻿#include "Window.h"
 #include "Engine/Core/Log.h"
 #include "Engine/Events/SDLEventTranslator.h"
+#include "EngineAssets.h"
 
 #include <glad/glad.h>
 #include <stb_image.h>
@@ -39,7 +40,13 @@ void Firebox::Window::Create()
     SDL_WindowFlags windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
 
     int width, height, channels;
-    m_WindowIconPixels = stbi_load("FireboxEditor/Resources/Icons/FireboxEngineLogo32x32.png", &width, &height, &channels, 4);
+    String iconPath = Firebox::EngineAssets::Get("Icons/FireboxEngineLogo32x32.png").string();
+    FB_CORE_TRACE(iconPath);
+    if (!iconPath.empty())
+    {
+        m_WindowIconPixels = stbi_load(iconPath.c_str(), &width, &height, &channels, 4);
+    }
+
     if (m_WindowIconPixels)
     {
         m_WindowIcon = SDL_CreateSurfaceFrom(width, height, SDL_PIXELFORMAT_RGBA32, m_WindowIconPixels, width * 4);

@@ -9,6 +9,8 @@ extern Firebox::Application* Firebox::CreateApp();
 
 int main(int argc, char** argv)
 {
+	Firebox::EngineAssets::Init();
+	FireboxEditor::Paths::Init();
 	Firebox::Log::Init();
 	auto app = Firebox::CreateApp();
 	app->Run();

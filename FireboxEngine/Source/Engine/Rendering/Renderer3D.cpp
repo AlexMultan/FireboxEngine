@@ -1,5 +1,6 @@
 #include "Renderer3D.h"
 #include "Engine/Core/Log.h"
+#include "Engine/Core/EngineAssets.h"
 #include "Engine/Platform/OpenGL/Shaders/DefaultShader.h"
 #include "Engine/Utils/Assert.h"
 
@@ -25,8 +26,8 @@ void Firebox::Renderer3D::Init()
 	s_Data.LightShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::LightVertex, Firebox::Shaders::GLSL::LightFragment);
 	s_Data.GridShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::GridVertexShader, Firebox::Shaders::GLSL::GridFragmentShader);
 	s_Data.DefaultMaterial = CreateRef<Material>(s_Data.DefaultShader);
-	s_Data.DefaultMaterial->SetDiffuseTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/T_Default.png"));
-	s_Data.DefaultMaterial->SetSpecularTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/T_Default.png"));
+	s_Data.DefaultMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Default.png").string()));
+	s_Data.DefaultMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Default.png").string()));
 	FB_ASSERT(s_Data.DefaultShader, "BaseShader is null after creation!");
 	s_Grid = CreateRef<Firebox::Grid>();
 }
