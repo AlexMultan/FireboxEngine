@@ -16,10 +16,12 @@ namespace Firebox {
 
 		Entity CreateEntity(const String& name);
 		void OnUpdate(float deltaTime);
-		void GetAllEntities();
+		inline DynamicArray<Entity>& GetAllEntities() { return m_SceneEntities; }
 
 	private:
 		entt::registry m_Registry;
+		DynamicArray<Entity> m_SceneEntities;
 		friend class Entity;
+		String m_DefaultEntityTag = "NewEntity";
 	};
 }

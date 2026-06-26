@@ -11,6 +11,7 @@ namespace Firebox {
 		Material();
 		Material(const Ref<Shader>& shader);
 
+		void BindTextures() const;
 		void BindMaterial() const;
 
 		inline void SetDiffuseTexture(const Ref<Texture>& texture) { m_DiffuseTexture = texture; }
@@ -18,6 +19,7 @@ namespace Firebox {
 		inline void SetShininess(float shininess) { m_Shininess = shininess; }
 
 		inline const Ref<Shader>& GetShader() const { return m_Shader; }
+		inline const Ref<Texture>& GetDiffuse() const { return m_DiffuseTexture; }
 		inline float GetShininess() const { return m_Shininess; }
 
 	private:

@@ -17,7 +17,8 @@ namespace Firebox {
 	void StaticMesh::LoadModel(const String& path)
 	{
 		Assimp::Importer importer;
-		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+		const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | 
+			aiProcess_CalcTangentSpace | aiProcess_GenUVCoords | aiProcess_TransformUVCoords);
 
 		if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
@@ -45,7 +46,6 @@ namespace Firebox {
 			else if(mesh->mMaterialIndex < 1)
 			{
 				material = Renderer3D::GetDefaultMaterial();
-				FB_CORE_ERROR("I used Default Material");
 			}
 			m_Materials.push_back(material);
 		}
@@ -80,14 +80,19 @@ namespace Firebox {
 			if (mesh->mTextureCoords[0])
 			{
 				Vector2 texVec;
-
 				texVec.x = mesh->mTextureCoords[0][i].x;
 				texVec.y = mesh->mTextureCoords[0][i].y;
 				vertex.TexCoords = texVec;
 			}
 			else
 			{
-				vertex.TexCoords = { 0.0f, 0.0f };
+				Vector2 fallbackCoords;
+				fallbackCoords.x = mesh->mVertices[i].x;
+				fallbackCoords.y = mesh->mVertices[i].y;
+				fallbackCoords.x *= 5.0f;
+				fallbackCoords.y *= 5.0f;
+
+				vertex.TexCoords = fallbackCoords;
 			}
 
 			vertices.push_back(vertex);

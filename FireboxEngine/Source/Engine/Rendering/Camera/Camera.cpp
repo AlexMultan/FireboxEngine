@@ -4,6 +4,9 @@
 #include "Engine/Core/Log.h"
 #include "Engine/Utils/String.h"
 
+// Stuff related to input should be handled via CameraComponent/EditorCameraComponent 
+// Also EditorCamera which is currently handled in the EditorViewport, should have it's own class 
+
 void Firebox::Camera::OnUpdate(float deltaTime)
 {
 	if(m_EnableInput)

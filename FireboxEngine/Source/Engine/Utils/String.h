@@ -9,6 +9,11 @@ namespace Utils {
 		return std::to_string(num);
 	}
 
+	static inline const String ToString(uint64_t num)
+	{
+		return std::to_string(num);
+	}
+
 	static inline const String ToString(const Vector2& vec2)
 	{
 		return "(" + std::to_string(vec2.x) + ", " + std::to_string(vec2.y) + ")";

@@ -12,10 +12,8 @@ Firebox::OpenGL::OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecifica
 Firebox::OpenGL::OpenGLFramebuffer::~OpenGLFramebuffer()
 {
 	glDeleteFramebuffers(1, &m_FBO);
-	//glDeleteFramebuffers(1, &m_MsFBO);
 	glDeleteRenderbuffers(1, &m_RBO);
 	glDeleteTextures(1, &m_ColorAttachment);
-	//glDeleteTextures(1, &m_MsColorTex);
 }
 
 void Firebox::OpenGL::OpenGLFramebuffer::BindFramebuffer()
@@ -24,13 +22,6 @@ void Firebox::OpenGL::OpenGLFramebuffer::BindFramebuffer()
 	glViewport(0, 0, m_Specs.Width, m_Specs.Height);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT || GL_DEPTH_BUFFER_BIT);
-
-	//glEnable(GL_MULTISAMPLE);
-
-	/*glBindFramebuffer(GL_READ_FRAMEBUFFER, m_MsFBO);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_FBO);
-
-	glBlitFramebuffer(0, 0, m_Specs.Width, m_Specs.Height, 0, 0, m_Specs.Width, m_Specs.Height, GL_COLOR_BUFFER_BIT, GL_NEAREST);*/
 }
 
 void Firebox::OpenGL::OpenGLFramebuffer::UnbindFramebuffer()
@@ -59,26 +50,6 @@ void Firebox::OpenGL::OpenGLFramebuffer::Invalidate()
 		glDeleteRenderbuffers(1, &m_RBO);
 	}
 
-	/*if (m_MsFBO)
-	{
-		glDeleteFramebuffers(1, &m_MsFBO);
-		glDeleteTextures(1, &m_MsColorTex);
-	}
-
-	glGenTextures(1, &m_MsColorTex);
-	glBindTexture(GL_TEXTURE_2D, m_MsColorTex);
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, m_Specs.Width, m_Specs.Height, GL_TRUE);
-	glCheckError();
-
-	glGenFramebuffers(1, &m_MsFBO);
-	glBindFramebuffer(GL_FRAMEBUFFER, m_MsFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, m_MsColorTex, 0);
-	glCheckError();
-
-	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-		FIREBOX_CORE_ERROR("Multisample Framebuffer is not complete");*/
-
-
 	glGenTextures(1, &m_ColorAttachment);
 	glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_Specs.Width, m_Specs.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
@@ -90,7 +61,7 @@ void Firebox::OpenGL::OpenGLFramebuffer::Invalidate()
 
 	glGenRenderbuffers(1, &m_RBO);
 	glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_Specs.Width, m_Specs.Height);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH32F_STENCIL8, m_Specs.Width, m_Specs.Height);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
 
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);

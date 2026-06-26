@@ -24,8 +24,8 @@ void Firebox::Window::Create()
 {
     SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
     SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
@@ -119,10 +119,7 @@ void Firebox::Window::SetMaxFPS(const double& fps)
 
 void Firebox::Window::SetVSyncEnabled(bool enable)
 {
-    if (enable)
-    {
-        m_MaxFPS = 60;
-    }
+    SDL_GL_SetSwapInterval(enable);
 }
 
 void Firebox::Window::SetDisplayMode(DisplayMode displayMode)

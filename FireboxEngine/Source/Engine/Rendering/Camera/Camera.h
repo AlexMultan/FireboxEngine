@@ -32,7 +32,8 @@ namespace Firebox {
 		const Vector3& GetPosition() const { return m_Position; }
 		const Vector3& GetFront() const { return m_Front; }
 		const Mat4& GetViewMatrix() const { return m_ViewMatrix; }
-		virtual Mat4 GetProjectionMatrix() const { return Mat4(1.0f); }
+		virtual Mat4 GetPerspective() const { return Mat4(1.0f); }
+		virtual Mat4 GetPerspectiveInfinite() const { return Mat4(1.0f); }
 		inline void SetPosition(const Vector3& position) { m_Position = position; RecalculateViewMatrix(); }
 		inline void SetCameraSpeed(float speed) { m_CameraSpeed = speed; }
 		inline void SetInputEnabled(bool enable) { m_EnableInput = enable; }

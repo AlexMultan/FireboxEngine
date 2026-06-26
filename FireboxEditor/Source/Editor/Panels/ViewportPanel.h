@@ -2,7 +2,7 @@
 
 #include "Engine/Core/Core.h"
 #include "Engine/Rendering/Resources/Framebuffer.h"
-#include "Engine/Components/Components.h"
+#include "Editor/Core/EditorContext.h"
 
 namespace FireboxEditor {
 
@@ -22,18 +22,17 @@ namespace FireboxEditor {
 	class ViewportPanel
 	{
 	public:
-		ViewportPanel();
-		ViewportPanel(const char* name);
+		ViewportPanel(const char* name, EditorContext& context);
 		~ViewportPanel();
 
-		void RenderViewport(const Ref<Firebox::Framebuffer>& framebuffer, const Mat4& viewMatrix, const Mat4& projectionMatrix, 
-			TransformComponent& transformComp);
+		void RenderViewport(const Ref<Firebox::Framebuffer>& framebuffer, const Mat4& viewMatrix, const Mat4& projectionMatrix);
 
 		inline const Vector2& GetViewportSize() { return m_ViewportSize; }
 		inline bool IsFocused() const { return m_IsFocused; }
 		inline const float GetCamaraSpeedParam() const { return m_CameraSpeed; }
 		inline void SetMenuBarHeight(float height) { m_MenuBarHeight = height; }
 		inline const float& GetGridSize() const { return m_GridSize; }
+		inline const uint GetViewMode() const { return m_CurrentViewMode; }
 
 	private:
 		String m_Name = "Viewport";
@@ -44,6 +43,8 @@ namespace FireboxEditor {
 		float m_MenuBarHeight = 0.0f;
 		bool m_Snap = true;
 		float m_GridSize = 1.0f;
+		uint m_CurrentViewMode = 0;
+		EditorContext& m_Context;
 
 		GizmoTransformType m_GizmoTransformType = GizmoTransformType::Translate;
 		GizmoTransformSpace m_GizmoTransformSpace = GizmoTransformSpace::World;

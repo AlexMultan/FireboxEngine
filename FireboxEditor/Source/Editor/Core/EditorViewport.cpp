@@ -11,7 +11,8 @@
 #include <ImGuizmo.h>
 
 FireboxEditor::EditorViewport::EditorViewport() 
-    : Layer("EditorLayer"), io(nullptr)
+    : Layer("EditorLayer"), io(nullptr), m_SceneHierarchyPanel("Scene Hierarchy", m_EditorContext), m_PropertiesPanel("Properties", m_EditorContext),
+    m_ViewportPanel("Viewport", m_EditorContext)
 {
    
 }
@@ -62,12 +63,10 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_MenuBar = FireboxEditor::MenuBar();
 
     m_AssetBrowser = FireboxEditor::AssetBrowser("Asset Browser");
-    m_OutlinerPanel = FireboxEditor::OutlinerPanel("Outliner");
+    m_StatsPanel = FireboxEditor::StatsPanel("Stats");
 
-    m_PropertiesPanel = FireboxEditor::PropertiesPanel("Properties");
     if (!m_TransformPropertiesFont) { return; }
 
-    m_ViewportPanel = FireboxEditor::ViewportPanel("Viewport");
     m_Framebuffer = Firebox::Framebuffer::Create({ 800, 600 });
 
     m_CurrentScene = CreateRef<Firebox::Scene>();
@@ -77,33 +76,29 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_EditorCamera->SetInputEnabled(false);
 
     m_CubeMesh = CreateRef<Firebox::Mesh>(Firebox::PrimitiveShapes::Cube().vertices, Firebox::PrimitiveShapes::Cube().indices);
-    m_CubeMaterial = CreateRef<Firebox::Material>(Firebox::Renderer3D::GetDefaultShader());
-    m_CubeMaterial->SetDiffuseTexture(Firebox::Texture::Create(FireboxEditor::Paths::Resource("Textures/wood_shutter_diff_2k.png").string()));
-    m_CubeMaterial->SetSpecularTexture(Firebox::Texture::Create(FireboxEditor::Paths::Resource("Textures/wood_shutter_diff_2k.png").string()));
-    m_CubeTransform.Position = Vector3(0.0f, 0.0f, -2.0f);
-    m_CubeTransform.Rotation = Vector3(0.0f, 0.0f, 0.0f);
-    m_CubeTransform.Scale = Vector3(1.0f, 1.0f, 1.0f);
-    m_CubeTag = "Wall Cube";
-
-    m_SecondCubeMaterial = CreateRef<Firebox::Material>();
-    /*m_SecondCubeMaterial->SetDiffuseTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/T_Default.png"));
-    m_SecondCubeMaterial->SetSpecularTexture(Firebox::Texture::Create("FireboxEditor/Resources/Textures/T_Default.png"));*/
-    m_SecondCubeTransform.Position = Vector3(1.0f, 2.0f, 3.0f);
-    m_SecondCubeTransform.Rotation = Vector3(0.0f, 0.0f, 0.0f);
-    m_SecondCubeTransform.Scale = Vector3(1.0f, 1.0f, 1.0f);
-    m_SecondCubeTag = "Minecraft Grass Cube";
-
-    m_CubeEntity = m_CurrentScene->CreateEntity("Minecraft Block");
+    m_CubeEntity = m_CurrentScene->CreateEntity("Box");
     m_CubeEntity.AddComponent<MeshComponent>(m_CubeMesh);
     m_CubeEntity.AddComponent<MaterialComponent>(Firebox::Renderer3D::GetDefaultMaterial());
-    //entityCube.AddComponent<TagComponent>();
+    m_CubeEntity.GetComponent<TransformComponent>().Position.x = -2.0f;
 
     m_BunnyModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_StanfordBunny.obj").string());
-    m_BunnyMat = CreateRef<Firebox::Material>(Firebox::Renderer3D::GetDefaultShader());
     m_BunnyEntity = m_CurrentScene->CreateEntity("Bunny");
     m_BunnyEntity.AddComponent<StaticMeshComponent>(m_BunnyModel);
+    m_BunnyEntity.GetComponent<TransformComponent>().Position.z = -1.0f;
 
-    //m_OutlinerPanel.SetEntityTag(entityCube.GetComponent<TagComponent>().Tag.c_str());
+    /*m_FireaxeModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_Fireaxe.obj").string());
+    m_FireaxeMaterial = CreateRef<Firebox::Material>(Firebox::Renderer3D::GetDefaultShader());
+    m_FireaxeMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Fireaxe_BC.tga").string()));
+    m_FireaxeMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Fireaxe_BC.tga").string()));
+    m_FireaxeModel->SetMaterial(0, m_FireaxeMaterial);
+    m_FireaxeEntity = m_CurrentScene->CreateEntity("Fireaxe");
+    m_FireaxeEntity.AddComponent<StaticMeshComponent>(m_FireaxeModel);*/
+
+    for (auto& entity : m_CurrentScene->GetAllEntities())
+    {
+        String msg = "Entity Tag: " + entity.GetComponent<TagComponent>().Tag + ", Entity Id: " + Utils::ToString(entity.GetComponent<IdComponent>().GetId());
+        FB_EDITOR_INFO(msg);
+    }
 
     if (m_CubeEntity.HasComponent<TransformComponent>())
     {
@@ -114,9 +109,6 @@ void FireboxEditor::EditorViewport::OnAttach()
     {
         FB_EDITOR_WARN("I have a tag component!");
     }
-
-    FB_EDITOR_INFO("Tag is {0}", m_CubeEntity.GetComponent<TagComponent>().Tag);
-    FB_EDITOR_INFO("UUID is {0}", m_CubeEntity.GetComponent<IdComponent>().GetId());
 
     m_DirectionalLight.Direction = Vector3(-0.2f, -1.0f, -0.3f);
     m_DirectionalLight.Color = Vector3(1.0f, 1.0f, 0.9f);
@@ -158,6 +150,7 @@ void FireboxEditor::EditorViewport::OnRender(float deltaTime)
     m_CurrentScene->OnUpdate(deltaTime);
     Firebox::Renderer3D::EndScene();
     Firebox::Renderer3D::SetGridSize(m_ViewportPanel.GetGridSize());
+    Firebox::Renderer3D::SetActiveViewMode(static_cast<Firebox::ViewMode>(m_ViewportPanel.GetViewMode()));
     Firebox::Renderer3D::DrawGrid();
 
     m_Framebuffer->UnbindFramebuffer();
@@ -216,14 +209,15 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
 
     // Gotta wrap up RenderPanel() calls in some layer so it gets called only once in here and renders every panel there is, instead of calling it separately  
     
-    m_ViewportPanel.RenderViewport(m_Framebuffer, m_EditorCamera->GetViewMatrix(), m_EditorCamera->GetProjectionMatrix(), 
-        m_BunnyEntity.GetComponent<TransformComponent>());
+    m_ViewportPanel.RenderViewport(m_Framebuffer, m_EditorCamera->GetViewMatrix(), m_EditorCamera->GetPerspective());
 
     m_ViewportPanel.SetMenuBarHeight(menuBarHeight);
     m_AssetBrowser.RenderPanel();
-    m_PropertiesPanel.RenderPanel(m_BunnyEntity.GetComponent<TransformComponent>());
+    m_SceneHierarchyPanel.RenderSceneHierarchyrPanel(m_CurrentScene);
+
+    m_PropertiesPanel.RenderPanel();
     m_ConsolePanel.RenderPanel();
-    m_OutlinerPanel.RenderOutlinerPanel();
+    m_StatsPanel.RenderPanel();
     
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

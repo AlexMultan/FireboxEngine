@@ -13,9 +13,6 @@ Firebox::Application::Application()
     m_Window = std::make_unique<Window>(WindowProperties("Firebox Editor", 1600, 900));
     m_Window->Create();
     m_Window->SetDisplayMode(DisplayMode::Maximized);
-
-    //FIREBOX_CONSOLE_PRINT(Utilities::ToString(m_Window->GetWindowSize()));
-    std::cout << Utils::ToString(m_Window->GetWindowSize()) << "\n";
 }
 
 Firebox::Application::~Application()
@@ -35,17 +32,18 @@ void Firebox::Application::PushOverlay(Layer* layer)
 
 void Firebox::Application::Run()
 {
+    m_Window->SetMaxFPS(120.0f);
     Firebox::Renderer3D::Init();
     for (Layer* layer : m_LayerStack)
     {
-        FB_CORE_TRACE("BaseShader in OnAttach: {0}", (uint64_t)Firebox::Renderer3D::GetDefaultShader().get());
+        FB_CORE_TRACE("DefaultShader in OnAttach: {0}", (uint64_t)Firebox::Renderer3D::GetDefaultShader().get());
         layer->OnAttach();
     }
 	Timer timer;
 
     m_Window->SetEventCallback([this](Event& e)
         {
-            for (auto it = m_LayerStack.begin(); it != m_LayerStack.end(); ++it)
+            for (auto it = m_LayerStack.begin(); it != m_LayerStack.end(); it++)
             {
                 if (e.Handled) break;
                 (*it)->OnEvent(e);
@@ -54,6 +52,7 @@ void Firebox::Application::Run()
 
     while (m_Window->IsRunning())
     {
+        Firebox::Console::SetDrawCalls(0);
         m_Window->PerformanceCounterStart();
         m_Window->PollEvents();
 

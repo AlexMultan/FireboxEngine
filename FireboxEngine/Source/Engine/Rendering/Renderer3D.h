@@ -11,6 +11,13 @@
 
 namespace Firebox {
 
+	enum ViewMode
+	{
+		Lit = 0,
+		Unlit = 1,
+		Depth = 2
+	};
+
 	class FIREBOX_API Renderer3D
 	{
 	public:
@@ -24,10 +31,12 @@ namespace Firebox {
 		static void DrawGrid();
 
 		static Ref<Shader> GetDefaultShader();
+		static Ref<Shader> GetDepthShader();
 		static Ref<Shader> GetLightShader();
 		static Ref<Shader> GetGridShader();
 		static const Ref<Material>& GetDefaultMaterial();
 		static void SetGridSize(const float& gridSize);
+		static void SetActiveViewMode(const ViewMode& viewMode);
 
 	private:
 		static void Flush();
@@ -45,6 +54,8 @@ namespace Firebox {
 			Scope<RendererAPI> RendererAPI;
 			std::vector<RenderCommand> RenderQueue;
 			Ref<Shader> DefaultShader;
+			Ref<Shader> UnlitShader;
+			Ref<Shader> DepthShader;
 			Ref<Shader> LightShader;
 			Ref<Shader> GridShader;
 			Ref<Material> DefaultMaterial;
@@ -54,6 +65,7 @@ namespace Firebox {
 		};
 
 		static Renderer3DData s_Data;
+		static ViewMode s_ViewMode;
 
 		static Ref<Grid> s_Grid;
 		static float s_GridSize;

@@ -33,7 +33,7 @@ void FireboxEditor::FloatParameters::DrawParameter(const char* text, const char*
 	ImVec2 maxPos = ImVec2(pos.x + size.x + paddingX, pos.y + frameHeight);
 
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
-	drawList->AddRectFilled(minPos, maxPos, IM_COL32(color.r * 255, color.g * 255, color.b * 255, color.a * 255), 2.0f, ImDrawFlags_RoundCornersLeft);
+	drawList->AddRectFilled(minPos, maxPos, IM_COL32(color.r * 255, color.g * 255, color.b * 255, color.a * 255));
 
 	ImGui::Text("%s", text);
 

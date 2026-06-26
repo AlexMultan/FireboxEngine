@@ -15,12 +15,7 @@
 
 #include <stdlib.h>
 
-FireboxEditor::ViewportPanel::ViewportPanel()
-{
-
-}
-
-FireboxEditor::ViewportPanel::ViewportPanel(const char* name) : m_Name(name)
+FireboxEditor::ViewportPanel::ViewportPanel(const char* name, EditorContext& context) : m_Name(name), m_Context(context), m_TextureID(0)
 {
 	
 }
@@ -30,15 +25,15 @@ FireboxEditor::ViewportPanel::~ViewportPanel()
 
 }
 
-void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer>& framebuffer, const Mat4& viewMatrix, const Mat4& projectionMatrix,
-	TransformComponent& transformComp)
+void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer>& framebuffer, const Mat4& viewMatrix, const Mat4& projectionMatrix)
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 	
 	ImGui::SetNextWindowBgAlpha(0.0f);
 
-	ImGui::Begin("Viewport"); // Viewport Begin
+	ImGui::Begin("Viewport");
+
 	Vector2 size = { ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y };
 
 	uint texID = framebuffer->GetColorAttachment();
@@ -52,33 +47,37 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 
 	m_IsFocused = ImGui::IsWindowHovered();
 
-	ImGuizmo::SetOrthographic(false);
-	ImGuizmo::SetDrawlist();
-	ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_ViewportSize.x, m_ViewportSize.y);
+	Firebox::Entity entity = m_Context.selectedEntity;
 
-	Mat4 transform = transformComp.GetTransform();
-
-	if (ImGui::IsWindowFocused() || m_IsFocused)
+	if (entity && entity.HasComponent<TransformComponent>())
 	{
-		if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_W))
-			m_GizmoTransformType = GizmoTransformType::Translate;
-		if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_E))
-			m_GizmoTransformType = GizmoTransformType::Rotate;
-		if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_R))
-			m_GizmoTransformType = GizmoTransformType::Scale;
+		ImGuizmo::SetOrthographic(false);
+		ImGuizmo::SetDrawlist();
+		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_ViewportSize.x, m_ViewportSize.y);
 
-		if(Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_SPACE))
-			m_GizmoTransformType = static_cast<GizmoTransformType>((static_cast<int>(m_GizmoTransformType) + 1) % 3);
-	}
+		Mat4 transform = entity.GetComponent<TransformComponent>().GetTransform();
 
-	ImGuizmo::OPERATION operation = ImGuizmo::OPERATION::TRANSLATE;
-	ImGuizmo::MODE mode = ImGuizmo::WORLD;
-	
-	switch (m_GizmoTransformType)
-	{
+		if (ImGui::IsWindowFocused() || m_IsFocused)
+		{
+			if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_W))
+				m_GizmoTransformType = GizmoTransformType::Translate;
+			if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_E))
+				m_GizmoTransformType = GizmoTransformType::Rotate;
+			if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_R))
+				m_GizmoTransformType = GizmoTransformType::Scale;
+
+			if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_SPACE))
+				m_GizmoTransformType = static_cast<GizmoTransformType>((static_cast<int>(m_GizmoTransformType) + 1) % 3);
+		}
+
+		ImGuizmo::OPERATION operation = ImGuizmo::OPERATION::TRANSLATE;
+		ImGuizmo::MODE mode = ImGuizmo::WORLD;
+
+		switch (m_GizmoTransformType)
+		{
 		case GizmoTransformType::Translate:
 			operation = ImGuizmo::OPERATION::TRANSLATE;
-			break;	
+			break;
 		case GizmoTransformType::Rotate:
 			operation = ImGuizmo::OPERATION::ROTATE;
 			break;
@@ -88,33 +87,36 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 			break;
 		default:
 			break;
-	}
+		}
 
-	float gizmoSnapValues[3] = { m_GridSize * 0.1f, m_GridSize * 0.1f, m_GridSize * 0.1f };
+		float gizmoSnapValues[3] = { m_GridSize * 0.1f, m_GridSize * 0.1f, m_GridSize * 0.1f };
 
-	if (ImGuizmo::Manipulate(glm::value_ptr(viewMatrix), glm::value_ptr(projectionMatrix), operation,
-		mode, glm::value_ptr(transform), nullptr, m_Snap ? gizmoSnapValues : nullptr));
-	{
-		float translation[3], rotation[3], scale[3];
-		ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), translation, rotation, scale);
+		if (ImGuizmo::Manipulate(glm::value_ptr(viewMatrix), glm::value_ptr(projectionMatrix), operation,
+			mode, glm::value_ptr(transform), nullptr, m_Snap ? gizmoSnapValues : nullptr));
+		{
+			float translation[3], rotation[3], scale[3];
+			ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), translation, rotation, scale);
 
-		transformComp.Position = Vector3(translation[0], translation[1], translation[2]);
-		transformComp.Rotation = Vector3(rotation[0], rotation[1], rotation[2]);
-		transformComp.Scale = Vector3(scale[0], scale[1], scale[2]);
+			entity.GetComponent<TransformComponent>().Position = Vector3(translation[0], translation[1], translation[2]);
+			entity.GetComponent<TransformComponent>().Rotation = Vector3(rotation[0], rotation[1], rotation[2]);
+			entity.GetComponent<TransformComponent>().Scale = Vector3(scale[0], scale[1], scale[2]);
+		}
 	}
 		
-
+	ImVec2 CameraSettingsPos{ m_ViewportSize.x - 70.0f, 30.0f };
 	ImGui::SetNextItemAllowOverlap();
-	ImGui::SetCursorPos(ImVec2(m_ViewportSize.x - 70.0f, 30.0f));
+	ImGui::SetCursorPos(CameraSettingsPos);
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 4.0f);
-	if (ImGui::Button("Settings"))
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.6f, 0.6f, 0.6f, 0.4f));
+	if (ImGui::Button("Camera"))
 	{
-		ImGui::OpenPopup("ViewportSettingsPopup");
+		ImGui::OpenPopup("CameraSettingsPopup");
 	}
 	ImGui::PopStyleVar();
+	ImGui::PopStyleColor();
 
 	ImGuiWindowFlags popupFlags = ImGuiWindowFlags_NoMove;
-	if (ImGui::BeginPopup("ViewportSettingsPopup", popupFlags))
+	if (ImGui::BeginPopup("CameraSettingsPopup", popupFlags))
 	{
 		ImGui::TextDisabled("Camera Settings");
 		ImGui::Separator();
@@ -127,7 +129,7 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 		static int selectedValue = 2;
 		if (ImGui::Combo("Snap Size", &selectedValue, snapValues, IM_ARRAYSIZE(snapValues)))
 		{
-			FIREBOX_CONSOLE_PRINT(Utils::ToString(selectedValue));
+			FB_CONSOLE_PRINT(Utils::ToString(selectedValue));
 			float gridSize = atof(snapValues[selectedValue]);
 			m_GridSize = gridSize / 10.0f;
 		}
@@ -135,7 +137,33 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 		ImGui::EndPopup();
 	}
 
-	ImGui::End(); // Viewport End
+	ImVec2 RenderingSettingsPos{ CameraSettingsPos.x - 80.0f, CameraSettingsPos.y };
+	ImGui::SetNextItemAllowOverlap();
+	ImGui::SetCursorPos(RenderingSettingsPos);
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 4.0f);
+	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.6f, 0.6f, 0.6f, 0.4f));
+	if (ImGui::Button("Rendering"))
+	{
+		ImGui::OpenPopup("RenderingSettingsPopup");
+	}
+	ImGui::PopStyleVar();
+	ImGui::PopStyleColor();
+
+	if (ImGui::BeginPopup("RenderingSettingsPopup", popupFlags))
+	{
+		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
+		static const char* viewModes[]{ "Lit", "Unlit", "Depth" };
+		static int selectedMode = 0;
+		if (ImGui::Combo("View Mode", &selectedMode, viewModes, IM_ARRAYSIZE(viewModes)))
+		{
+			FB_CONSOLE_PRINT(Utils::ToString(selectedMode));
+			m_CurrentViewMode = selectedMode;
+		}
+		ImGui::PopStyleColor();
+		ImGui::EndPopup();
+	}
+
+	ImGui::End();
 
 	ImGui::PopStyleVar(2);
 }

@@ -24,11 +24,11 @@ namespace Firebox {
 		auto& tag = entity.AddComponent<TagComponent>();
 
 		if (name.empty())
-			tag.Tag = "New Entity";
+			tag.Tag = m_DefaultEntityTag;
 		else
 			tag.Tag = name;
 
-		std::cout << tag.Tag << "\n";
+		m_SceneEntities.emplace_back(entity);
 		return entity;
 	}
 
@@ -46,15 +46,9 @@ namespace Firebox {
 
 			for (size_t i = 0; i < meshes.size(); i++)
 			{
-				//const Ref<Material>& mat = (i < materials.size()) ? materials[i] : Renderer3D::GetDefaultMaterial();
 				Renderer3D::DrawMesh(meshes[i], materials[i], transform);
 			}
 		}
-	}
-
-	void Scene::GetAllEntities()
-	{
-		
 	}
 }
 

@@ -4,6 +4,9 @@ Intermediate/
 bin/
 bin-int/
 
+FireboxEditor/Resources/Models/SM_Fireaxe.obj
+FireboxEngine/EngineAssets/Textures/T_Fireaxe_BC.tga
+
 *.user
 *.vcxproj
 *.filters
