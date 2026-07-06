@@ -6,7 +6,7 @@
 #include "Editor/UI/MenuBar.h"
 #include "Editor/Panels/ConsolePanel.h"
 #include "Editor/Panels/ViewportPanel.h"
-#include "Editor/Panels/SceneHierarchyPanel.h"
+#include "Editor/Panels/HierarchyPanel.h"
 #include "Editor/Panels/StatsPanel.h"
 #include "Engine/Rendering/Resources/Framebuffer.h"
 #include "Engine/Rendering/Camera/PerspectiveCamera.h"
@@ -46,7 +46,7 @@ namespace FireboxEditor {
 		MenuBar m_MenuBar;
 		ConsolePanel m_ConsolePanel;
 		ViewportPanel m_ViewportPanel;
-		SceneHierarchyPanel m_SceneHierarchyPanel;
+		HierarchyPanel m_HierarchyPanel;
 		StatsPanel m_StatsPanel;
 		EditorContext m_EditorContext;
 
@@ -54,7 +54,7 @@ namespace FireboxEditor {
 
 		Ref<Firebox::PerspectiveCamera> m_EditorCamera;
 		Ref<Firebox::Framebuffer> m_Framebuffer;
-		Ref<Firebox::Mesh> m_CubeMesh;
+		Ref<Firebox::StaticMesh> m_CubeMesh;
 		Ref<Firebox::Material> m_FireaxeMaterial;
 		Ref<Firebox::Material> m_SecondCubeMaterial;
 		TransformComponent m_CubeTransform;
@@ -63,10 +63,11 @@ namespace FireboxEditor {
 		TransformComponent m_SecondCubeTransform;
 		Firebox::DirectionalLightComponent m_DirectionalLight;
 		Firebox::Entity m_CubeEntity{};
+		Firebox::Entity m_FloorEntity{};
 		Firebox::Entity m_BunnyEntity{};
 		Firebox::Entity m_FireaxeEntity{};
-		//Firebox::Entity m_FireaxeEntity1{};
+		Firebox::Entity m_FireaxeEntity1{};
 		Ref<Firebox::StaticMesh> m_BunnyModel;
-		//Ref<Firebox::StaticMesh> m_FireaxeModel;
+		Ref<Firebox::StaticMesh> m_FireaxeModel;
 	};
 }

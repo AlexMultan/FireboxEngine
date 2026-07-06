@@ -33,6 +33,7 @@ Mat4 Firebox::PerspectiveCamera::ReversePerspective(float fovY, float aspect, fl
 	proj[3][2] = (zNear * zFar) / (zFar - zNear);
 	return proj;
 }
+
 Mat4 Firebox::PerspectiveCamera::ReversePerspectiveInfinite(float fovY, float aspect, float zNear) const
 {
 	float f = 1.0f / tanf(fovY / 2.0f);

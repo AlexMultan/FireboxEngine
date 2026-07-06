@@ -5,13 +5,14 @@
 #include "Engine/Utils/DebugTools.h"
 #include "Engine/Utils/String.h"
 #include "Engine/Rendering/Resources/PrimitiveShapes.h"
+#include "Editor/Core/EditorUtils.h"
 
 #include <imgui_impl_sdl3.h>
 #include <imgui_impl_opengl3.h>
 #include <ImGuizmo.h>
 
 FireboxEditor::EditorViewport::EditorViewport() 
-    : Layer("EditorLayer"), io(nullptr), m_SceneHierarchyPanel("Scene Hierarchy", m_EditorContext), m_PropertiesPanel("Properties", m_EditorContext),
+    : Layer("EditorLayer"), io(nullptr), m_HierarchyPanel("Hierarchy", m_EditorContext), m_PropertiesPanel("Details", m_EditorContext),
     m_ViewportPanel("Viewport", m_EditorContext)
 {
    
@@ -34,8 +35,8 @@ void FireboxEditor::EditorViewport::OnAttach()
     io->ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
     io->ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
-	io->FontDefault = io->Fonts->AddFontFromFileTTF(FireboxEditor::Paths::Resource("Fonts/Ubuntu_Sans/static/UbuntuSans-Medium.ttf").string().c_str(), 17.0f);
-    m_TransformPropertiesFont = io->Fonts->AddFontFromFileTTF(FireboxEditor::Paths::Resource("Fonts/Ubuntu_Sans/static/UbuntuSans-SemiBold.ttf").string().c_str(), 17.0f);
+	io->FontDefault = io->Fonts->AddFontFromFileTTF(FireboxEditor::Paths::Resource("Fonts/JetBrainsMono/JetBrainsMono-Bold.ttf").string().c_str(), 17.0f);
+    m_TransformPropertiesFont = io->Fonts->AddFontFromFileTTF(FireboxEditor::Paths::Resource("Fonts/JetBrainsMono/JetBrainsMono-Regular.ttf").string().c_str(), 17.0f);
 
     ImGui::FireboxEditorStyleClassic();
 
@@ -46,14 +47,15 @@ void FireboxEditor::EditorViewport::OnAttach()
     ImGuiStyle& style = ImGui::GetStyle();
     style.ScaleAllSizes(window.GetMainScale());
     style.FontScaleDpi = window.GetMainScale();
-    style.TabRounding = 0.0f;
+    style.TabRounding = 3.0f;
     io->ConfigDpiScaleFonts = true;
     io->ConfigDpiScaleViewports = true;
 	io->ConfigDockingAlwaysTabBar = true;
+    style.AntiAliasedFill = true;
 
     if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
     {
-        style.WindowRounding = 0.0f;
+        style.WindowRounding = 9.0f;
         style.Colors[ImGuiCol_WindowBg].w = 1.0f;
     }
 
@@ -74,25 +76,36 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_EditorCamera = CreateRef<Firebox::PerspectiveCamera>(60.0f, 16.0f / 9.0f,
         0.1f, 1000.0f);
     m_EditorCamera->SetInputEnabled(false);
+    m_EditorCamera->SetPosition({ 0.0f, 2.0f, 1.0f });
 
-    m_CubeMesh = CreateRef<Firebox::Mesh>(Firebox::PrimitiveShapes::Cube().vertices, Firebox::PrimitiveShapes::Cube().indices);
+    m_CubeMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_Cube.obj").string());
     m_CubeEntity = m_CurrentScene->CreateEntity("Box");
-    m_CubeEntity.AddComponent<MeshComponent>(m_CubeMesh);
-    m_CubeEntity.AddComponent<MaterialComponent>(Firebox::Renderer3D::GetDefaultMaterial());
+    m_CubeEntity.AddComponent<StaticMeshComponent>(m_CubeMesh);
     m_CubeEntity.GetComponent<TransformComponent>().Position.x = -2.0f;
+    m_CubeEntity.GetComponent<TransformComponent>().Position.y = 1.0f;
+
+    m_FloorEntity = m_CurrentScene->CreateEntity("Floor");
+    m_FloorEntity.AddComponent<StaticMeshComponent>(m_CubeMesh);
+    m_FloorEntity.GetComponent<TransformComponent>().Scale = { 10.0f, 0.5f, 10.0f };
+    m_CubeMesh->SetMaterial(0, Firebox::Renderer3D::GetDefaultMaterial(), 2.0f);
 
     m_BunnyModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_StanfordBunny.obj").string());
     m_BunnyEntity = m_CurrentScene->CreateEntity("Bunny");
     m_BunnyEntity.AddComponent<StaticMeshComponent>(m_BunnyModel);
+    m_BunnyEntity.GetComponent<TransformComponent>().Position.y = 1.0f;
     m_BunnyEntity.GetComponent<TransformComponent>().Position.z = -1.0f;
+    m_BunnyEntity.GetComponent<TransformComponent>().Scale = { 3.0f, 3.0f, 3.0f };
 
-    /*m_FireaxeModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_Fireaxe.obj").string());
+/*    m_FireaxeModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_Fireaxe.obj").string());
     m_FireaxeMaterial = CreateRef<Firebox::Material>(Firebox::Renderer3D::GetDefaultShader());
     m_FireaxeMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Fireaxe_BC.tga").string()));
     m_FireaxeMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Fireaxe_BC.tga").string()));
+    //m_FireaxeMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/medieval_red_brick_nor_gl_2k.png").string()));
     m_FireaxeModel->SetMaterial(0, m_FireaxeMaterial);
     m_FireaxeEntity = m_CurrentScene->CreateEntity("Fireaxe");
-    m_FireaxeEntity.AddComponent<StaticMeshComponent>(m_FireaxeModel);*/
+    m_FireaxeEntity.AddComponent<StaticMeshComponent>(m_FireaxeModel);
+    m_FireaxeEntity.GetComponent<TransformComponent>().Position.y = 1.0f;*/
+
 
     for (auto& entity : m_CurrentScene->GetAllEntities())
     {
@@ -100,20 +113,11 @@ void FireboxEditor::EditorViewport::OnAttach()
         FB_EDITOR_INFO(msg);
     }
 
-    if (m_CubeEntity.HasComponent<TransformComponent>())
-    {
-        FB_EDITOR_WARN("I have a transform component!");
-    }
-
-    if (m_CubeEntity.HasComponent<TagComponent>())
-    {
-        FB_EDITOR_WARN("I have a tag component!");
-    }
-
     m_DirectionalLight.Direction = Vector3(-0.2f, -1.0f, -0.3f);
-    m_DirectionalLight.Color = Vector3(1.0f, 1.0f, 0.9f);
+    m_DirectionalLight.Color = Vector3(1.0f, 0.89f, 0.96f);
 
     m_PropertiesPanel.SetTransformPropertiesFont(m_TransformPropertiesFont);
+    FireboxEditor::EditorUtils::Init(io);
 }
 
 void FireboxEditor::EditorViewport::OnDetach()
@@ -148,6 +152,7 @@ void FireboxEditor::EditorViewport::OnRender(float deltaTime)
 
     Firebox::Renderer3D::BeginScene(*m_EditorCamera, m_DirectionalLight);
     m_CurrentScene->OnUpdate(deltaTime);
+    Firebox::Renderer3D::DrawSkybox();
     Firebox::Renderer3D::EndScene();
     Firebox::Renderer3D::SetGridSize(m_ViewportPanel.GetGridSize());
     Firebox::Renderer3D::SetActiveViewMode(static_cast<Firebox::ViewMode>(m_ViewportPanel.GetViewMode()));
@@ -213,7 +218,7 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
 
     m_ViewportPanel.SetMenuBarHeight(menuBarHeight);
     m_AssetBrowser.RenderPanel();
-    m_SceneHierarchyPanel.RenderSceneHierarchyrPanel(m_CurrentScene);
+    m_HierarchyPanel.RenderHierarchyrPanel(m_CurrentScene);
 
     m_PropertiesPanel.RenderPanel();
     m_ConsolePanel.RenderPanel();

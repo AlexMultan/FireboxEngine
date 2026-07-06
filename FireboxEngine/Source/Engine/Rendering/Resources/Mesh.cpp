@@ -1,5 +1,4 @@
 #include "Mesh.h"
-#include "Engine/Utils/String.h"
 
 Firebox::Mesh::Mesh(const DynamicArray<Vertex>& vertices, const DynamicArray<uint>& indices)
 {
@@ -9,7 +8,9 @@ Firebox::Mesh::Mesh(const DynamicArray<Vertex>& vertices, const DynamicArray<uin
 	m_VBO->SetLayout({
 		{ ShaderDataType::Float3, "aPos" },
 		{ ShaderDataType::Float3, "aNormal" },
-		{ ShaderDataType::Float2, "aTexCoords" }
+		{ ShaderDataType::Float2, "aTexCoords" },
+		{ ShaderDataType::Float3, "aTangent" },
+		{ ShaderDataType::Float3, "aBitangent" }
 		});
 
 	m_IBO = IndexBuffer::Create(indices.data(), indices.size());

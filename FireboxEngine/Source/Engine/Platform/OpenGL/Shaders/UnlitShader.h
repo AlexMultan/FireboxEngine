@@ -2,7 +2,7 @@
 
 namespace Firebox::Shaders::GLSL {
 
-	inline constexpr const char* UnlitVertex = R"(#version 440 core
+	inline constexpr const char* UnlitVertex = R"(#version 460 core
 
 		layout (location = 0) in vec3 aPos;
 		layout (location = 2) in vec2 aTexCoords;
@@ -19,7 +19,7 @@ namespace Firebox::Shaders::GLSL {
 		}
 	)";
 
-	inline constexpr const char* UnlitFragment = R"(#version 440 core
+	inline constexpr const char* UnlitFragment = R"(#version 460 core
 
 		out vec4 FragColor;
 

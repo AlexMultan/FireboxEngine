@@ -21,9 +21,12 @@ namespace Firebox {
 		StaticMesh(const String& path);
 
 		void SetMaterial(size_t slotIndex, const Ref<Material>& material);
+		void SetMaterial(size_t slotIndex, const Ref<Material>& material, float tiling);
 
-		const DynamicArray<Ref<Mesh>>& GetMeshes() const { return m_Meshes; }
-		const DynamicArray<Ref<Material>>& GetMaterials() const { return m_Materials; }
+		inline const DynamicArray<Ref<Mesh>>& GetMeshes() const { return m_Meshes; }
+		inline const DynamicArray<Ref<Material>>& GetMaterials() const { return m_Materials; }
+		inline void SetMaterials(const DynamicArray<Ref<Material>>& materials) { m_Materials = materials; }
+		inline const String& GetDirectory() const { return m_Directory; }
 	private:
 		void LoadModel(const String& path);
 		void ProcessNode(aiNode* node, const aiScene* scene);

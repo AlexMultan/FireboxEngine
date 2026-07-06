@@ -6,6 +6,7 @@ bin-int/
 
 FireboxEditor/Resources/Models/SM_Fireaxe.obj
 FireboxEngine/EngineAssets/Textures/T_Fireaxe_BC.tga
+FireboxEngine/EngineAssets/Textures/T_Fireaxe_N.tga
 
 *.user
 *.vcxproj

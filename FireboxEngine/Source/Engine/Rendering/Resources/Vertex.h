@@ -11,5 +11,7 @@ namespace Firebox {
 		Vector3 Position;
 		Vector3 Normal;
 		Vector2 TexCoords;
+		Vector3 Tangent;
+		Vector3 Bitangent;
 	};
 }

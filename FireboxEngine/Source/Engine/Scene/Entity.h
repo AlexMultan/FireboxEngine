@@ -22,7 +22,7 @@ namespace Firebox {
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
 		{
-			return m_Scene->m_Registry.emplace_or_replace<T>(m_Handle, std::forward<Args>(args)...);
+			return m_Scene->m_Registry.emplace_or_replace<T>(m_Handle, std::forward<Args>(args)... );
 		}
 
 		template<typename T>

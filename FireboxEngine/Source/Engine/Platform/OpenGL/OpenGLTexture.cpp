@@ -46,6 +46,48 @@ Firebox::OpenGLTexture::OpenGLTexture(const String& path)
 	stbi_image_free(data);
 }
 
+Firebox::OpenGLTexture::OpenGLTexture(const DynamicArray<String>& faces)
+{
+	glGenTextures(1, &m_CubemapTextureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubemapTextureID);
+
+	int width, height, nrChannels;
+
+	for (size_t i = 0; i < faces.size(); i++)
+	{
+		unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			GLenum format;
+			if (nrChannels == 1)
+				format = GL_RED;
+			else if (nrChannels == 3)
+				format = GL_RGB;
+			else if (nrChannels == 4)
+				format = GL_RGBA;
+
+			FB_CORE_TRACE("Loaded cubemap face: {0}", faces[i]);
+			FB_CORE_TRACE("Cubemap format: {0}", format);
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+		else
+		{
+			FB_CORE_ERROR("STB reason: {0}", stbi_failure_reason());
+			FB_CORE_ERROR("Cubemap texture failed to load! | {0}", faces[i]);
+			stbi_image_free(data);
+		}
+	}
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+}
+
 Firebox::OpenGLTexture::~OpenGLTexture()
 {
 
@@ -57,10 +99,22 @@ void Firebox::OpenGLTexture::BindTexture(uint slot)
 	glBindTexture(GL_TEXTURE_2D, m_TextureID);
 }
 
+void Firebox::OpenGLTexture::BindCubemapTexture(uint slot)
+{
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubemapTextureID);
+}
+
 void Firebox::OpenGLTexture::UnbindTexture()
 {
-	//glActiveTexture(0);
+	glActiveTexture(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Firebox::OpenGLTexture::UnbindCubemapTexture()
+{
+	glActiveTexture(0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }
 
 void Firebox::OpenGLTexture::DeleteTexture()

@@ -18,6 +18,12 @@ void Firebox::Material::BindTextures() const
 
 	if (m_SpecularTexture)
 		m_SpecularTexture->BindTexture(1);
+
+	if (m_SpecularTexture)
+		m_SpecularTexture->BindTexture(2);
+
+	if (m_CubemapTexture)
+		m_CubemapTexture->BindCubemapTexture(3);
 }
 
 void Firebox::Material::BindMaterial() const
@@ -30,5 +36,14 @@ void Firebox::Material::BindMaterial() const
 	if (m_SpecularTexture)
 		m_Shader->SetInt("u_Material.specular", 1);
 
-	m_Shader->SetFloat("u_Material.shininess", m_Shininess);
+	if (m_NormalTexture)
+		m_Shader->SetInt("u_Material.normal", 2);
+
+	if (m_CubemapTexture)
+		m_Shader->SetInt("u_SkyboxTex", 3);
+	else
+	{
+		m_Shader->SetFloat("u_Material.shininess", m_Shininess);
+		m_Shader->SetFloat("u_Tiling", m_Tiling);
+	}
 }

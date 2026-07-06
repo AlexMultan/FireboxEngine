@@ -5,6 +5,8 @@
 #include "Engine/Rendering/Resources/Material.h"
 #include "Engine/Rendering/Resources/Mesh.h"
 #include "Engine/Rendering/Resources/Grid.h"
+#include "Engine/Rendering/Resources/Skybox.h"
+#include "Engine/Rendering/Resources/ShadowMap.h"
 #include "Engine/Components/Components.h"
 #include "Engine/Components/LightComponents.h"
 #include "Engine/Rendering/Camera/Camera.h"
@@ -29,17 +31,23 @@ namespace Firebox {
 
 		static void DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform);
 		static void DrawGrid();
+		static void DrawSkybox();
 
 		static Ref<Shader> GetDefaultShader();
 		static Ref<Shader> GetDepthShader();
+		static Ref<Shader> GetShadowShader();
 		static Ref<Shader> GetLightShader();
 		static Ref<Shader> GetGridShader();
+		static Ref<Shader> GetSkyboxShader();
 		static const Ref<Material>& GetDefaultMaterial();
+		static const Ref<Material>& GetSkyboxMaterial();
 		static void SetGridSize(const float& gridSize);
 		static void SetActiveViewMode(const ViewMode& viewMode);
 
 	private:
 		static void Flush();
+		static void RenderShadowPass();
+		static std::array<Vector3, 8> GetFrustumCornersWorldSpace(const Mat4& viewProjection);
 
 		struct RenderCommand
 		{
@@ -56,12 +64,19 @@ namespace Firebox {
 			Ref<Shader> DefaultShader;
 			Ref<Shader> UnlitShader;
 			Ref<Shader> DepthShader;
+			Ref<Shader> ShadowDepthShader;
 			Ref<Shader> LightShader;
 			Ref<Shader> GridShader;
+			Ref<Shader> SkyboxShader;
 			Ref<Material> DefaultMaterial;
+			Ref<Material> SkyboxMaterial;
 			Mat4 ViewProjectionMatrix;
+			Mat4 ViewMatrix;
+			Mat4 ProjectionMatrix;
+			Mat4 LightSpaceMatrix;
 			Vector3 CameraPosition;
 			DirectionalLightComponent DirectionalLight;
+			Ref<ShadowMap> ShadowMap;
 		};
 
 		static Renderer3DData s_Data;
@@ -69,5 +84,7 @@ namespace Firebox {
 
 		static Ref<Grid> s_Grid;
 		static float s_GridSize;
+
+		static Ref<Skybox> s_Skybox;
 	};
 }

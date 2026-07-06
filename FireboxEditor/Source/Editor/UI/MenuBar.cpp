@@ -16,6 +16,19 @@ FireboxEditor::MenuBar::~MenuBar()
 
 void FireboxEditor::MenuBar::RenderMenuBar()
 {
+    static bool s_ShowProjectSettings = false;
+
+    if (s_ShowProjectSettings)
+    {
+        ImGui::Begin("Project Settings");
+        if (ImGui::Button("Close"))
+        {
+            s_ShowProjectSettings = false;
+        }
+        ImGui::Text("In Progress");
+        ImGui::End();
+    }
+
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("File"))
@@ -88,6 +101,11 @@ void FireboxEditor::MenuBar::RenderMenuBar()
             if (ImGui::MenuItem("Cut", "Ctrl+X"))
             {
 
+            }
+            ImGui::Separator();
+            if (ImGui::MenuItem("Project Settings"))
+            {
+                s_ShowProjectSettings = true;
             }
             ImGui::EndMenu();
         }

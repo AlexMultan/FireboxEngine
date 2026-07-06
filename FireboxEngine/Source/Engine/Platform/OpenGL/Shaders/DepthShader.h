@@ -2,7 +2,7 @@
 
 namespace Firebox::Shaders::GLSL {
 
-	inline constexpr const char* DepthVertex = R"(#version 440 core
+	inline constexpr const char* DepthVertex = R"(#version 460 core
 
 		layout (location = 0) in vec3 aPos;
 
@@ -32,6 +32,27 @@ namespace Firebox::Shaders::GLSL {
 			float linearDepth = LinearizeDepth(gl_FragCoord.z);
 			float normalized = log(linearDepth + 1.0) / log(u_Far + 1.0);
 			FragColor = vec4(vec3(normalized), 1.0);
+		}
+	)";
+
+	inline constexpr const char* ShadowMapDepthVertex = R"(#version 460 core
+
+		layout (location = 0) in vec3 aPos;
+
+		uniform mat4 u_LightSpaceMatrix;
+		uniform mat4 u_Model;
+
+		void main()
+		{
+			gl_Position = u_LightSpaceMatrix * u_Model * vec4(aPos, 1.0);
+		}
+	)";
+
+	inline constexpr const char* ShadowMapDepthFragment = R"(#version 440 core
+
+		void main()
+		{
+	
 		}
 	)";
 }

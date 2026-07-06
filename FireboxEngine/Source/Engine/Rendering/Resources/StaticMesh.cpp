@@ -14,6 +14,15 @@ namespace Firebox {
 			m_Materials[slotIndex] = material;
 	}
 
+	void StaticMesh::SetMaterial(size_t slotIndex, const Ref<Material>& material, float tiling)
+	{
+		if (slotIndex < m_Materials.size())
+		{
+			m_Materials[slotIndex] = material;
+			m_Materials[slotIndex]->SetTiling(tiling);
+		}
+	}
+
 	void StaticMesh::LoadModel(const String& path)
 	{
 		Assimp::Importer importer;
@@ -83,6 +92,16 @@ namespace Firebox {
 				texVec.x = mesh->mTextureCoords[0][i].x;
 				texVec.y = mesh->mTextureCoords[0][i].y;
 				vertex.TexCoords = texVec;
+
+				vec.x = mesh->mTangents[i].x;
+				vec.y = mesh->mTangents[i].y;
+				vec.z = mesh->mTangents[i].z;
+				vertex.Tangent = vec;
+
+				vec.x = mesh->mBitangents[i].x;
+				vec.y = mesh->mBitangents[i].y;
+				vec.z = mesh->mBitangents[i].z;
+				vertex.Bitangent = vec;
 			}
 			else
 			{
@@ -119,12 +138,19 @@ namespace Firebox {
 			material->SetDiffuseTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
 		}
 
-		if (mat->GetTextureCount(aiTextureType_DIFFUSE) > 0)
+		if (mat->GetTextureCount(aiTextureType_SPECULAR) > 0)
 		{
 			aiString path;
 			mat->GetTexture(aiTextureType_SPECULAR, 0, &path);
 			material->SetSpecularTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
 		}
+
+		/*if (mat->GetTextureCount(aiTextureType_NORMALS) > 0)
+		{
+			aiString path;
+			mat->GetTexture(aiTextureType_NORMALS, 0, &path);
+			material->SetNormalTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
+		}*/
 
 		float shininess = 32.0f;
 		mat->Get(AI_MATKEY_SHININESS, shininess);

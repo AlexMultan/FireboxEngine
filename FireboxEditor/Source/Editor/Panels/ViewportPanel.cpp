@@ -28,8 +28,6 @@ FireboxEditor::ViewportPanel::~ViewportPanel()
 void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer>& framebuffer, const Mat4& viewMatrix, const Mat4& projectionMatrix)
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	
 	ImGui::SetNextWindowBgAlpha(0.0f);
 
 	ImGui::Begin("Viewport");
@@ -165,5 +163,5 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 
 	ImGui::End();
 
-	ImGui::PopStyleVar(2);
+	ImGui::PopStyleVar();
 }

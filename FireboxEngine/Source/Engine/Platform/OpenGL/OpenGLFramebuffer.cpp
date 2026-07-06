@@ -20,7 +20,7 @@ void Firebox::OpenGL::OpenGLFramebuffer::BindFramebuffer()
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, m_FBO);
 	glViewport(0, 0, m_Specs.Width, m_Specs.Height);
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT || GL_DEPTH_BUFFER_BIT);
 }
 

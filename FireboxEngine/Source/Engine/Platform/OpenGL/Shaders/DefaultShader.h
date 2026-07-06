@@ -2,30 +2,45 @@
 
 namespace Firebox::Shaders::GLSL {
 
-	inline constexpr const char* DefaultVertex = R"(#version 440 core
+	inline constexpr const char* DefaultVertex = R"(#version 460 core
 
 		layout (location = 0) in vec3 aPos;
 		layout (location = 1) in vec3 aNormal;
 		layout (location = 2) in vec2 aTexCoords;
+		layout (location = 3) in vec3 aTangent;
+		layout (location = 4) in vec3 aBitangent;
 
 		uniform mat4 u_ViewProjection;
 		uniform mat4 u_Model;
 		uniform mat3 u_InverseNormal;
+		uniform mat4 u_LightSpaceMatrix;
+		uniform float u_Tiling;
 
 		out vec3 FragPos;
-		out vec3 Normal;
 		out vec2 TexCoords;
+		out vec4 FragPosLightSpace;
+		out mat3 TBN;
+		out vec3 Normal;
 
 		void main()
 		{
 			FragPos = vec3(u_Model * vec4(aPos, 1.0));
-			Normal = u_InverseNormal * aNormal;
-			TexCoords = aTexCoords;
+			Normal = aNormal;
+			vec3 N = normalize(u_InverseNormal * aNormal);
+			vec3 T = normalize(u_InverseNormal * aTangent);
+			T = normalize(T - dot(T, N) * N);
+			vec3 B = cross(N, T);
+			if(dot(cross(N, T), normalize(u_InverseNormal * aBitangent)) < 0.0){
+				T = T * -1.0;
+			}
+			TBN = mat3(T, B, N);
+			TexCoords = aTexCoords * u_Tiling;
+			FragPosLightSpace = u_LightSpaceMatrix * vec4(FragPos, 1.0);
 			gl_Position = u_ViewProjection * u_Model * vec4(aPos, 1.0);
 		}
 	)";
 
-	inline constexpr const char* DefaultFragment = R"(#version 440 core
+	inline constexpr const char* DefaultFragment = R"(#version 460 core
 
 		out vec4 FragColor;
 
@@ -33,6 +48,7 @@ namespace Firebox::Shaders::GLSL {
 			vec3 ambient;
 			sampler2D diffuse;
 			sampler2D specular;
+			sampler2D normal;
 			float shininess;
 		};
 
@@ -57,15 +73,18 @@ namespace Firebox::Shaders::GLSL {
 		//uniform PointLight pointLights[NR_POINT_LIGHTS];
 
 		in vec3 FragPos;
-		in vec3 Normal;
 		in vec2 TexCoords;
+		in vec4 FragPosLightSpace;
+		in mat3 TBN;
+		in vec3 Normal;
 		
 		uniform Material u_Material;
 		uniform DirectionalLight u_DirectionalLight; 
 		uniform PointLight u_PointLight; 
 		uniform vec3 u_ViewPos;
+		//uniform sampler2D u_ShadowMap;
 
-		vec3 CalculateDirectionalLight(DirectionalLight directionalLight, vec3 normal, vec3 viewDir)
+		vec3 CalculateDirectionalLight(DirectionalLight directionalLight, vec3 viewDir, vec3 normal)
 		{
 			vec3 directionalLightDir = normalize(-directionalLight.direction);
 			float diff = max(dot(normal, directionalLightDir), 0.0);
@@ -74,6 +93,7 @@ namespace Firebox::Shaders::GLSL {
 			vec3 ambient = directionalLight.ambient * texture(u_Material.diffuse, TexCoords).rgb;
 			vec3 diffuse = directionalLight.diffuse * diff * texture(u_Material.diffuse, TexCoords).rgb;
 			vec3 specular = directionalLight.specular * spec * texture(u_Material.specular, TexCoords).rgb;
+			//return (ambient + (1.0 - shadow) * (diffuse + specular));
 			return (ambient + diffuse + specular);
 		}
 
@@ -94,17 +114,48 @@ namespace Firebox::Shaders::GLSL {
 			return (ambient + diffuse + specular);
 		}
 
+		/*float CalculateShadows(vec4 fragPosLightSpace, vec3 normal, vec3 lightDirToFrag)
+		{
+			vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+			projCoords = projCoords * 0.5 + 0.5;
+			float closestDepth = texture(u_ShadowMap, projCoords.xy).r;
+			float currentDepth = projCoords.z;
+			float bias = max(0.05 * (1.0 - dot(normal, lightDirToFrag)), 0.005);
+			float shadow = 0.0;
+			vec2 texelSize = 1.0 / textureSize(u_ShadowMap, 0);
+			for(int x = -1; x <= 1; x++)
+			{
+				for(int y = -1; y <= 1; y++)
+				{
+					float pcfDepth = texture(u_ShadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+					shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
+				}
+			}
+			shadow /= 9.0;
+
+			if(projCoords.z > 1.0)
+				shadow = 0.0;
+
+			return shadow;
+		}*/
+
 		void main()
 		{
-			vec3 norm = normalize(Normal);
+			vec3 normal;
+			vec3 sampledNormal = texture(u_Material.normal, TexCoords).rgb;
+			normal = normalize(sampledNormal * 2.0 - 1.0);
+			normal.x = -normal.x;
+			normal.y = -normal.y;
+			vec3 worldNormal = normalize(TBN * normal);
 			vec3 viewDir = normalize(u_ViewPos - FragPos);
-			vec3 result = CalculateDirectionalLight(u_DirectionalLight, norm, viewDir);
+			//float shadow = CalculateShadows(FragPosLightSpace, lightDir);
+			vec3 result = CalculateDirectionalLight(u_DirectionalLight, viewDir, Normal);
 			//result += CalculatePointLight(u_PointLight, norm, FragPos, viewDir);
 			FragColor = vec4(result, 1.0);
 		}
 	)";
 
-	inline constexpr const char* LightVertex = R"(#version 440 core
+	inline constexpr const char* LightVertex = R"(#version 460 core
 
 		layout (location = 0) in vec3 aPos;
 
@@ -127,7 +178,7 @@ namespace Firebox::Shaders::GLSL {
 		}
 	)";
 
-	inline constexpr const char* GridVertexShader = R"(#version 440 core
+	inline constexpr const char* GridVertexShader = R"(#version 460 core
 		
 		layout(location = 0) in vec3 aPos;
 
@@ -154,7 +205,7 @@ namespace Firebox::Shaders::GLSL {
 		}
 	)";
 
-	inline constexpr const char* GridFragmentShader = R"(#version 440 core
+	inline constexpr const char* GridFragmentShader = R"(#version 460 core
 		
 		in vec2 coords;
 		in vec3 camPos;
@@ -193,6 +244,36 @@ namespace Firebox::Shaders::GLSL {
 			float gridAlpha = clamp(isMainGrid + isSubGrid, 0.0, 0.2);
 			
 			FragColor = vec4(gridRGB * opacityFalloff, gridAlpha);
+		}
+	)";
+
+	inline constexpr const char* SkyboxVertexShader = R"(#version 460 core
+			
+		layout(location = 0) in vec3 aPos;
+
+		out vec3 TexCoords;
+
+		uniform mat4 u_ViewProjection;
+
+		void main()
+		{
+			TexCoords = aPos;
+			vec4 pos = u_ViewProjection * vec4(aPos, 1.0);
+			gl_Position = vec4(pos.xy, 0.0, pos.w);
+		}
+	)";
+
+	inline constexpr const char* SkyboxFragmentShader = R"(#version 460 core
+			
+		out vec4 FragColor;
+
+		in vec3 TexCoords;
+
+		uniform samplerCube u_SkyboxTex;
+
+		void main()
+		{
+			FragColor = texture(u_SkyboxTex, TexCoords);
 		}
 	)";
 }
