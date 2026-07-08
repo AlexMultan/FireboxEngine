@@ -55,7 +55,6 @@ namespace FireboxEditor {
 		Ref<Firebox::PerspectiveCamera> m_EditorCamera;
 		Ref<Firebox::Framebuffer> m_Framebuffer;
 		Ref<Firebox::StaticMesh> m_CubeMesh;
-		Ref<Firebox::Material> m_FireaxeMaterial;
 		Ref<Firebox::Material> m_SecondCubeMaterial;
 		TransformComponent m_CubeTransform;
 		String m_CubeTag;
@@ -65,9 +64,6 @@ namespace FireboxEditor {
 		Firebox::Entity m_CubeEntity{};
 		Firebox::Entity m_FloorEntity{};
 		Firebox::Entity m_BunnyEntity{};
-		Firebox::Entity m_FireaxeEntity{};
-		Firebox::Entity m_FireaxeEntity1{};
 		Ref<Firebox::StaticMesh> m_BunnyModel;
-		Ref<Firebox::StaticMesh> m_FireaxeModel;
 	};
 }

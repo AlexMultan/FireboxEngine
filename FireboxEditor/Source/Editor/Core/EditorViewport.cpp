@@ -96,16 +96,6 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_BunnyEntity.GetComponent<TransformComponent>().Position.z = -1.0f;
     m_BunnyEntity.GetComponent<TransformComponent>().Scale = { 3.0f, 3.0f, 3.0f };
 
-/*    m_FireaxeModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_Fireaxe.obj").string());
-    m_FireaxeMaterial = CreateRef<Firebox::Material>(Firebox::Renderer3D::GetDefaultShader());
-    m_FireaxeMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Fireaxe_BC.tga").string()));
-    m_FireaxeMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Fireaxe_BC.tga").string()));
-    //m_FireaxeMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/medieval_red_brick_nor_gl_2k.png").string()));
-    m_FireaxeModel->SetMaterial(0, m_FireaxeMaterial);
-    m_FireaxeEntity = m_CurrentScene->CreateEntity("Fireaxe");
-    m_FireaxeEntity.AddComponent<StaticMeshComponent>(m_FireaxeModel);
-    m_FireaxeEntity.GetComponent<TransformComponent>().Position.y = 1.0f;*/
-
 
     for (auto& entity : m_CurrentScene->GetAllEntities())
     {

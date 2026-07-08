@@ -48,8 +48,9 @@ void Firebox::Renderer3D::Init()
 	s_Data.SkyboxShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::SkyboxVertexShader, Firebox::Shaders::GLSL::SkyboxFragmentShader);
 
 	s_Data.DefaultMaterial = CreateRef<Material>(s_Data.DefaultShader);
-	s_Data.DefaultMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Default.png").string()));
-	s_Data.DefaultMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Default.png").string()));
+	s_Data.DefaultMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/medieval_red_brick_diff_2k.png").string()));
+	s_Data.DefaultMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/medieval_red_brick_diff_2k.png").string()));
+	s_Data.DefaultMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/medieval_red_brick_nor_gl_2k.png").string()));
 
 	s_Data.SkyboxMaterial = CreateRef<Material>(s_Data.SkyboxShader);
 	DynamicArray<String> skyboxFaces{

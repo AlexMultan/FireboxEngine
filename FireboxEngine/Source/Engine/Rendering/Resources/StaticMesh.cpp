@@ -145,12 +145,12 @@ namespace Firebox {
 			material->SetSpecularTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
 		}
 
-		/*if (mat->GetTextureCount(aiTextureType_NORMALS) > 0)
+		if (mat->GetTextureCount(aiTextureType_NORMALS) > 0)
 		{
 			aiString path;
 			mat->GetTexture(aiTextureType_NORMALS, 0, &path);
 			material->SetNormalTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
-		}*/
+		}
 
 		float shininess = 32.0f;
 		mat->Get(AI_MATKEY_SHININESS, shininess);

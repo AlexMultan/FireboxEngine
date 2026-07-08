@@ -19,8 +19,8 @@ void Firebox::Material::BindTextures() const
 	if (m_SpecularTexture)
 		m_SpecularTexture->BindTexture(1);
 
-	if (m_SpecularTexture)
-		m_SpecularTexture->BindTexture(2);
+	if (m_NormalTexture)
+		m_NormalTexture->BindTexture(2);
 
 	if (m_CubemapTexture)
 		m_CubemapTexture->BindCubemapTexture(3);

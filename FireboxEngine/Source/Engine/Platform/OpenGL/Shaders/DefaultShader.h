@@ -20,12 +20,10 @@ namespace Firebox::Shaders::GLSL {
 		out vec2 TexCoords;
 		out vec4 FragPosLightSpace;
 		out mat3 TBN;
-		out vec3 Normal;
 
 		void main()
 		{
 			FragPos = vec3(u_Model * vec4(aPos, 1.0));
-			Normal = aNormal;
 			vec3 N = normalize(u_InverseNormal * aNormal);
 			vec3 T = normalize(u_InverseNormal * aTangent);
 			T = normalize(T - dot(T, N) * N);
@@ -76,7 +74,6 @@ namespace Firebox::Shaders::GLSL {
 		in vec2 TexCoords;
 		in vec4 FragPosLightSpace;
 		in mat3 TBN;
-		in vec3 Normal;
 		
 		uniform Material u_Material;
 		uniform DirectionalLight u_DirectionalLight; 
@@ -144,12 +141,12 @@ namespace Firebox::Shaders::GLSL {
 			vec3 normal;
 			vec3 sampledNormal = texture(u_Material.normal, TexCoords).rgb;
 			normal = normalize(sampledNormal * 2.0 - 1.0);
-			normal.x = -normal.x;
-			normal.y = -normal.y;
+			//normal.x = -normal.x;
+			//normal.y = -normal.y;
 			vec3 worldNormal = normalize(TBN * normal);
 			vec3 viewDir = normalize(u_ViewPos - FragPos);
 			//float shadow = CalculateShadows(FragPosLightSpace, lightDir);
-			vec3 result = CalculateDirectionalLight(u_DirectionalLight, viewDir, Normal);
+			vec3 result = CalculateDirectionalLight(u_DirectionalLight, viewDir, worldNormal);
 			//result += CalculatePointLight(u_PointLight, norm, FragPos, viewDir);
 			FragColor = vec4(result, 1.0);
 		}
