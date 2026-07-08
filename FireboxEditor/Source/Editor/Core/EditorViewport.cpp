@@ -96,6 +96,15 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_BunnyEntity.GetComponent<TransformComponent>().Position.z = -1.0f;
     m_BunnyEntity.GetComponent<TransformComponent>().Scale = { 3.0f, 3.0f, 3.0f };
 
+    m_JerrycanMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_Jerrycan.gltf").string());
+    m_JerrycanMaterial = CreateRef<Firebox::Material>();
+    m_JerrycanMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Jerrycan_BC.png").string()));
+    m_JerrycanMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Jerrycan_N.png").string()));
+    m_JerrycanMesh->SetMaterial(0, m_JerrycanMaterial);
+    m_JerrycanEntity = m_CurrentScene->CreateEntity("Jerrycan");
+    m_JerrycanEntity.AddComponent<StaticMeshComponent>(m_JerrycanMesh);
+    m_JerrycanEntity.GetComponent<TransformComponent>().Position.y = 0.5f;
+
 
     for (auto& entity : m_CurrentScene->GetAllEntities())
     {

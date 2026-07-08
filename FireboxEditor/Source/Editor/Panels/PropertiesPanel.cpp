@@ -7,6 +7,7 @@
 #include "Engine/Core/EngineAssets.h"
 #include "Engine/Rendering/Renderer3D.h"
 #include "Editor/Core/EditorUtils.h"
+#include "Editor/UI/MaterialEditor.h"
 
 #include <imgui.h>
 
@@ -23,6 +24,7 @@ FireboxEditor::PropertiesPanel::~PropertiesPanel()
 void FireboxEditor::PropertiesPanel::RenderPanel()
 {
 	Firebox::Entity entity = m_Context.selectedEntity;
+	static bool s_ShowMaterialEditor = false;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 6.0f));
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -101,7 +103,15 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 				{
 					ImGui::Image((ImTextureID)(uintptr_t)smc.StaticMesh->GetMaterials()[i]->GetDiffuse()->GetTextureID(), 
 						{64.0f, 64.0f}, ImVec2(0, 1), ImVec2(1, 0));
+
+					MaterialEditor::DrawMaterialEditor(s_ShowMaterialEditor, smc.StaticMesh->GetMaterials()[i]);
+
+					if (ImGui::Button("Edit Material"))
+					{
+						s_ShowMaterialEditor = true;
+					}
 				}
+
 				ImGui::TreePop();
 			}
 		}

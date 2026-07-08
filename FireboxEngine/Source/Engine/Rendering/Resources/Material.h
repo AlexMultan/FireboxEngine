@@ -31,7 +31,8 @@ namespace Firebox {
 		inline const Ref<Texture>& GetDiffuse() const { return m_DiffuseTexture; }
 		inline const Ref<Texture>& GetNormal() const { return m_NormalTexture; }
 		inline const Ref<Texture>& GetCubemap() const { return m_CubemapTexture; }
-		inline float GetShininess() const { return m_Shininess; }
+		inline float& GetShininess() { return m_Shininess; }
+		inline float& GetTiling() { return m_Tiling; }
 
 	private:
 		Ref<Shader> m_Shader;

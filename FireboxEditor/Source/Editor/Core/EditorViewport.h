@@ -65,5 +65,9 @@ namespace FireboxEditor {
 		Firebox::Entity m_FloorEntity{};
 		Firebox::Entity m_BunnyEntity{};
 		Ref<Firebox::StaticMesh> m_BunnyModel;
+
+		Firebox::Entity m_JerrycanEntity{};
+		Ref<Firebox::Material> m_JerrycanMaterial;
+		Ref<Firebox::StaticMesh> m_JerrycanMesh;
 	};
 }

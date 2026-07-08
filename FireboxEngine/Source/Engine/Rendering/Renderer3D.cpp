@@ -158,8 +158,8 @@ void Firebox::Renderer3D::Flush()
 			activeShader = s_Data.UnlitShader;
 			activeShader->UseShader();
 			activeShader->SetMat4("u_ViewProjection", s_Data.ViewProjectionMatrix);
-			cmd.Material->BindTextures();
 			activeShader->SetInt("u_Diffuse", 0);
+			activeShader->SetFloat("u_Tiling", cmd.Material->GetTiling());
 			break;
 
 		case ViewMode::Depth:
