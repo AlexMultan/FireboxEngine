@@ -10,34 +10,34 @@ workspace "FireboxEngine"
 outputdir = "%{cfg.buildcfg}-x64"
 
 IncludeDir = {}
-IncludeDir["SDL"] = "FireboxEngine/ThirdParty/SDL/include"
-IncludeDir["Glad"] = "FireboxEngine/ThirdParty/Glad/include"
-IncludeDir["imgui"] = "FireboxEngine/ThirdParty/ImGui"
-IncludeDir["glm"] = "FireboxEngine/ThirdParty/GLM"
-IncludeDir["stb"] = "FireboxEngine/ThirdParty/stb"
-IncludeDir["entt"] = "FireboxEngine/ThirdParty/entt/include"
-IncludeDir["assimp"] = "FireboxEngine/ThirdParty/assimp/include"
-IncludeDir["ImGuizmo"] = "FireboxEngine/ThirdParty/ImGuizmo/src"
+IncludeDir["SDL"] = "ThirdParty/SDL/include"
+IncludeDir["Glad"] = "ThirdParty/Glad/include"
+IncludeDir["imgui"] = "ThirdParty/ImGui"
+IncludeDir["glm"] = "ThirdParty/GLM"
+IncludeDir["stb"] = "ThirdParty/stb"
+IncludeDir["entt"] = "ThirdParty/entt/include"
+IncludeDir["assimp"] = "ThirdParty/assimp/include"
+IncludeDir["ImGuizmo"] = "ThirdParty/ImGuizmo/src"
 
-include "FireboxEngine/ThirdParty/Glad"
-include "FireboxEngine/ThirdParty/ImGui"
-include "FireboxEngine/ThirdParty/ImGuizmo"
-include "FireboxEngine/ThirdParty/assimp"
+include "ThirdParty/Glad"
+include "ThirdParty/ImGui"
+include "ThirdParty/ImGuizmo"
+include "ThirdParty/assimp"
 
-project "FireboxEngine"
-    location "FireboxEngine"
+project "Engine"
+    location "Engine"
     language "C++"
 
     targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
     objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
     
     files{
-        "%{prj.name}/Source/Engine/**/**.h",
-        "%{prj.name}/Source/Engine/**/**.cpp",
+        "%{prj.name}/Source/**/**.h",
+        "%{prj.name}/Source/**/**.cpp",
     }
 
     includedirs{
-        "%{prj.name}/ThirdParty/spdlog/include",
+        "ThirdParty/spdlog/include",
         "%{IncludeDir.SDL}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.imgui}",
@@ -50,7 +50,7 @@ project "FireboxEngine"
     }
 
     removefiles{
-        "%{prj.name}/ThirdParty/GLM/glm/glm.cppm"
+        "ThirdParty/GLM/glm/glm.cppm"
     }
 
     links{
@@ -62,8 +62,12 @@ project "FireboxEngine"
         "assimp"
     }
 
+    defines{
+        "GLM_FORCE_DEPTH_ZERO_TO_ONE"
+    }
+
     libdirs{
-        "%{prj.name}/ThirdParty/SDL/lib/x64"
+        "ThirdParty/SDL/lib/x64"
     }
 
     filter "system:windows"
@@ -78,23 +82,23 @@ project "FireboxEngine"
         kind "SharedLib"
         defines "FIREBOX_BUILD_DLL"
         postbuildcommands{
-            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{COPY} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Editor",
+            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Editor",
+            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Editor",
 
-            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Game",
-            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Game",
-            "{COPY} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Game"
+            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame",
+            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame",
+            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame"
         }
 
     filter "configurations:Shipping"
         kind "StaticLib"
         defines "FIREBOX_STATIC"
         postbuildcommands{
-            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{COPY} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Game",
-            "{COPY} %{wks.location}%{prj.name}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Game"
+            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Editor",
+            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Editor",
+            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame",
+            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame"
         }
 
     filter "configurations:Debug"
@@ -117,33 +121,33 @@ project "FireboxEngine"
 
 
 
-project "Game"
-    location "Game"
+project "SampleGame"
+    location "Projects/SampleGame"
     kind "ConsoleApp"
     language "C++"
 
-    targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
-    objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
+    targetdir ("Binaries/" .. outputdir .. "/Projects/%{prj.name}")
+    objdir ("Intermediate/" .. outputdir .. "/Projects/%{prj.name}")
     
     files{
-        "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp",
+        "Projects/%{prj.name}/Source/**.h",
+        "Projects/%{prj.name}/Source/**.cpp",
     }
 
     links{
-        "FireboxEngine"
+        "Engine"
     }
 
     includedirs{
-        "FireboxEngine/ThirdParty/spdlog/include",
-        "FireboxEngine/ThirdParty/SDL/include",
-        "FireboxEngine/ThirdParty/GLM",
-        "FireboxEngine/ThirdParty/ImGui",
-        "FireboxEngine/ThirdParty/stb",
-        "FireboxEngine/ThirdParty/entt/include",
-        "FireboxEngine/ThirdParty/ImGuizmo/src",
-        "FireboxEngine/ThirdParty/assimp/include",
-        "FireboxEngine/Source"
+        "ThirdParty/spdlog/include",
+        "ThirdParty/SDL/include",
+        "ThirdParty/GLM",
+        "ThirdParty/ImGui",
+        "ThirdParty/stb",
+        "ThirdParty/entt/include",
+        "ThirdParty/ImGuizmo/src",
+        "ThirdParty/assimp/include",
+        "Engine/Source"
     }
 
     filter "system:windows"
@@ -183,8 +187,8 @@ project "Game"
         filter {}
 
 
-project "FireboxEditor"
-    location "FireboxEditor"
+project "Editor"
+    location "Editor"
     kind "ConsoleApp"
     language "C++"
 
@@ -197,7 +201,7 @@ project "FireboxEditor"
     }
 
     links{
-        "FireboxEngine",
+        "Engine",
         "SDL3",
         "opengl32.lib",
         "Glad",
@@ -205,22 +209,22 @@ project "FireboxEditor"
         "ImGuizmo"
     }
 
-    dependson { "Game" }
+    dependson { "SampleGame" }
 
     libdirs{
-        "FireboxEngine/ThirdParty/SDL/lib/x64"
+        "ThirdParty/SDL/lib/x64"
     }
 
     includedirs{
-        "FireboxEngine/ThirdParty/spdlog/include",
-        "FireboxEngine/ThirdParty/SDL/include",
-        "FireboxEngine/ThirdParty/GLM",
-        "FireboxEngine/ThirdParty/ImGui",
-        "FireboxEngine/ThirdParty/stb",
-        "FireboxEngine/ThirdParty/entt/include",
-        "FireboxEngine/ThirdParty/assimp/include",
-        "FireboxEngine/ThirdParty/ImGuizmo/src",
-        "FireboxEngine/Source",
+        "ThirdParty/spdlog/include",
+        "ThirdParty/SDL/include",
+        "ThirdParty/GLM",
+        "ThirdParty/ImGui",
+        "ThirdParty/stb",
+        "ThirdParty/entt/include",
+        "ThirdParty/assimp/include",
+        "ThirdParty/ImGuizmo/src",
+        "Engine/Source",
         "%{IncludeDir.Glad}",
         "%{prj.name}/Source"
     }
