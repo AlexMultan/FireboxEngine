@@ -1,0 +1,49 @@
+#pragma once
+
+#include "Core/Core.h"
+
+#include <array>
+
+namespace Firebox {
+
+	struct ShadowMapProps
+	{
+		float Fov, NearPlane, FarPlane, AspectRatio;
+		Mat4 ViewMatrix;
+		Vector3 LightDir;
+
+		ShadowMapProps() = default;
+		ShadowMapProps(ShadowMapProps&) = default;
+		ShadowMapProps(float fov, float nearPlane, float farPlane, float aspectRatio, const Mat4& viewMatrix, const Vector3& lightDir) :
+			Fov(fov), NearPlane(nearPlane), FarPlane(farPlane), AspectRatio(aspectRatio), ViewMatrix(viewMatrix), LightDir(lightDir)
+		{
+		}
+	};
+
+	class FIREBOX_API ShadowMap
+	{
+	public:
+		virtual void BindShadowMap() = 0;
+		virtual void UnbindShadowMap() = 0;
+		virtual void ResizeFramebuffer(uint resolution) = 0;
+		virtual uint GetDepthTexture() const = 0;
+		static Ref<ShadowMap> Create(uint resolution);
+		
+		inline const DynamicArray<float>& GetCascadeLevels() const { return m_ShadowCascadeLevels; }
+		void SetCascadeLevels();
+		void SetShadowMapProps(float fov, float nearPlane, float farPlane, float aspectRatio, const Mat4& viewMatrix, const Vector3& lightDir);
+		DynamicArray<Vector3> GetFrustumCornersWorldSpace(const Mat4& projection, const Mat4& view);
+		DynamicArray<Mat4> GetLightSpaceMatrices();
+
+	protected:
+		ShadowMapProps m_ShadowMapProps;
+		uint m_LightDepthMaps = 0;
+		uint m_LightFBO = 0;
+		uint m_DepthMapResolution = 4096;
+		Mat4 m_LightSpaceMatrix = Mat4(1.0f);
+		DynamicArray<float> m_ShadowCascadeLevels{};
+		
+	private:
+		Mat4 GetLightSpaceMatrix(const float nearPlane, const float farPlane);
+	};
+}
