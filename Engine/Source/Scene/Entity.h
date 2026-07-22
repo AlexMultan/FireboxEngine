@@ -19,6 +19,12 @@ namespace Firebox {
 			return m_Scene->m_Registry.any_of<T>(m_Handle);
 		}
 
+		template<typename T>
+		bool HasComponent() const
+		{
+			return m_Scene->m_Registry.any_of<T>(m_Handle);
+		}
+
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
 		{
@@ -27,6 +33,13 @@ namespace Firebox {
 
 		template<typename T>
 		T& GetComponent()
+		{
+			FB_ASSERT(HasComponent<T>(), "Entity doesn't have a component");
+			return m_Scene->m_Registry.get<T>(m_Handle);
+		}
+
+		template<typename T>
+		const T& GetComponent() const
 		{
 			FB_ASSERT(HasComponent<T>(), "Entity doesn't have a component");
 			return m_Scene->m_Registry.get<T>(m_Handle);

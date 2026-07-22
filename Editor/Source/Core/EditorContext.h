@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scene/Entity.h"
+#include "Scene/Scene.h"
 
 #include <functional>
 
@@ -26,5 +27,6 @@ namespace FireboxEditor {
 			if (OnSelectionChanged)
 				OnSelectionChanged(selectedEntity);
 		}
+
 	};
 }

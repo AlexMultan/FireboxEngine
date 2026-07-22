@@ -4,6 +4,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/MaterialComponent.h"
 #include "Rendering/Renderer3D.h"
+#include "Serialization/SceneSerializer.h"
 #include "Entity.h"
 
 #include <fstream>
@@ -55,8 +56,9 @@ namespace Firebox {
 			}
 		}
 	}
-	void Scene::SaveScene(const json& j, const String& filename)
+	void Scene::SaveScene(const String& filename)
 	{
+		json j = *this;
 		std::ofstream file(filename);
 
 		if (file.is_open())
@@ -68,9 +70,9 @@ namespace Firebox {
 		else
 			FB_CORE_ERROR("Error: Could not open file for writing: {0}", filename);
 	}
-	json Scene::LoadScene(const String& filename)
+	Scene Scene::LoadScene(const String& filename)
 	{
-		std::fstream file(filename);
+		std::ifstream file(filename);
 		json j;
 
 		if (file.is_open())
@@ -79,9 +81,13 @@ namespace Firebox {
 			file.close();
 		}
 		else
+		{
 			FB_CORE_ERROR("Error: Could not open file for reading: {0}", filename);
-		return j;
-
+			return Scene{};
+		}
+		Scene scene;
+		j.get_to(scene);
+		return scene;
 	}
 }
 

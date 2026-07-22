@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Scene/Scene.h"
 
 namespace FireboxEditor {
 
@@ -9,6 +10,6 @@ namespace FireboxEditor {
 		MenuBar();
 		~MenuBar();
 
-		void RenderMenuBar();
+		void RenderMenuBar(Ref<Firebox::Scene>& scene);
 	};
 }

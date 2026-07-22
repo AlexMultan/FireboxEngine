@@ -15,8 +15,9 @@ private:
 public:
 	IdComponent() = default;
 	IdComponent(const IdComponent&) = default;
+	IdComponent(Firebox::UUID id) { m_Id = id; }
 
-	const uint64& GetId() { return m_Id; }
+	uint64 GetId() const { return m_Id; }
 };
 
 struct TransformComponent

@@ -57,18 +57,4 @@ namespace nlohmann {
 			j.at("Tag").get_to(tag);
 		}
 	};
-
-	template<>
-	struct adl_serializer<IdComponent>
-	{
-		static void to_json(json& j, const IdComponent& id)
-		{
-			j = json{ "Entity", id };
-		}
-
-		static void from_json(const json& j, IdComponent& id)
-		{
-			j.at("Entity").get_to(id);
-		}
-	};
 }

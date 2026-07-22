@@ -170,7 +170,7 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     ImGui::NewFrame();
     ImGuizmo::BeginFrame();
 
-    m_MenuBar.RenderMenuBar();
+    m_MenuBar.RenderMenuBar(m_CurrentScene);
     float menuBarHeight = ImGui::GetFrameHeight();
 
 

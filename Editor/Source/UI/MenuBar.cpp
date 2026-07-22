@@ -1,8 +1,10 @@
 #include "MenuBar.h"
-#include "imgui.h"
 #include "Build/GameRunner.h"
 #include "Input/Input.h"
+#include "Editor/EditorPaths.h"
+#include "Scene/Entity.h"
 
+#include <imgui.h>
 #include <windows.h>
 #include <commdlg.h>
 
@@ -14,7 +16,7 @@ FireboxEditor::MenuBar::~MenuBar()
 {
 }
 
-void FireboxEditor::MenuBar::RenderMenuBar()
+void FireboxEditor::MenuBar::RenderMenuBar(Ref<Firebox::Scene>& scene)
 {
     static bool s_ShowProjectSettings = false;
 
@@ -62,14 +64,16 @@ void FireboxEditor::MenuBar::RenderMenuBar()
                     std::wstring selectedFile = ofn.lpstrFile;
                 }
             }
+
             if (ImGui::MenuItem("Save", "Ctrl+S"))
             {
 
             }
 
-            if (ImGui::MenuItem("Save As", "Ctrl+Shift+S"))
+            if (ImGui::MenuItem("Save Scene", "Ctrl+Shift+S"))
             {
-
+				scene->SetSceneName("Basic");
+				scene->SaveScene(FireboxEditor::Paths::Resource("Levels/Basic.fbscene").string());
             }
 
             if (ImGui::MenuItem("Exit"))
