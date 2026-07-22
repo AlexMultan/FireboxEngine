@@ -3,6 +3,9 @@
 #include "Core/Core.h"
 
 #include <entt.hpp>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 namespace Firebox {
 
@@ -16,6 +19,8 @@ namespace Firebox {
 
 		Entity CreateEntity(const String& name);
 		void OnUpdate(float deltaTime);
+		void SaveScene(const json& j, const String& filename);
+		json LoadScene(const String& filename);
 		inline DynamicArray<Entity>& GetAllEntities() { return m_SceneEntities; }
 
 	private:

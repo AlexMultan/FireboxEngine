@@ -18,6 +18,7 @@ IncludeDir["stb"] = "ThirdParty/stb"
 IncludeDir["entt"] = "ThirdParty/entt/include"
 IncludeDir["assimp"] = "ThirdParty/assimp/include"
 IncludeDir["ImGuizmo"] = "ThirdParty/ImGuizmo/src"
+IncludeDir["json"] = "ThirdParty/json/include"
 
 include "ThirdParty/Glad"
 include "ThirdParty/ImGui"
@@ -46,6 +47,7 @@ project "Engine"
         "%{IncludeDir.stb}",
         "%{IncludeDir.assimp}",
         "%{IncludeDir.ImGuizmo}",
+        "%{IncludeDir.json}",
         "%{prj.name}/Source"
     }
 
@@ -60,7 +62,7 @@ project "Engine"
         "imgui",
         "ImGuizmo",
         "assimp"
-    }
+        }
 
     defines{
         "GLM_FORCE_DEPTH_ZERO_TO_ONE"
@@ -147,6 +149,7 @@ project "SampleGame"
         "ThirdParty/entt/include",
         "ThirdParty/ImGuizmo/src",
         "ThirdParty/assimp/include",
+        "ThirdParty/json/include",
         "Engine/Source"
     }
 
@@ -224,6 +227,7 @@ project "Editor"
         "ThirdParty/entt/include",
         "ThirdParty/assimp/include",
         "ThirdParty/ImGuizmo/src",
+        "ThirdParty/json/include",
         "Engine/Source",
         "%{IncludeDir.Glad}",
         "%{prj.name}/Source"

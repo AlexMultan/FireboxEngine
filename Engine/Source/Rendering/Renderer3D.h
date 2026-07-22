@@ -1,17 +1,17 @@
 #pragma once
 
-#include "Rendering/RendererAPI.h"
-#include "Rendering/Resources/Shader.h"
-#include "Rendering/Resources/Material.h"
-#include "Rendering/Resources/Mesh.h"
-#include "Rendering/Resources/Grid.h"
-#include "Rendering/Resources/Skybox.h"
-#include "Rendering/Resources/ShadowMap.h"
+#include "Rendering/RHI/RendererAPI.h"
+#include "Rendering/Materials/Shader.h"
+#include "Rendering/Materials/Material.h"
+#include "Rendering/Geometry/Mesh.h"
+#include "Rendering/Geometry/Grid.h"
+#include "Rendering/Skybox/Skybox.h"
+#include "Rendering/Targets/ShadowMap.h"
 #include "Components/Components.h"
 #include "Components/LightComponents.h"
 #include "Rendering/Camera/Camera.h"
-#include "Rendering/Resources/UniformBuffer.h"
-#include "Rendering/Resources/Framebuffer.h"
+#include "Rendering/Buffers/UniformBuffer.h"
+#include "Rendering/Targets/Framebuffer.h"
 
 namespace Firebox {
 

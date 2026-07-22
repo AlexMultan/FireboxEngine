@@ -1,14 +1,16 @@
 #include "PropertiesPanel.h"
 #include "UI/FloatParameters.h"
 #include "Utils/DebugTools.h"
-#include "Components/Components.h"
+#include "Components/CoreComponents.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/MaterialComponent.h"
+#include "Components/LightComponents.h"
 #include "Scene/Entity.h"
 #include "UI/ImGuiHelpers.h"
-#include "Core/EngineAssets.h"
+#include "Editor/EngineAssets.h"
 #include "Rendering/Renderer3D.h"
 #include "Core/EditorUtils.h"
 #include "UI/MaterialEditor.h"
-#include "Components/LightComponents.h"
 
 #include <imgui.h>
 

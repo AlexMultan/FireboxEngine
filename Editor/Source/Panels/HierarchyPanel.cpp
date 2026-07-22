@@ -1,8 +1,10 @@
 #include "HierarchyPanel.h"
 #include "UI/EntityHierarchyNode.h"
 #include "Scene/Entity.h"
-#include "Components/Components.h"
-#include "Rendering/Resources/PrimitiveShapes.h"
+#include "Components/CoreComponents.h"
+#include "Components/MeshComponent.h"
+#include "Components/MaterialComponent.h"
+#include "Rendering/Geometry/PrimitiveShapes.h"
 #include "Rendering/Renderer3D.h"
 
 #include <imgui.h>
@@ -37,7 +39,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(Ref<Firebox::Scene>& s
 			if (EditorUI::EntityHierarchyNode::DrawNode(e.GetComponent<TagComponent>().Tag.c_str(), id, isSelected))
 			{
 				m_Context.SetSelected(e);
-				FB_EDITOR_INFO("Selected Entity ID: {0}", id);
+				FB_EDITOR_TRACE("Selected Entity ID: {0}", id);
 			}
 		}
 		ImGui::TreePop();
@@ -46,7 +48,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(Ref<Firebox::Scene>& s
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsAnyItemHovered())
 	{
 		m_Context.ClearSelection();
-		FB_EDITOR_INFO("Deselected Entity. No active node.");
+		FB_EDITOR_TRACE("Deselected Entity. No active node.");
 	}
 
 	if (ImGui::IsWindowHovered() && !ImGui::IsAnyItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))

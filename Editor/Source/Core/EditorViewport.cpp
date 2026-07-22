@@ -4,9 +4,9 @@
 #include "Input/Input.h"
 #include "Utils/DebugTools.h"
 #include "Utils/String.h"
-#include "Rendering/Resources/PrimitiveShapes.h"
+#include "Rendering/Geometry/PrimitiveShapes.h"
 #include "Core/EditorUtils.h"
-#include "Rendering/Resources/Framebuffer.h"
+#include "Rendering/Targets/Framebuffer.h"
 
 #include <imgui_impl_sdl3.h>
 #include <imgui_impl_opengl3.h>
@@ -77,16 +77,15 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_EditorCamera->SetInputEnabled(false);
     m_EditorCamera->SetPosition({ 0.0f, 2.0f, 1.0f });
 
-    m_CubeMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_Cube.obj").string());
-    m_CubeEntity = m_CurrentScene->CreateEntity("Box");
-    m_CubeEntity.AddComponent<StaticMeshComponent>(m_CubeMesh);
-    m_CubeEntity.GetComponent<TransformComponent>().Position.x = -2.0f;
-    m_CubeEntity.GetComponent<TransformComponent>().Position.y = 1.0f;
-
+    m_FloorMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_Cube.obj").string());
+    m_WoodMaterial = CreateRef<Firebox::Material>();
+    m_WoodMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Wood_Planks_BC.png").string()));
+    m_WoodMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Wood_Planks_N.png").string()));
+    m_WoodMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Wood_Planks_BC.png").string()));
     m_FloorEntity = m_CurrentScene->CreateEntity("Floor");
-    m_FloorEntity.AddComponent<StaticMeshComponent>(m_CubeMesh);
+    m_FloorEntity.AddComponent<StaticMeshComponent>(m_FloorMesh);
     m_FloorEntity.GetComponent<TransformComponent>().Scale = { 10.0f, 0.5f, 10.0f };
-    m_CubeMesh->SetMaterial(0, Firebox::Renderer3D::GetDefaultMaterial(), 2.0f);
+    m_FloorMesh->SetMaterial(0, m_WoodMaterial, 10.0f);
 
     m_BunnyModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_StanfordBunny.obj").string());
     m_BunnyEntity = m_CurrentScene->CreateEntity("Bunny");
@@ -99,6 +98,7 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_JerrycanMaterial = CreateRef<Firebox::Material>();
     m_JerrycanMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Jerrycan_BC.png").string()));
     m_JerrycanMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Jerrycan_N.png").string()));
+    m_JerrycanMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Jerrycan_BC.png").string()));
     m_JerrycanMesh->SetMaterial(0, m_JerrycanMaterial);
     m_JerrycanEntity = m_CurrentScene->CreateEntity("Jerrycan");
     m_JerrycanEntity.AddComponent<StaticMeshComponent>(m_JerrycanMesh);

@@ -1,7 +1,7 @@
 #include "EditorUtils.h"
-#include "Rendering/Resources/Texture.h"
-#include "Core/EngineAssets.h"
-#include "Core/EditorPaths.h"
+#include "Rendering/Materials/Texture.h"
+#include "Editor/EngineAssets.h"
+#include "Editor/EditorPaths.h"
 #include "Utils/String.h"
 
 uint FireboxEditor::EditorUtils::s_MeshIconTexture = 0;

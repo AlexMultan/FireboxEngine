@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
-#include "Rendering/Resources/Framebuffer.h"
+#include "Rendering/Targets/Framebuffer.h"
 #include "Core/EditorContext.h"
 
 namespace FireboxEditor {

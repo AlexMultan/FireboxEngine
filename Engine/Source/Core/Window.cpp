@@ -1,7 +1,7 @@
 ﻿#include "Window.h"
 #include "Core/Log.h"
 #include "Events/SDLEventTranslator.h"
-#include "EngineAssets.h"
+#include "Editor/EngineAssets.h"
 
 #include <glad/glad.h>
 #include <stb_image.h>

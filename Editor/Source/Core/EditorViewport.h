@@ -9,8 +9,10 @@
 #include "Panels/HierarchyPanel.h"
 #include "Panels/StatsPanel.h"
 #include "Rendering/Camera/PerspectiveCamera.h"
-#include "Components/Components.h"
+#include "Components/CoreComponents.h"
 #include "Components/LightComponents.h"
+#include "Components/StaticMeshComponent.h"
+#include "Components/MaterialComponent.h"
 #include "Scene/Scene.h"
 #include "Scene/Entity.h"
 #include "EditorContext.h"
@@ -52,20 +54,16 @@ namespace FireboxEditor {
 		Ref<Firebox::Scene> m_CurrentScene;
 
 		Ref<Firebox::PerspectiveCamera> m_EditorCamera;
-		Ref<Firebox::StaticMesh> m_CubeMesh;
-		Ref<Firebox::Material> m_SecondCubeMaterial;
-		TransformComponent m_CubeTransform;
-		String m_CubeTag;
-		String m_SecondCubeTag;
-		TransformComponent m_SecondCubeTransform;
 		Firebox::Entity m_DirectionalLight;
-		Firebox::Entity m_CubeEntity{};
 		Firebox::Entity m_FloorEntity{};
+		Ref<Firebox::StaticMesh> m_FloorMesh;
 		Firebox::Entity m_BunnyEntity{};
 		Ref<Firebox::StaticMesh> m_BunnyModel;
 
 		Firebox::Entity m_JerrycanEntity{};
 		Ref<Firebox::Material> m_JerrycanMaterial;
 		Ref<Firebox::StaticMesh> m_JerrycanMesh;
+
+		Ref<Firebox::Material> m_WoodMaterial;
 	};
 }
