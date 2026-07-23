@@ -1,8 +1,6 @@
 #include "Scene.h"
 #include "Components/CoreComponents.h"
-#include "Components/MeshComponent.h"
-#include "Components/StaticMeshComponent.h"
-#include "Components/MaterialComponent.h"
+#include "Components/RenderComponents.h"
 #include "Rendering/Renderer3D.h"
 #include "Serialization/SceneSerializer.h"
 #include "Entity.h"
@@ -21,6 +19,12 @@ namespace Firebox {
 
 	}
 
+
+	Entity Scene::CreateEntity()
+	{
+		Entity entity = { m_Registry.create(), this };
+		return entity;
+	}
 
 	Entity Scene::CreateEntity(const String& name)
 	{
@@ -58,7 +62,7 @@ namespace Firebox {
 	}
 	void Scene::SaveScene(const String& filename)
 	{
-		json j = *this;
+		JSON j = *this;
 		std::ofstream file(filename);
 
 		if (file.is_open())
@@ -73,7 +77,7 @@ namespace Firebox {
 	Scene Scene::LoadScene(const String& filename)
 	{
 		std::ifstream file(filename);
-		json j;
+		JSON j;
 
 		if (file.is_open())
 		{

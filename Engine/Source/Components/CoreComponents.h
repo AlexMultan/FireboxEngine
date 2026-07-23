@@ -3,10 +3,6 @@
 #include "Core/Core.h"
 #include "Core/UUID.h"
 
-#include <nlohmann/json.hpp>
-
-using json = nlohmann::json;
-
 struct IdComponent
 {
 private:

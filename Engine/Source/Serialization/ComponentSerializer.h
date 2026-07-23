@@ -1,22 +1,19 @@
 #pragma once
 
 #include "Components/Components.h"
-
-#include <nlohmann/json.hpp>
-
-using json = nlohmann::json;
+#include "JsonAlias.h"
 
 namespace nlohmann {
 
 	template<>
 	struct adl_serializer<Vector3>
 	{
-		static void to_json(json& j, const Vector3& v)
+		static void to_json(JSON& j, const Vector3& v)
 		{
-			j = json{ {"X", v.x}, {"Y", v.y}, {"Z", v.z} };
+			j = JSON{ {"X", v.x}, {"Y", v.y}, {"Z", v.z} };
 		}
 
-		static void from_json(const json& j, Vector3& v)
+		static void from_json(const JSON& j, Vector3& v)
 		{
 			j.at("X").get_to(v.x);
 			j.at("Y").get_to(v.y);
@@ -27,16 +24,16 @@ namespace nlohmann {
 	template<>
 	struct adl_serializer<TransformComponent>
 	{
-		static void to_json(json& j, const TransformComponent& transform)
+		static void to_json(JSON& j, const TransformComponent& transform)
 		{
-			j = json{
+			j = JSON{
 				{"Position", transform.Position},
 				{"Rotation", transform.Rotation},
 				{"Scale", transform.Scale}
 			};
 		}
 
-		static void from_json(const json& j, TransformComponent& transform)
+		static void from_json(const JSON& j, TransformComponent& transform)
 		{
 			j.at("Position").get_to(transform.Position);
 			j.at("Rotation").get_to(transform.Rotation);
@@ -47,14 +44,14 @@ namespace nlohmann {
 	template<>
 	struct adl_serializer<TagComponent>
 	{
-		static void to_json(json& j, const TagComponent& tag)
+		static void to_json(JSON& j, const TagComponent& tag)
 		{
-			j = json{ "Tag", tag };
+			j = JSON{ "Tag", tag.Tag };
 		}
 
-		static void from_json(const json& j, TagComponent& tag)
+		static void from_json(const JSON& j, TagComponent& tag)
 		{
-			j.at("Tag").get_to(tag);
+			j.at("Tag").get_to(tag.Tag);
 		}
 	};
 }

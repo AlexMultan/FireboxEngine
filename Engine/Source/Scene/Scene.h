@@ -18,10 +18,12 @@ namespace Firebox {
 		Scene(Scene&&) = default;
 		Scene& operator=(Scene&&) = default;
 
+		Entity CreateEntity();
 		Entity CreateEntity(const String& name);
 		void OnUpdate(float deltaTime);
 		void SaveScene(const String& filename);
 		static Scene LoadScene(const String& filename);
+		inline const entt::registry& GetRegistry() const { return m_Registry; }
 		inline const DynamicArray<Entity>& GetAllEntities() const { return m_SceneEntities; }
 		inline const String& GetSceneName() const { return m_SceneName; }
 		inline void SetSceneName(const String& name) { m_SceneName = name; }

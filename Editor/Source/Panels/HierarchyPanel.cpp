@@ -2,8 +2,7 @@
 #include "UI/EntityHierarchyNode.h"
 #include "Scene/Entity.h"
 #include "Components/CoreComponents.h"
-#include "Components/MeshComponent.h"
-#include "Components/MaterialComponent.h"
+#include "Components/RenderComponents.h"
 #include "Rendering/Geometry/PrimitiveShapes.h"
 #include "Rendering/Renderer3D.h"
 

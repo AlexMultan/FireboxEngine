@@ -70,10 +70,44 @@ void FireboxEditor::MenuBar::RenderMenuBar(Ref<Firebox::Scene>& scene)
 
             }
 
-            if (ImGui::MenuItem("Save Scene", "Ctrl+Shift+S"))
+            if (ImGui::BeginMenu("Scene"))
             {
-				scene->SetSceneName("Basic");
-				scene->SaveScene(FireboxEditor::Paths::Resource("Levels/Basic.fbscene").string());
+                if (ImGui::MenuItem("Save", "Ctrl+Shift+S"))
+                {
+                    scene->SetSceneName("Untitled");
+                    scene->SaveScene(FireboxEditor::Paths::Resource("Levels/Untitled.fbscene").string());
+                }
+
+                if (ImGui::MenuItem("Load", "Ctrl+Shift+L"))
+                {
+                    OPENFILENAMEW ofn;
+                    wchar_t szFile[260] = L"";
+
+                    ZeroMemory(&ofn, sizeof(ofn));
+                    ofn.lStructSize = sizeof(ofn);
+                    ofn.hwndOwner = NULL;
+                    ofn.lpstrFile = szFile;
+                    ofn.nMaxFile = sizeof(szFile) / sizeof(wchar_t);
+                    ofn.lpstrFilter =
+                        L"Scene (*.fbscene)\0*.fbscene\0"
+                        L"All Files (*.*)\0*.*\0\0";
+                    ofn.nFilterIndex = 1;
+                    ofn.lpstrFileTitle = NULL;
+                    ofn.nMaxFileTitle = 0;
+                    ofn.lpstrInitialDir = NULL;
+                    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+                    if (GetOpenFileNameW(&ofn))
+                    {
+                        std::wstring selectedFile = ofn.lpstrFile;
+                        size_t len = wcstombs(nullptr, selectedFile.c_str(), 0) + 1;
+                        char* buffer = new char[len];
+                        wcstombs(buffer, selectedFile.c_str(), len);
+                        //scene = scene->LoadScene(buffer);
+                        delete[] buffer;
+                    }
+                }
+                ImGui::EndMenu();
             }
 
             if (ImGui::MenuItem("Exit"))
