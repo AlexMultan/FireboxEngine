@@ -22,16 +22,13 @@ namespace Firebox {
 		Entity CreateEntity(const String& name);
 		void OnUpdate(float deltaTime);
 		void SaveScene(const String& filename);
-		static Scene LoadScene(const String& filename);
+		static Ref<Scene> LoadScene(const String& filename);
 		inline const entt::registry& GetRegistry() const { return m_Registry; }
-		inline const DynamicArray<Entity>& GetAllEntities() const { return m_SceneEntities; }
 		inline const String& GetSceneName() const { return m_SceneName; }
 		inline void SetSceneName(const String& name) { m_SceneName = name; }
-		inline void SetEntities(const DynamicArray<Entity>& entities) { m_SceneEntities = entities; }
 
 	private:
 		entt::registry m_Registry;
-		DynamicArray<Entity> m_SceneEntities;
 		friend class Entity;
 		String m_DefaultEntityTag = "NewEntity";
 		String m_SceneName = "NewScene";

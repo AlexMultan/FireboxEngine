@@ -11,8 +11,10 @@ namespace FireboxEditor {
 	{
 	public:
 		Firebox::Entity selectedEntity;
+		Ref<Firebox::Scene> currentScene;
 
 		std::function<void(Firebox::Entity)> OnSelectionChanged;
+		std::function<void(Ref<Firebox::Scene>&)> OnSceneChanged;
 
 		inline void SetSelected(Firebox::Entity entity)
 		{
@@ -28,5 +30,12 @@ namespace FireboxEditor {
 				OnSelectionChanged(selectedEntity);
 		}
 
+		inline void SetCurrentScene(Ref<Firebox::Scene>& scene)
+		{
+			ClearSelection();
+			currentScene = scene;
+			if (OnSceneChanged)
+				OnSceneChanged(currentScene);
+		}
 	};
 }

@@ -46,12 +46,50 @@ namespace nlohmann {
 	{
 		static void to_json(JSON& j, const TagComponent& tag)
 		{
-			j = JSON{ "Tag", tag.Tag };
+			j = JSON{ {"Tag", tag.Tag} };
 		}
 
 		static void from_json(const JSON& j, TagComponent& tag)
 		{
 			j.at("Tag").get_to(tag.Tag);
+		}
+	};
+
+	template<>
+	struct adl_serializer<SkyboxComponent>
+	{
+		static void to_json(JSON& j, const SkyboxComponent& sb)
+		{
+			if (sb.Skybox)
+				j = JSON{ {"Faces", sb.Skybox->GetFaces()} };
+			else
+				j = JSON{ {"Faces", DynamicArray<String>{}} };
+		}
+
+		static void from_json(const JSON& j, SkyboxComponent& sb)
+		{
+			DynamicArray<String> faces;
+			j.at("Faces").get_to(faces);
+			if (!faces.empty())
+				sb.Skybox = CreateRef<Firebox::Skybox>(faces);
+		}
+	};
+
+	template<>
+	struct adl_serializer<DirectionalLightComponent>
+	{
+		static void to_json(JSON& j, const DirectionalLightComponent& dlc)
+		{
+			j = JSON{
+				{"Direction", dlc.Direction},
+				{"Color", dlc.Color}
+			};
+		}
+
+		static void from_json(const JSON& j, DirectionalLightComponent& sb)
+		{
+			j.at("Direction").get_to(sb.Direction);
+			j.at("Color").get_to(sb.Color);
 		}
 	};
 }

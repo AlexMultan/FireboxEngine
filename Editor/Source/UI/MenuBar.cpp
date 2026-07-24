@@ -8,7 +8,7 @@
 #include <windows.h>
 #include <commdlg.h>
 
-FireboxEditor::MenuBar::MenuBar()
+FireboxEditor::MenuBar::MenuBar(FireboxEditor::EditorContext& context) : m_Context(context)
 {
 }
 
@@ -16,7 +16,7 @@ FireboxEditor::MenuBar::~MenuBar()
 {
 }
 
-void FireboxEditor::MenuBar::RenderMenuBar(Ref<Firebox::Scene>& scene)
+void FireboxEditor::MenuBar::RenderMenuBar()
 {
     static bool s_ShowProjectSettings = false;
 
@@ -74,12 +74,14 @@ void FireboxEditor::MenuBar::RenderMenuBar(Ref<Firebox::Scene>& scene)
             {
                 if (ImGui::MenuItem("Save", "Ctrl+Shift+S"))
                 {
-                    scene->SetSceneName("Untitled");
-                    scene->SaveScene(FireboxEditor::Paths::Resource("Levels/Untitled.fbscene").string());
+                    m_Context.currentScene->SetSceneName("Untitled");
+                    m_Context.currentScene->SaveScene(FireboxEditor::Paths::Resource("Levels/Untitled.fbscene").string());
                 }
 
                 if (ImGui::MenuItem("Load", "Ctrl+Shift+L"))
                 {
+                    
+
                     OPENFILENAMEW ofn;
                     wchar_t szFile[260] = L"";
 
@@ -103,7 +105,10 @@ void FireboxEditor::MenuBar::RenderMenuBar(Ref<Firebox::Scene>& scene)
                         size_t len = wcstombs(nullptr, selectedFile.c_str(), 0) + 1;
                         char* buffer = new char[len];
                         wcstombs(buffer, selectedFile.c_str(), len);
-                        //scene = scene->LoadScene(buffer);
+
+                        Ref<Firebox::Scene> loadedScene = Firebox::Scene::LoadScene(buffer);
+                        m_Context.SetCurrentScene(loadedScene);
+
                         delete[] buffer;
                     }
                 }

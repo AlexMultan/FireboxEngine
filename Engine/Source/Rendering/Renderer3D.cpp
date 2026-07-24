@@ -13,14 +13,12 @@
 Firebox::Renderer3D::Renderer3DData Firebox::Renderer3D::s_Data;
 Firebox::ViewMode Firebox::Renderer3D::s_ViewMode = Firebox::ViewMode::Lit;
 Ref<Firebox::Grid> Firebox::Renderer3D::s_Grid = nullptr;
-Ref<Firebox::Skybox> Firebox::Renderer3D::s_Skybox = nullptr;
 const Ref<Firebox::Framebuffer>& Firebox::Renderer3D::GetMainFramebuffer() { return s_Data.MainFramebuffer; }
 Ref<Firebox::UniformBuffer> Firebox::Renderer3D::s_ShadowUniformBuffer = nullptr;
 Ref<Firebox::Shader> Firebox::Renderer3D::GetDefaultShader() { return s_Data.DefaultShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetLightShader() { return s_Data.LightShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetGridShader() { return s_Data.GridShader; }
 const Ref<Firebox::Material>& Firebox::Renderer3D::GetDefaultMaterial() { return s_Data.DefaultMaterial; }
-const Ref<Firebox::Material>& Firebox::Renderer3D::GetSkyboxMaterial() { return s_Data.SkyboxMaterial; }
 void Firebox::Renderer3D::SetGridSize(const float& gridSize) { s_GridSize = gridSize; }
 
 void Firebox::Renderer3D::SetActiveViewMode(const ViewMode& viewMode)
@@ -54,27 +52,14 @@ void Firebox::Renderer3D::Init()
 
 	s_Data.LightShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::LightVertex, Firebox::Shaders::GLSL::LightFragment, nullptr);
 	s_Data.GridShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::GridVertexShader, Firebox::Shaders::GLSL::GridFragmentShader, nullptr);
-	s_Data.SkyboxShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::SkyboxVertexShader, Firebox::Shaders::GLSL::SkyboxFragmentShader, nullptr);
 
 	s_Data.DefaultMaterial = CreateRef<Material>(s_Data.DefaultShader);
 	s_Data.DefaultMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Default.png").string()));
 	s_Data.DefaultMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Default.png").string()));
 	s_Data.DefaultMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Default.png").string()));
 
-	s_Data.SkyboxMaterial = CreateRef<Material>(s_Data.SkyboxShader);
-	DynamicArray<String> skyboxFaces{
-		Firebox::EngineAssets::Get("Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_right.png").string(),
-		Firebox::EngineAssets::Get("Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_left.png").string(),
-		Firebox::EngineAssets::Get("Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_top.png").string(),
-		Firebox::EngineAssets::Get("Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_bottom.png").string(),
-		Firebox::EngineAssets::Get("Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_front.png").string(),
-		Firebox::EngineAssets::Get("Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_back.png").string()
-	};
-	s_Data.SkyboxMaterial->SetCubemapTexture(Firebox::Texture::CreateCubemap(skyboxFaces));
-
-	FB_ASSERT(s_Data.DefaultShader, "BaseShader is null after creation!");
+	FB_ASSERT(s_Data.DefaultShader, "DefaultShader is null after creation!");
 	s_Grid = CreateRef<Firebox::Grid>();
-	s_Skybox = CreateRef<Firebox::Skybox>();
 }
 
 void Firebox::Renderer3D::Shutdown()
@@ -113,7 +98,6 @@ void Firebox::Renderer3D::EndScene()
 	RenderShadowPass();
 	s_Data.MainFramebuffer->BindFramebuffer();
 	Flush();
-	DrawSkybox();
 	DrawGrid();
 	s_Data.MainFramebuffer->UnbindFramebuffer();
 }
@@ -135,17 +119,12 @@ void Firebox::Renderer3D::DrawGrid()
 		s_Data.RendererAPI->DrawIndexed(s_Grid->GetVertexArray());
 }
 
-void Firebox::Renderer3D::DrawSkybox()
+void Firebox::Renderer3D::DrawSkybox(const Ref<Skybox>& skybox)
 {
-	Mat4 viewNoTranslation = Mat4(Mat3(s_Data.ViewMatrix));
-	Mat4 skyboxVP = s_Data.ProjectionMatrix * viewNoTranslation;
-	s_Data.RendererAPI->SetDepthFunc(Firebox::APIEnum::API_GEQUAL);
-	s_Data.SkyboxMaterial->BindMaterial();
-	s_Data.SkyboxShader->UseShader();
-	s_Data.SkyboxShader->SetMat4("u_ViewProjection", skyboxVP);
-	if (s_Skybox)
-		s_Data.RendererAPI->DrawIndexed(s_Skybox->GetVertexArray());
-	s_Data.RendererAPI->SetDepthFunc(Firebox::APIEnum::API_GREATER);
+	if (skybox) [[likely]]
+	{
+		s_Data.ActiveSkybox = skybox;
+	}
 }
 
 void Firebox::Renderer3D::Flush()
@@ -207,6 +186,19 @@ void Firebox::Renderer3D::Flush()
 		s_Data.RendererAPI->DrawIndexed(cmd.VAO);
 	}
 	s_Data.RenderQueue.clear();
+
+	if (s_Data.ActiveSkybox)
+	{
+		Mat4 viewNoTranslation = Mat4(Mat3(s_Data.ViewMatrix));
+		Mat4 skyboxVP = s_Data.ProjectionMatrix * viewNoTranslation;
+		s_Data.RendererAPI->SetDepthFunc(Firebox::APIEnum::API_GEQUAL);
+		s_Data.ActiveSkybox->GetMaterial()->BindMaterial();
+		s_Data.ActiveSkybox->GetShader()->UseShader();
+		s_Data.ActiveSkybox->GetShader()->SetMat4("u_ViewProjection", skyboxVP);
+		s_Data.RendererAPI->DrawIndexed(s_Data.ActiveSkybox->GetVertexArray());
+		s_Data.RendererAPI->SetDepthFunc(Firebox::APIEnum::API_GREATER);
+		s_Data.ActiveSkybox = nullptr;
+	}
 }
 
 void Firebox::Renderer3D::RenderShadowPass()

@@ -1,15 +1,19 @@
 #pragma once
 
 #include "Scene/Scene.h"
+#include "Core/EditorContext.h"
 
 namespace FireboxEditor {
 
 	class MenuBar
 	{
 	public:
-		MenuBar();
+		MenuBar(EditorContext& context);
 		~MenuBar();
 
-		void RenderMenuBar(Ref<Firebox::Scene>& scene);
+		void RenderMenuBar();
+
+	private:
+		EditorContext& m_Context;
 	};
 }

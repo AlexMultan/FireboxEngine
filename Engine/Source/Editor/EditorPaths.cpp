@@ -15,4 +15,9 @@ namespace FireboxEditor::Paths {
 		return (g_ResourceRoot / relativePath).lexically_normal();
 	}
 
+	std::filesystem::path GetRootPath()
+	{
+		return g_ResourceRoot.lexically_normal();
+	}
+
 }

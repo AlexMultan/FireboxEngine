@@ -9,7 +9,7 @@ namespace Firebox::Shaders::GLSL {
 		layout (location = 2) in vec2 aTexCoords;
 		layout (location = 3) in vec3 aTangent;
 		layout (location = 4) in vec3 aBitangent;
-
+		
 		uniform mat4 u_ViewProjection;
 		uniform mat4 u_Model;
 		uniform mat3 u_InverseNormal;

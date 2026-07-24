@@ -140,6 +140,21 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 				ImGui::TreePop();
 			}
 		}
+
+		if (entity.HasComponent<SkyboxComponent>())
+		{
+			PushTreeNodeStyle();
+
+			ImGuiTreeNodeFlags skyboxTreeFlags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen;
+			bool skyboxTree = ImGui::TreeNodeEx("Skybox", skyboxTreeFlags);
+
+			PopTreeNodeStyle();
+
+			if (skyboxTree)
+			{
+				ImGui::TreePop();
+			}
+		}
 	}
 
 	ImGui::End();

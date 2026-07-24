@@ -31,13 +31,13 @@ void EditorUI::FloatParameters::DrawParameter(const char* text, const char* grou
 	ImVec2 pos = ImGui::GetCursorScreenPos();
 	ImVec2 size = ImGui::CalcTextSize(text);
 
-	ImVec4 base = ImGui::ColorConvertU32ToFloat4(IM_COL32(color.r * 255, color.g * 255, color.b * 255, color.a * 255));
+	/*ImVec4 base = ImGui::ColorConvertU32ToFloat4(IM_COL32(color.r * 255, color.g * 255, color.b * 255, color.a * 255));
 	ImVec4 top = base * ImVec4(1.5f, 1.5f, 1.5f, 1.0f);
 	ImVec4 bottom = base * ImVec4(0.45f, 0.45f, 0.45f, 1.0f);
 	top.w = bottom.w = base.w;
 
 	ImU32 col_top = ImGui::GetColorU32(top);
-	ImU32 col_bot = ImGui::GetColorU32(bottom);
+	ImU32 col_bot = ImGui::GetColorU32(bottom);*/
 
 	float frameHeight = ImGui::GetFrameHeight();
 	float paddingX = ImGui::GetStyle().ItemInnerSpacing.x;
@@ -45,7 +45,7 @@ void EditorUI::FloatParameters::DrawParameter(const char* text, const char* grou
 	ImVec2 maxPos = ImVec2(pos.x + size.x + paddingX, pos.y + frameHeight);
 
 	ImDrawList* drawList = ImGui::GetWindowDrawList();
-	drawList->AddRectFilledMultiColor(minPos, maxPos, col_top, col_top, col_bot, col_bot);
+	drawList->AddRectFilled(minPos, maxPos, IM_COL32(color.r * 255, color.g * 255, color.b * 255, color.a * 255));
 	ImGui::PushFont(FireboxEditor::EditorUtils::GetTransformAxesFont());
 	ImGui::Text("%s", text);
 	ImGui::PopFont();

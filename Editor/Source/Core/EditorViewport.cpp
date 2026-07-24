@@ -14,7 +14,7 @@
 
 FireboxEditor::EditorViewport::EditorViewport() 
     : Layer("EditorLayer"), io(nullptr), m_HierarchyPanel("Hierarchy", m_EditorContext), m_PropertiesPanel("Details", m_EditorContext),
-    m_ViewportPanel("Viewport", m_EditorContext)
+    m_ViewportPanel("Viewport", m_EditorContext), m_MenuBar(m_EditorContext)
 {
    
 }
@@ -63,32 +63,32 @@ void FireboxEditor::EditorViewport::OnAttach()
     ImGui_ImplSDL3_InitForOpenGL(sdlWindow, glContext);
     ImGui_ImplOpenGL3_Init();
 
-    m_MenuBar = FireboxEditor::MenuBar();
+    FireboxEditor::EditorUtils::Init(io);
 
     m_AssetBrowser = FireboxEditor::AssetBrowser("Asset Browser");
     m_StatsPanel = FireboxEditor::StatsPanel("Stats");
 
     if (!m_TransformPropertiesFont) { return; }
 
-    m_CurrentScene = CreateRef<Firebox::Scene>();
-
     m_EditorCamera = CreateRef<Firebox::PerspectiveCamera>(60.0f, 16.0f / 9.0f,
         0.1f, 1000.0f);
     m_EditorCamera->SetInputEnabled(false);
     m_EditorCamera->SetPosition({ 0.0f, 2.0f, 1.0f });
+
+    m_EditorContext.currentScene = CreateRef<Firebox::Scene>();
 
     m_FloorMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_Cube.obj").string());
     m_WoodMaterial = CreateRef<Firebox::Material>();
     m_WoodMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Wood_Planks_BC.png").string()));
     m_WoodMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Wood_Planks_N.png").string()));
     m_WoodMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Wood_Planks_BC.png").string()));
-    m_FloorEntity = m_CurrentScene->CreateEntity("Floor");
+    m_FloorEntity = m_EditorContext.currentScene->CreateEntity("Floor");
     m_FloorEntity.AddComponent<StaticMeshComponent>(m_FloorMesh);
     m_FloorEntity.GetComponent<TransformComponent>().Scale = { 10.0f, 0.5f, 10.0f };
     m_FloorMesh->SetMaterial(0, m_WoodMaterial, 10.0f);
 
     m_BunnyModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::Paths::Resource("Models/SM_StanfordBunny.obj").string());
-    m_BunnyEntity = m_CurrentScene->CreateEntity("Bunny");
+    m_BunnyEntity = m_EditorContext.currentScene->CreateEntity("Bunny");
     m_BunnyEntity.AddComponent<StaticMeshComponent>(m_BunnyModel);
     m_BunnyEntity.GetComponent<TransformComponent>().Position.y = 1.0f;
     m_BunnyEntity.GetComponent<TransformComponent>().Position.z = -1.0f;
@@ -100,23 +100,16 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_JerrycanMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Jerrycan_N.png").string()));
     m_JerrycanMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Jerrycan_BC.png").string()));
     m_JerrycanMesh->SetMaterial(0, m_JerrycanMaterial);
-    m_JerrycanEntity = m_CurrentScene->CreateEntity("Jerrycan");
+    m_JerrycanEntity = m_EditorContext.currentScene->CreateEntity("Jerrycan");
     m_JerrycanEntity.AddComponent<StaticMeshComponent>(m_JerrycanMesh);
     m_JerrycanEntity.GetComponent<TransformComponent>().Position.y = 0.5f;
-
-    m_DirectionalLight = m_CurrentScene->CreateEntity("Directional Light");
+    
+    m_DirectionalLight = m_EditorContext.currentScene->CreateEntity("Directional Light");
     m_DirectionalLight.AddComponent<DirectionalLightComponent>();
     m_DirectionalLight.GetComponent<DirectionalLightComponent>().Direction = { -0.2f, -1.0f, -0.3f };
     m_DirectionalLight.GetComponent<DirectionalLightComponent>().Color = { 1.0f, 0.89f, 0.96f };
 
-    for (auto& entity : m_CurrentScene->GetAllEntities())
-    {
-        String msg = "Entity Tag: " + entity.GetComponent<TagComponent>().Tag + ", Entity Id: " + Utils::ToString(entity.GetComponent<IdComponent>().GetId());
-        FB_EDITOR_INFO(msg);
-    }
-
     m_PropertiesPanel.SetTransformPropertiesFont(m_TransformPropertiesFont);
-    FireboxEditor::EditorUtils::Init(io);
 }
 
 void FireboxEditor::EditorViewport::OnDetach()
@@ -148,7 +141,7 @@ void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
 void FireboxEditor::EditorViewport::OnRender(float deltaTime)
 {
     Firebox::Renderer3D::BeginScene(*m_EditorCamera, m_DirectionalLight.GetComponent<DirectionalLightComponent>());
-    m_CurrentScene->OnUpdate(deltaTime);
+    m_EditorContext.currentScene->OnUpdate(deltaTime);
     Firebox::Renderer3D::EndScene();
     Firebox::Renderer3D::SetGridSize(m_ViewportPanel.GetGridSize());
     Firebox::Renderer3D::SetActiveViewMode(static_cast<Firebox::ViewMode>(m_ViewportPanel.GetViewMode()));
@@ -170,7 +163,7 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
     ImGui::NewFrame();
     ImGuizmo::BeginFrame();
 
-    m_MenuBar.RenderMenuBar(m_CurrentScene);
+    m_MenuBar.RenderMenuBar();
     float menuBarHeight = ImGui::GetFrameHeight();
 
 
@@ -210,7 +203,7 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
 
     m_ViewportPanel.SetMenuBarHeight(menuBarHeight);
     m_AssetBrowser.RenderPanel();
-    m_HierarchyPanel.RenderHierarchyrPanel(m_CurrentScene);
+    m_HierarchyPanel.RenderHierarchyrPanel(m_EditorContext.currentScene);
 
     m_PropertiesPanel.RenderPanel();
     m_ConsolePanel.RenderPanel();

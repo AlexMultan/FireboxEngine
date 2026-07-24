@@ -10,5 +10,5 @@ namespace FireboxEditor::Paths {
 	FIREBOX_API void Init();
 
 	FIREBOX_API std::filesystem::path Resource(std::string_view relativePath);
-
+	FIREBOX_API std::filesystem::path GetRootPath();
 }

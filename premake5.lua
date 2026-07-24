@@ -74,7 +74,6 @@ project "Engine"
 
     filter "system:windows"
         cppdialect "C++20"
-        staticruntime "On"
         systemversion "latest"
         defines{ "FIREBOX_PLATFORM_WIN64", "FIREBOX_BUILD_DLL" }
         links { "imm32" }
@@ -106,17 +105,17 @@ project "Engine"
     filter "configurations:Debug"
         defines "FIREBOX_DEBUG"
         symbols "On"
-        buildoptions "/MDd"
+        staticruntime "Off"
 
     filter "configurations:Release"
         defines "FIREBOX_RELEASE"
         optimize "On"
-        buildoptions "/MD"
+        staticruntime "Off"
 
     filter "configurations:Shipping"
         defines "FIREBOX_SHIPPING"
         optimize "On"
-        buildoptions "/MD"
+        staticruntime "On"
 
     filter {}
 
@@ -155,7 +154,6 @@ project "SampleGame"
 
     filter "system:windows"
         cppdialect "C++20"
-        staticruntime "On"
         systemversion "latest"
 
         defines{
@@ -169,20 +167,20 @@ project "SampleGame"
         filter "configurations:Debug"
             defines "FIREBOX_DEBUG"
             symbols "On"
+            staticruntime "Off"
             kind "ConsoleApp"
-            buildoptions "/MDd"
 
         filter "configurations:Release"
             defines "FIREBOX_RELEASE"
             optimize "On"
+            staticruntime "Off"
             kind "ConsoleApp"
-            buildoptions "/MD"
 
         filter "configurations:Shipping"
             defines "FIREBOX_SHIPPING"
             optimize "On"
+            staticruntime "On"
             kind "ConsoleApp"
-            buildoptions "/MD"
 
         filter {"system:windows"}  
             buildoptions "/utf-8"
@@ -235,7 +233,6 @@ project "Editor"
 
     filter "system:windows"
         cppdialect "C++20"
-        staticruntime "On"
         systemversion "latest"
 
         defines{
@@ -249,17 +246,17 @@ project "Editor"
         filter "configurations:Debug"
             defines "FIREBOX_DEBUG"
             symbols "On"
-            buildoptions "/MDd"
+            staticruntime "Off"
 
         filter "configurations:Release"
             defines "FIREBOX_RELEASE"
             optimize "On"
-            buildoptions "/MD"
+            staticruntime "Off"
 
         filter "configurations:Shipping"
             defines "FIREBOX_SHIPPING"
             optimize "On"
-            buildoptions "/MD"
+            staticruntime "On"
 
         filter {"system:windows"}  
             buildoptions "/utf-8"

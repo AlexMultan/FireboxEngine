@@ -50,8 +50,6 @@ namespace FireboxEditor {
 		StatsPanel m_StatsPanel;
 		EditorContext m_EditorContext;
 
-		Ref<Firebox::Scene> m_CurrentScene;
-
 		Ref<Firebox::PerspectiveCamera> m_EditorCamera;
 		Firebox::Entity m_DirectionalLight;
 		Firebox::Entity m_FloorEntity{};

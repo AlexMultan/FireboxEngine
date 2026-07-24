@@ -4,6 +4,7 @@
 #include "Rendering/Buffers/VertexBuffer.h"
 #include "Rendering/Buffers/IndexBuffer.h"
 #include "Rendering/Buffers/Vertex.h"
+#include "Rendering/Materials/Material.h"
 
 namespace Firebox {
 
@@ -11,12 +12,19 @@ namespace Firebox {
 	{
 	public:
 		Skybox();
-        const Ref<VertexArray>& GetVertexArray() const { return m_VAO; }
+		Skybox(const DynamicArray<String>& faces);
+        inline const Ref<VertexArray>& GetVertexArray() const { return m_VAO; }
+        inline const Ref<Shader>& GetShader() const { return m_SkyboxShader; }
+        inline const Ref<Material>& GetMaterial() const { return m_SkyboxMaterial; }
+        inline const DynamicArray<String>& GetFaces() const { return m_Faces; }
 
 	private:
         Ref<VertexArray> m_VAO;
         Ref<VertexBuffer> m_VBO;
         Ref<IndexBuffer> m_IBO;
+        Ref<Shader> m_SkyboxShader;
+        Ref<Material> m_SkyboxMaterial;
+        DynamicArray<String> m_Faces;
 
         float vertices[72] = {
             // Back face (-Z)

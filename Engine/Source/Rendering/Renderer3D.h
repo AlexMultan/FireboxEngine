@@ -34,17 +34,15 @@ namespace Firebox {
 
 		static void DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform);
 		static void DrawGrid();
-		static void DrawSkybox();
+		static void DrawSkybox(const Ref<Skybox>& skybox);
 
 		static Ref<Shader> GetDefaultShader();
 		static Ref<Shader> GetDepthShader();
 		static Ref<Shader> GetShadowShader();
 		static Ref<Shader> GetLightShader();
 		static Ref<Shader> GetGridShader();
-		static Ref<Shader> GetSkyboxShader();
 		static const Ref<Framebuffer>& GetMainFramebuffer();
  		static const Ref<Material>& GetDefaultMaterial();
-		static const Ref<Material>& GetSkyboxMaterial();
 		static void SetGridSize(const float& gridSize);
 		static void SetActiveViewMode(const ViewMode& viewMode);
 
@@ -70,9 +68,7 @@ namespace Firebox {
 			Ref<Shader> ShadowDepthShader;
 			Ref<Shader> LightShader;
 			Ref<Shader> GridShader;
-			Ref<Shader> SkyboxShader;
 			Ref<Material> DefaultMaterial;
-			Ref<Material> SkyboxMaterial;
 			Mat4 ViewProjectionMatrix;
 			Mat4 ViewMatrix;
 			Mat4 ProjectionMatrix;
@@ -85,6 +81,7 @@ namespace Firebox {
 			DirectionalLightComponent DirectionalLight;
 			Ref<ShadowMap> ShadowMap;
 			Ref<Framebuffer> MainFramebuffer;
+			Ref<Skybox> ActiveSkybox = nullptr;
 		};
 
 		static Renderer3DData s_Data;
@@ -92,8 +89,6 @@ namespace Firebox {
 
 		static Ref<Grid> s_Grid;
 		static float s_GridSize;
-
-		static Ref<Skybox> s_Skybox;
 
 		static Ref<UniformBuffer> s_ShadowUniformBuffer;
 	};

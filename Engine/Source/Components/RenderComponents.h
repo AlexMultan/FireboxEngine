@@ -4,6 +4,7 @@
 #include "Rendering/Geometry/Mesh.h"
 #include "Rendering/Materials/Material.h"
 #include "Rendering/Geometry/StaticMesh.h"
+#include "Rendering/Skybox/Skybox.h"
 
 struct MeshComponent
 {
@@ -42,6 +43,18 @@ struct StaticMeshComponent
 	StaticMeshComponent(const StaticMeshComponent&) = default;
 	StaticMeshComponent(const Ref<Firebox::StaticMesh>& staticMesh)
 		: StaticMesh(staticMesh)
+	{
+	}
+};
+
+struct SkyboxComponent
+{
+	Ref<Firebox::Skybox> Skybox;
+
+	SkyboxComponent() = default;
+	SkyboxComponent(const SkyboxComponent&) = default;
+	SkyboxComponent(const Ref<Firebox::Skybox>& skybox)
+		: Skybox(skybox)
 	{
 	}
 };

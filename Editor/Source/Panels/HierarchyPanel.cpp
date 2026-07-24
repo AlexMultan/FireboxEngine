@@ -30,14 +30,15 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(Ref<Firebox::Scene>& s
 
 	if (ImGui::TreeNodeEx("Scene", hierarchyNodeFlags))
 	{
-		for (auto& e : scene->GetAllEntities())
+		auto& registry = scene->GetRegistry();
+		for (auto e : registry.view<IdComponent>())
 		{
 			ImGui::SetCursorPosX(0.0f);
-			uint64 id = e.GetComponent<IdComponent>().GetId();
+			uint64 id = registry.get<IdComponent>(e).GetId();
 			bool isSelected = m_Context.selectedEntity && (m_Context.selectedEntity.GetComponent<IdComponent>().GetId() == id);
-			if (EditorUI::EntityHierarchyNode::DrawNode(e.GetComponent<TagComponent>().Tag.c_str(), id, isSelected))
+			if (EditorUI::EntityHierarchyNode::DrawNode(registry.get<TagComponent>(e).Tag.c_str(), id, isSelected))
 			{
-				m_Context.SetSelected(e);
+				m_Context.SetSelected(Firebox::Entity(e, scene.get()));
 				FB_EDITOR_TRACE("Selected Entity ID: {0}", id);
 			}
 		}
@@ -76,8 +77,19 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(Ref<Firebox::Scene>& s
 
 			if (ImGui::MenuItem("Directional Light"))
 			{
-
+				Firebox::Entity directionalLightEntity = scene->CreateEntity("Directional Light");
+				m_Context.SetSelected(directionalLightEntity);
+				directionalLightEntity.AddComponent<DirectionalLightComponent>();
 			}
+
+			if (ImGui::MenuItem("Skybox"))
+			{
+				Firebox::Entity skyboxEntity = scene->CreateEntity("Skybox");
+				Ref<Firebox::Skybox> skybox = CreateRef<Firebox::Skybox>();
+				m_Context.SetSelected(skyboxEntity);
+				skyboxEntity.AddComponent<SkyboxComponent>(skybox);
+			}
+
 			ImGui::EndMenu();
 		}
 		ImGui::EndPopup();

@@ -11,7 +11,7 @@ namespace Firebox {
 
 	Scene::Scene()
 	{
-		
+
 	}
 
 	Scene::~Scene()
@@ -38,7 +38,6 @@ namespace Firebox {
 		else
 			tag.Tag = name;
 
-		m_SceneEntities.emplace_back(entity);
 		return entity;
 	}
 
@@ -59,6 +58,11 @@ namespace Firebox {
 				Renderer3D::DrawMesh(meshes[i], materials[i], transform);
 			}
 		}
+
+		for (auto&& [entity, skybox] : m_Registry.view<SkyboxComponent>().each())
+		{
+			Renderer3D::DrawSkybox(skybox.Skybox);
+		}
 	}
 	void Scene::SaveScene(const String& filename)
 	{
@@ -69,12 +73,12 @@ namespace Firebox {
 		{
 			file << j.dump(4);
 			file.close();
-			std::cout << "Scene successfully saved to " << filename << "\n";
+			FB_CORE_TRACE("Scene successfully saved to: {0}", filename);
 		}
 		else
 			FB_CORE_ERROR("Error: Could not open file for writing: {0}", filename);
 	}
-	Scene Scene::LoadScene(const String& filename)
+	Ref<Scene> Scene::LoadScene(const String& filename)
 	{
 		std::ifstream file(filename);
 		JSON j;
@@ -83,14 +87,15 @@ namespace Firebox {
 		{
 			file >> j;
 			file.close();
+			FB_CORE_TRACE("Successfully loaded scene: {0}", filename);
 		}
 		else
 		{
 			FB_CORE_ERROR("Error: Could not open file for reading: {0}", filename);
-			return Scene{};
+			return nullptr;
 		}
-		Scene scene;
-		j.get_to(scene);
+		Ref<Scene> scene = CreateRef<Scene>();
+		j.get_to(*scene);
 		return scene;
 	}
 }
