@@ -12,6 +12,7 @@
 #include "Rendering/Camera/Camera.h"
 #include "Rendering/Buffers/UniformBuffer.h"
 #include "Rendering/Targets/Framebuffer.h"
+#include "Animation/Animator.h"
 
 namespace Firebox {
 
@@ -33,10 +34,11 @@ namespace Firebox {
 		static void EndScene();
 
 		static void DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform);
+		static void DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform, const Ref<Animator> animator);
 		static void DrawGrid();
 		static void DrawSkybox(const Ref<Skybox>& skybox);
 
-		static Ref<Shader> GetDefaultShader();
+		static Ref<Shader> GetLitShader();
 		static Ref<Shader> GetDepthShader();
 		static Ref<Shader> GetShadowShader();
 		static Ref<Shader> GetLightShader();
@@ -56,13 +58,14 @@ namespace Firebox {
 			Ref<Material> Material;
 			Mat4 Transform;
 			Mat4 InverseNormal;
+			Ref<Animator> Animator;
 		};
 
 		struct Renderer3DData
 		{
 			Scope<RendererAPI> RendererAPI;
 			DynamicArray<RenderCommand> RenderQueue;
-			Ref<Shader> DefaultShader;
+			Ref<Shader> LitShader;
 			Ref<Shader> UnlitShader;
 			Ref<Shader> DepthShader;
 			Ref<Shader> ShadowDepthShader;

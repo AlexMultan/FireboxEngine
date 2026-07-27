@@ -1,7 +1,7 @@
 ﻿#include "Window.h"
 #include "Core/Log.h"
 #include "Events/SDLEventTranslator.h"
-#include "Editor/EngineAssets.h"
+#include "Editor/EnginePaths.h"
 
 #include <glad/glad.h>
 #include <stb_image.h>
@@ -40,7 +40,7 @@ void Firebox::Window::Create()
     SDL_WindowFlags windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
 
     int width, height, channels;
-    String iconPath = Firebox::EngineAssets::Get("Icons/FireboxEngineLogo32x32.png").string();
+    String iconPath = Firebox::EngineContent::Get("Icons/FireboxEngineLogo32x32.png").string();
     FB_CORE_TRACE(iconPath);
     if (!iconPath.empty())
     {

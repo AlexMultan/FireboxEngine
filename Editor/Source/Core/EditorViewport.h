@@ -9,12 +9,13 @@
 #include "Panels/HierarchyPanel.h"
 #include "Panels/StatsPanel.h"
 #include "Rendering/Camera/PerspectiveCamera.h"
-#include "Components/CoreComponents.h"
-#include "Components/LightComponents.h"
-#include "Components/RenderComponents.h"
 #include "Scene/Scene.h"
 #include "Scene/Entity.h"
 #include "EditorContext.h"
+#include "Components/CoreComponents.h"
+#include "Components/LightComponents.h"
+#include "Components/RenderComponents.h"
+#include "Components/AnimationComponents.h"
 
 #include "imgui.h"
 
@@ -36,10 +37,9 @@ namespace FireboxEditor {
  
 	private:
 		ImGuiIO* io;
-		bool showFolderButton = true;
+		EditorContext m_EditorContext;
 		ImGuiWindowFlags m_WindowFlags;
 		ImGuiDockNodeFlags m_DockNodeFlags;
-		ImFont* m_TransformPropertiesFont = nullptr;
 
 		AssetBrowser m_AssetBrowser;
 		PropertiesPanel m_PropertiesPanel;
@@ -48,7 +48,6 @@ namespace FireboxEditor {
 		ViewportPanel m_ViewportPanel;
 		HierarchyPanel m_HierarchyPanel;
 		StatsPanel m_StatsPanel;
-		EditorContext m_EditorContext;
 
 		Ref<Firebox::PerspectiveCamera> m_EditorCamera;
 		Firebox::Entity m_DirectionalLight;
@@ -62,5 +61,12 @@ namespace FireboxEditor {
 		Ref<Firebox::StaticMesh> m_JerrycanMesh;
 
 		Ref<Firebox::Material> m_WoodMaterial;
+
+		Firebox::Entity m_CharacterEntity{};
+		Ref<Firebox::StaticMesh> m_CharacterModel;
+		Ref<Firebox::Material> m_CharacterMaterial1;
+		Ref<Firebox::Material> m_CharacterMaterial2;
+		Firebox::Animation m_RunningAnim;
+		Ref<Firebox::Animator> m_CharacterAnimator;
 	};
 }

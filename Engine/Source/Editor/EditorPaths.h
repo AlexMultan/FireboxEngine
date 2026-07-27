@@ -5,10 +5,10 @@
 
 #include "Core/Core.h"
 
-namespace FireboxEditor::Paths {
+namespace FireboxEditor::EditorContent {
 
 	FIREBOX_API void Init();
 
-	FIREBOX_API std::filesystem::path Resource(std::string_view relativePath);
+	FIREBOX_API std::filesystem::path Get(std::string_view relativePath);
 	FIREBOX_API std::filesystem::path GetRootPath();
 }

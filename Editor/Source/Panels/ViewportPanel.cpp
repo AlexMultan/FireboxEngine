@@ -17,7 +17,10 @@
 
 FireboxEditor::ViewportPanel::ViewportPanel(const char* name, EditorContext& context) : m_Name(name), m_Context(context), m_TextureID(0)
 {
-	
+	m_Context.AddEntitySelectionListener([this](Firebox::Entity newEntity)
+		{
+			m_SelectedEntity = newEntity;
+		});
 }
 
 FireboxEditor::ViewportPanel::~ViewportPanel()
@@ -45,15 +48,13 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 
 	m_IsFocused = ImGui::IsWindowHovered();
 
-	Firebox::Entity entity = m_Context.selectedEntity;
-
-	if (entity && entity.HasComponent<TransformComponent>())
+	if (m_SelectedEntity && m_SelectedEntity.HasComponent<TransformComponent>())
 	{
 		ImGuizmo::SetOrthographic(false);
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_ViewportSize.x, m_ViewportSize.y);
 
-		Mat4 transform = entity.GetComponent<TransformComponent>().GetTransform();
+		Mat4 transform = m_SelectedEntity.GetComponent<TransformComponent>().GetTransform();
 
 		if (ImGui::IsWindowFocused() || m_IsFocused)
 		{
@@ -95,9 +96,9 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 			float translation[3], rotation[3], scale[3];
 			ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(transform), translation, rotation, scale);
 
-			entity.GetComponent<TransformComponent>().Position = Vector3(translation[0], translation[1], translation[2]);
-			entity.GetComponent<TransformComponent>().Rotation = Vector3(rotation[0], rotation[1], rotation[2]);
-			entity.GetComponent<TransformComponent>().Scale = Vector3(scale[0], scale[1], scale[2]);
+			m_SelectedEntity.GetComponent<TransformComponent>().Position = Vector3(translation[0], translation[1], translation[2]);
+			m_SelectedEntity.GetComponent<TransformComponent>().Rotation = Vector3(rotation[0], rotation[1], rotation[2]);
+			m_SelectedEntity.GetComponent<TransformComponent>().Scale = Vector3(scale[0], scale[1], scale[2]);
 		}
 	}
 		

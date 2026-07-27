@@ -10,7 +10,10 @@
 
 FireboxEditor::HierarchyPanel::HierarchyPanel(const char* name, EditorContext& context) : m_Name(name), m_Context(context)
 {
-
+	m_Context.AddEntitySelectionListener([this](Firebox::Entity newEntity)
+		{
+			m_SelectedEntity = newEntity;
+		});
 }
 
 FireboxEditor::HierarchyPanel::~HierarchyPanel()
@@ -18,7 +21,7 @@ FireboxEditor::HierarchyPanel::~HierarchyPanel()
 
 }
 
-void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(Ref<Firebox::Scene>& scene)
+void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Scene>& scene)
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 6.0f));
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -35,10 +38,10 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(Ref<Firebox::Scene>& s
 		{
 			ImGui::SetCursorPosX(0.0f);
 			uint64 id = registry.get<IdComponent>(e).GetId();
-			bool isSelected = m_Context.selectedEntity && (m_Context.selectedEntity.GetComponent<IdComponent>().GetId() == id);
+			bool isSelected = m_SelectedEntity && (m_SelectedEntity.GetComponent<IdComponent>().GetId() == id);
 			if (EditorUI::EntityHierarchyNode::DrawNode(registry.get<TagComponent>(e).Tag.c_str(), id, isSelected))
 			{
-				m_Context.SetSelected(Firebox::Entity(e, scene.get()));
+				m_Context.SetSelectedEntity(Firebox::Entity(e, scene.get()));
 				FB_EDITOR_TRACE("Selected Entity ID: {0}", id);
 			}
 		}
@@ -47,7 +50,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(Ref<Firebox::Scene>& s
 
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left) && !ImGui::IsAnyItemHovered())
 	{
-		m_Context.ClearSelection();
+		m_Context.DeselectEntity();
 		FB_EDITOR_TRACE("Deselected Entity. No active node.");
 	}
 
@@ -64,13 +67,13 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(Ref<Firebox::Scene>& s
 			if (ImGui::MenuItem("Empty Entity"))
 			{
 				Firebox::Entity emptyEntity = scene->CreateEntity("");
-				m_Context.SetSelected(emptyEntity);
+				m_Context.SetSelectedEntity(emptyEntity);
 			}
 
 			if (ImGui::MenuItem("Cube"))
 			{
 				Firebox::Entity cubeEntity = scene->CreateEntity("Cube");
-				m_Context.SetSelected(cubeEntity);
+				m_Context.SetSelectedEntity(cubeEntity);
 				cubeEntity.AddComponent<MeshComponent>(Firebox::PrimitiveShapes::Cube().vertices, Firebox::PrimitiveShapes::Cube().indices);
 				cubeEntity.AddComponent<MaterialComponent>(Firebox::Renderer3D::GetDefaultMaterial());
 			}
@@ -78,7 +81,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(Ref<Firebox::Scene>& s
 			if (ImGui::MenuItem("Directional Light"))
 			{
 				Firebox::Entity directionalLightEntity = scene->CreateEntity("Directional Light");
-				m_Context.SetSelected(directionalLightEntity);
+				m_Context.SetSelectedEntity(directionalLightEntity);
 				directionalLightEntity.AddComponent<DirectionalLightComponent>();
 			}
 
@@ -86,7 +89,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(Ref<Firebox::Scene>& s
 			{
 				Firebox::Entity skyboxEntity = scene->CreateEntity("Skybox");
 				Ref<Firebox::Skybox> skybox = CreateRef<Firebox::Skybox>();
-				m_Context.SetSelected(skyboxEntity);
+				m_Context.SetSelectedEntity(skyboxEntity);
 				skyboxEntity.AddComponent<SkyboxComponent>(skybox);
 			}
 

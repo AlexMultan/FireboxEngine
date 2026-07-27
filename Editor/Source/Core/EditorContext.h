@@ -4,38 +4,37 @@
 #include "Scene/Scene.h"
 
 #include <functional>
+#include <filesystem>
 
 namespace FireboxEditor {
+
+	namespace fs = std::filesystem;
 
 	class EditorContext
 	{
 	public:
-		Firebox::Entity selectedEntity;
-		Ref<Firebox::Scene> currentScene;
+		EditorContext();
+		
+		Firebox::Entity GetSelectedEntity() const { return m_SelectedEntity; }
+		void SetSelectedEntity(Firebox::Entity entity);
+		void SetCurrentScene(Ref<Firebox::Scene>& scene);
+		void SetSelectedDirectory(const fs::path& directory);
+		void DeselectEntity();
+		void DeselectDirectory(const fs::path& directory);
+		void AddEntitySelectionListener(std::function<void(Firebox::Entity)> listener);
+		void AddSceneChangeListener(std::function<void(const Ref<Firebox::Scene>&)> listener);
+		void AddDirectorySelectionListener(std::function<void(const fs::path& directory)> listener);
 
-		std::function<void(Firebox::Entity)> OnSelectionChanged;
-		std::function<void(Ref<Firebox::Scene>&)> OnSceneChanged;
+		const Ref<Firebox::Scene>& GetCurrentScene() const { return m_CurrentScene; }
+		const fs::path& GetSelectedDirectory() const { return m_SelectedDirectory; }
 
-		inline void SetSelected(Firebox::Entity entity)
-		{
-			selectedEntity = entity;
-			if (OnSelectionChanged)
-				OnSelectionChanged(entity);
-		}
+	private:
+		Firebox::Entity m_SelectedEntity;
+		Ref<Firebox::Scene> m_CurrentScene;
+		fs::path m_SelectedDirectory;
 
-		inline void ClearSelection()
-		{
-			selectedEntity = {};
-			if (OnSelectionChanged)
-				OnSelectionChanged(selectedEntity);
-		}
-
-		inline void SetCurrentScene(Ref<Firebox::Scene>& scene)
-		{
-			ClearSelection();
-			currentScene = scene;
-			if (OnSceneChanged)
-				OnSceneChanged(currentScene);
-		}
+		DynamicArray<std::function<void(Firebox::Entity)>> m_EntitySelectionListeners;
+		DynamicArray<std::function<void(const Ref<Firebox::Scene>&)>> m_SceneChangeListeners;
+		DynamicArray<std::function<void(const fs::path&)>> m_DirectorySelectionListeners;
 	};
 }

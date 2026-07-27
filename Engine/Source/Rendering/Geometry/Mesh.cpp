@@ -10,7 +10,9 @@ Firebox::Mesh::Mesh(const DynamicArray<Vertex>& vertices, const DynamicArray<uin
 		{ ShaderDataType::Float3, "aNormal" },
 		{ ShaderDataType::Float2, "aTexCoords" },
 		{ ShaderDataType::Float3, "aTangent" },
-		{ ShaderDataType::Float3, "aBitangent" }
+		{ ShaderDataType::Float3, "aBitangent" },
+		{ ShaderDataType::Int4, "aBoneIDs" },
+		{ ShaderDataType::Float4, "aWeights" }
 		});
 
 	m_IBO = IndexBuffer::Create(indices.data(), indices.size());

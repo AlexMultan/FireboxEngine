@@ -45,6 +45,7 @@ namespace FireboxEditor {
 		float m_GridSize = 1.0f;
 		uint m_CurrentViewMode = 0;
 		EditorContext& m_Context;
+		Firebox::Entity m_SelectedEntity;
 
 		GizmoTransformType m_GizmoTransformType = GizmoTransformType::Translate;
 		GizmoTransformSpace m_GizmoTransformSpace = GizmoTransformSpace::World;

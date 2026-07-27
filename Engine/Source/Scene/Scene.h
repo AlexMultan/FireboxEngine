@@ -20,6 +20,7 @@ namespace Firebox {
 
 		Entity CreateEntity();
 		Entity CreateEntity(const String& name);
+		void DestroyEntity(Entity entity);
 		void OnUpdate(float deltaTime);
 		void SaveScene(const String& filename);
 		static Ref<Scene> LoadScene(const String& filename);

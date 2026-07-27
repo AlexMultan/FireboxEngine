@@ -13,5 +13,7 @@ namespace Firebox {
 		Vector2 TexCoords;
 		Vector3 Tangent;
 		Vector3 Bitangent;
+		int BoneIDs[MAX_BONE_INFLUENCE];
+		float Weights[MAX_BONE_INFLUENCE];
 	};
 }

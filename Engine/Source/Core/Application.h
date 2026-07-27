@@ -5,7 +5,7 @@
 #include "Core/Window.h"
 #include "Rendering/Renderer3D.h"
 #include "Editor/EditorPaths.h"
-#include "Editor/EngineAssets.h"
+#include "Editor/EnginePaths.h"
 
 #include <memory>
 

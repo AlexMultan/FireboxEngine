@@ -1,7 +1,9 @@
 #pragma once
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <iostream>
@@ -9,6 +11,9 @@
 #include <vector>
 #include <memory>
 #include <concepts>
+#include <map>
+#include <list>
+#include <cmath>
 
 typedef uint8_t uint8;
 typedef uint16_t uint16;

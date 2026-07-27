@@ -3,23 +3,25 @@
 #include "Core/Core.h"
 #include "imgui.h"
 #include "Panels/IPanel.h"
-
-#include <filesystem>
+#include "Core/EditorContext.h"
 
 namespace FireboxEditor {
 
-	class AssetBrowser : public IPanel
+	class AssetBrowser
 	{
 	public:
-		AssetBrowser();
-		AssetBrowser(const char* name);
+		AssetBrowser(EditorContext& context);
+		AssetBrowser(const char* name, EditorContext& context);
 		~AssetBrowser();
 
-		virtual void RenderPanel() override;
+		void RenderPanel();
+		void DrawDirectoryNode(const char* name, const std::filesystem::path& directory);
 
 	private:
 		std::string m_Name = "Asset Browser";
-		std::filesystem::path m_ParentDirectory;
+		EditorContext& m_Context;
+		std::filesystem::path m_EditorDirectory;
+		std::filesystem::path m_EngineDirectory;
 		std::filesystem::path m_CurrentDirectory;
 	};
 }

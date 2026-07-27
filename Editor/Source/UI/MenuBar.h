@@ -15,5 +15,6 @@ namespace FireboxEditor {
 
 	private:
 		EditorContext& m_Context;
+		Ref<Firebox::Scene> m_Scene;
 	};
 }

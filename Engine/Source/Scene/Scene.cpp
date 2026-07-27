@@ -1,6 +1,7 @@
 #include "Scene.h"
 #include "Components/CoreComponents.h"
 #include "Components/RenderComponents.h"
+#include "Components/AnimationComponents.h"
 #include "Rendering/Renderer3D.h"
 #include "Serialization/SceneSerializer.h"
 #include "Entity.h"
@@ -41,6 +42,12 @@ namespace Firebox {
 		return entity;
 	}
 
+	void Scene::DestroyEntity(Entity entity)
+	{
+		if (entity)
+			m_Registry.destroy(entity.GetHandle());
+	}
+
 	void Scene::OnUpdate(float deltaTime)
 	{
 		for (auto&& [entity, transform, mesh, material] : m_Registry.view<TransformComponent, MeshComponent, MaterialComponent>().each())
@@ -56,6 +63,18 @@ namespace Firebox {
 			for (size_t i = 0; i < meshes.size(); i++)
 			{
 				Renderer3D::DrawMesh(meshes[i], materials[i], transform);
+			}
+		}
+
+		for (auto&& [entity, transform, staticMesh, animator] : m_Registry.view<TransformComponent, StaticMeshComponent, AnimatorComponent>().each())
+		{
+			animator.Animator->Update(deltaTime);
+			const auto& meshes = staticMesh.StaticMesh->GetMeshes();
+			const auto& materials = staticMesh.StaticMesh->GetMaterials();
+
+			for (size_t i = 0; i < meshes.size(); i++)
+			{
+				Renderer3D::DrawMesh(meshes[i], materials[i], transform, animator.Animator);
 			}
 		}
 

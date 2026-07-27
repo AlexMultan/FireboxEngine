@@ -12,10 +12,11 @@ namespace FireboxEditor {
 		HierarchyPanel(const char* name, EditorContext& context);
 		~HierarchyPanel();
 
-		void RenderHierarchyrPanel(Ref<Firebox::Scene>& scene);
+		void RenderHierarchyrPanel(const Ref<Firebox::Scene>& scene);
 
 	private:
 		String m_Name = "Hierachy";
 		EditorContext& m_Context;
+		Firebox::Entity m_SelectedEntity;
 	};
 }

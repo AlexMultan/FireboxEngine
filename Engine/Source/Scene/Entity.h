@@ -57,6 +57,8 @@ namespace Firebox {
 			return m_Scene != nullptr && m_Handle != entt::null && m_Scene->m_Registry.valid(m_Handle);
 		}
 
+		inline const entt::entity GetHandle() const { return m_Handle; }
+
 	private:
 		entt::entity m_Handle{ entt::null };
 		Scene* m_Scene = nullptr;

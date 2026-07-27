@@ -10,13 +10,13 @@ bool EditorUI::EntityHierarchyNode::DrawNode(const char* name, const uint64 id, 
 
 	if (isSelected)
 	{
-		ImGui::PushFont(FireboxEditor::EditorUtils::GetSelectedEntityNodeFont());
+		//ImGui::PushFont(FireboxEditor::EditorUtils::GetSelectedEntityNodeFont());
 		ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.29f, 0.47f, 0.85f, 1.00f));
 		ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.31f, 0.53f, 0.98f, 1.00f));
 	}
 
 	ImGui::PushStyleColor(ImGuiCol_HeaderActive, ImVec4(0.29f, 0.47f, 0.85f, 1.00f));
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(20.0f, 3.0f));	
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(40.0f, 3.0f));	
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);	
 
 	bool entityNode = ImGui::TreeNodeEx((void*)(uintptr_t)id, entityNodeFlags, name);
@@ -24,7 +24,7 @@ bool EditorUI::EntityHierarchyNode::DrawNode(const char* name, const uint64 id, 
 	if (isSelected)
 	{
 		ImGui::PopStyleColor(3);
-		ImGui::PopFont();
+		//ImGui::PopFont();
 	}
 	else
 		ImGui::PopStyleColor(1);

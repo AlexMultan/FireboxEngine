@@ -3,7 +3,7 @@
 
 Firebox::Material::Material()
 {
-	m_Shader = Firebox::Renderer3D::GetDefaultShader();
+	m_Shader = Firebox::Renderer3D::GetLitShader();
 }
 
 Firebox::Material::Material(const Ref<Shader>& shader) : m_Shader(shader)

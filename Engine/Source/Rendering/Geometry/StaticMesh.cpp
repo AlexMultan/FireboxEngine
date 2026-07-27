@@ -1,5 +1,7 @@
 #include "StaticMesh.h"
 #include "Rendering/Renderer3D.h"
+#include "Utils/AssimpHelpers.h"
+#include "Utils/Assert.h"
 
 namespace Firebox {
 
@@ -85,6 +87,8 @@ namespace Firebox {
 				vec.z = mesh->mNormals[i].z;
 				vertex.Normal = vec;
 			}
+			else
+				vertex.Normal = { 0.0f, 1.0f, 0.0f };
 
 			if (mesh->mTextureCoords[0])
 			{
@@ -171,5 +175,55 @@ namespace Firebox {
 		m_LoadedTextures.Paths.push_back(path);
 		m_LoadedTextures.Textures.push_back(texture);
 		return texture;
+	}
+	void StaticMesh::SetVertexBoneDataDefault(Vertex& vertex)
+	{
+		for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+		{
+			vertex.BoneIDs[i] = -1;
+			vertex.Weights[i] = 0.0f;
+		}
+	}
+	void StaticMesh::SetVertexBoneData(Vertex& vertex, int boneId, float weight)
+	{
+		for (int i = 0; i < MAX_BONE_INFLUENCE; i++)
+		{
+			if (vertex.BoneIDs[i] < 0)
+			{
+				vertex.BoneIDs[i] = boneId;
+				vertex.Weights[i] = weight;
+				break;
+			}
+		}
+	}
+	void StaticMesh::ExtractBoneWeightForVertices(DynamicArray<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
+	{
+		for (int i = 0; i < mesh->mNumBones; i++)
+		{
+			int id = -1;
+			String boneName = mesh->mBones[i]->mName.C_Str();
+			if (m_BoneInfoMap.find(boneName) == m_BoneInfoMap.end())
+			{
+				BoneInfo newInfo;
+				newInfo.Id = m_BoneCounter;
+				newInfo.Offset = AssimpHelpers::ConvertMatrixToGlmFormat(mesh->mBones[i]->mOffsetMatrix);
+				m_BoneInfoMap[boneName] = newInfo;
+				id = m_BoneCounter;
+				m_BoneCounter++;
+			}
+			else
+				id = m_BoneInfoMap[boneName].Id;
+			FB_ASSERT(id != -1, "Failed to assign a valid bone ID for bone '%s'!", boneName.c_str());
+			auto weights = mesh->mBones[i]->mWeights;
+			int numWeights = mesh->mBones[i]->mNumWeights;
+
+			for (int j = 0; j < numWeights; j++)
+			{
+				int vertexId = weights[j].mVertexId;
+				float weight = weights[j].mWeight;
+				FB_ASSERT(vertexId < vertices.size(), "Vertex ID %d out of range (vertices size: %zu) for bone '%s'!", vertexId, vertices.size(), boneName.c_str());
+				SetVertexBoneData(vertices[vertexId], id, weight);
+			}
+		}
 	}
 }

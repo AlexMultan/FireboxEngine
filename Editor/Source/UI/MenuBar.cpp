@@ -8,8 +8,12 @@
 #include <windows.h>
 #include <commdlg.h>
 
-FireboxEditor::MenuBar::MenuBar(FireboxEditor::EditorContext& context) : m_Context(context)
+FireboxEditor::MenuBar::MenuBar(FireboxEditor::EditorContext& context) : m_Context(context), m_Scene(nullptr)
 {
+    m_Context.AddSceneChangeListener([this](const Ref<Firebox::Scene>& newScene)
+        {
+            m_Scene = newScene;
+        });
 }
 
 FireboxEditor::MenuBar::~MenuBar()
@@ -74,8 +78,8 @@ void FireboxEditor::MenuBar::RenderMenuBar()
             {
                 if (ImGui::MenuItem("Save", "Ctrl+Shift+S"))
                 {
-                    m_Context.currentScene->SetSceneName("Untitled");
-                    m_Context.currentScene->SaveScene(FireboxEditor::Paths::Resource("Levels/Untitled.fbscene").string());
+                    m_Context.GetCurrentScene()->SetSceneName("Untitled");
+                    m_Context.GetCurrentScene()->SaveScene(FireboxEditor::EditorContent::Get("Levels/Untitled.fbscene").string());
                 }
 
                 if (ImGui::MenuItem("Load", "Ctrl+Shift+L"))

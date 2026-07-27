@@ -5,7 +5,7 @@
 
 #include "imgui_internal.h"
 
-void EditorUI::FloatParameters::Float3(Vector3* otherVector, const char* label, ImFont* font)
+void EditorUI::FloatParameters::Float3(Vector3* otherVector, const char* label)
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0.0f, 0.0f));
 
@@ -15,18 +15,18 @@ void EditorUI::FloatParameters::Float3(Vector3* otherVector, const char* label, 
 		ImGui::Text(label);
 
 		ImGui::TableNextColumn();
-		DrawParameter("X", label, Vector4(0.611f, 0.0f, 0.0f, 1.0f), &otherVector->x, font);
+		DrawParameter("X", label, Vector4(0.611f, 0.0f, 0.0f, 1.0f), &otherVector->x);
 		ImGui::TableNextColumn();
-		DrawParameter("Y", label, Vector4(0.02f, 0.58f, 0.0f, 1.0f), &otherVector->y, font);
+		DrawParameter("Y", label, Vector4(0.02f, 0.58f, 0.0f, 1.0f), &otherVector->y);
 		ImGui::TableNextColumn();
-		DrawParameter("Z", label, Vector4(0.0f, 0.466f, 1.0f, 1.0f), &otherVector->z, font);
+		DrawParameter("Z", label, Vector4(0.0f, 0.466f, 1.0f, 1.0f), &otherVector->z);
 		ImGui::EndTable();
 	}
 
 	ImGui::PopStyleVar();
 }
 
-void EditorUI::FloatParameters::DrawParameter(const char* text, const char* groupLabel, Vector4 color, float* parameter, ImFont* font)
+void EditorUI::FloatParameters::DrawParameter(const char* text, const char* groupLabel, Vector4 color, float* parameter)
 {
 	ImVec2 pos = ImGui::GetCursorScreenPos();
 	ImVec2 size = ImGui::CalcTextSize(text);
@@ -55,7 +55,7 @@ void EditorUI::FloatParameters::DrawParameter(const char* text, const char* grou
 	char id[64];
 	snprintf(id, sizeof(id), "##%s_%s", groupLabel, text);
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.86f, 0.86f, 0.86f, 1.0f));
-	ImGui::PushFont(font);
+	ImGui::PushFont(FireboxEditor::EditorUtils::GetTransformValuesFont());
 	ImGui::DragFloat(id, parameter, 0.05f, -99999999.0f, 99999999.0f);
 	ImGui::PopStyleColor();
 	ImGui::PopFont();

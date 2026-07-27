@@ -60,6 +60,7 @@ namespace Firebox {
         FBK_KEY_F12 = SDL_SCANCODE_F12,
 
         FBK_KEY_ESCAPE = SDL_SCANCODE_ESCAPE,
+        FBK_KEY_DELETE = SDL_SCANCODE_DELETE,
         FBK_KEY_RETURN = SDL_SCANCODE_RETURN,
         FBK_KEY_BACKSPACE = SDL_SCANCODE_BACKSPACE,
         FBK_KEY_TAB = SDL_SCANCODE_TAB,
@@ -143,6 +144,7 @@ namespace Firebox {
         case SDLK_F11: return FBK_KEY_F11;
         case SDLK_F12: return FBK_KEY_F12;
         case SDLK_ESCAPE: return FBK_KEY_ESCAPE;
+        case SDLK_DELETE: return FBK_KEY_DELETE;
         case SDLK_RETURN: return FBK_KEY_RETURN;
         case SDLK_BACKSPACE: return FBK_KEY_BACKSPACE;
         case SDLK_TAB: return FBK_KEY_TAB;
@@ -208,6 +210,7 @@ namespace Firebox {
         case FBK_KEY_F11: return SDLK_F11;
         case FBK_KEY_F12: return SDLK_F12;
         case FBK_KEY_ESCAPE: return SDLK_ESCAPE;
+        case FBK_KEY_DELETE: return SDLK_DELETE;
         case FBK_KEY_RETURN: return SDLK_RETURN;
         case FBK_KEY_BACKSPACE: return SDLK_BACKSPACE;
         case FBK_KEY_TAB: return SDLK_TAB;

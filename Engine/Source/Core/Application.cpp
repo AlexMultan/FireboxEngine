@@ -32,11 +32,11 @@ void Firebox::Application::PushOverlay(Layer* layer)
 
 void Firebox::Application::Run()
 {
-    m_Window->SetMaxFPS(144.0f);
+    m_Window->SetMaxFPS(9999.0f);
     Firebox::Renderer3D::Init();
     for (Layer* layer : m_LayerStack)
     {
-        FB_CORE_TRACE("DefaultShader in OnAttach: {0}", (uint64_t)Firebox::Renderer3D::GetDefaultShader().get());
+        FB_CORE_TRACE("DefaultShader in OnAttach: {0}", (uint64_t)Firebox::Renderer3D::GetLitShader().get());
         layer->OnAttach();
     }
 	Timer timer;

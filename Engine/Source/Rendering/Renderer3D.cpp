@@ -1,9 +1,6 @@
 #include "Renderer3D.h"
 #include "Core/Log.h"
-#include "Editor/EngineAssets.h"
-#include "Rendering/Backends/Shaders/GLSL/DefaultShader.h"
-#include "Rendering/Backends/Shaders/GLSL/UnlitShader.h"
-#include "Rendering/Backends/Shaders/GLSL/DepthShader.h"
+#include "Editor/EnginePaths.h"
 #include "Utils/Assert.h"
 
 #include <algorithm>
@@ -15,7 +12,7 @@ Firebox::ViewMode Firebox::Renderer3D::s_ViewMode = Firebox::ViewMode::Lit;
 Ref<Firebox::Grid> Firebox::Renderer3D::s_Grid = nullptr;
 const Ref<Firebox::Framebuffer>& Firebox::Renderer3D::GetMainFramebuffer() { return s_Data.MainFramebuffer; }
 Ref<Firebox::UniformBuffer> Firebox::Renderer3D::s_ShadowUniformBuffer = nullptr;
-Ref<Firebox::Shader> Firebox::Renderer3D::GetDefaultShader() { return s_Data.DefaultShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetLitShader() { return s_Data.LitShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetLightShader() { return s_Data.LightShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetGridShader() { return s_Data.GridShader; }
 const Ref<Firebox::Material>& Firebox::Renderer3D::GetDefaultMaterial() { return s_Data.DefaultMaterial; }
@@ -38,27 +35,33 @@ void Firebox::Renderer3D::Init()
 	s_Data.RendererAPI->Init();
 
 	FB_CORE_TRACE("Creating DefaultShader...");
-	s_Data.DefaultShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::DefaultVertex, Firebox::Shaders::GLSL::DefaultFragment, nullptr);
-	s_Data.UnlitShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::UnlitVertex, Firebox::Shaders::GLSL::UnlitFragment, nullptr);
-	s_Data.DepthShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::DepthVertex, Firebox::Shaders::GLSL::DepthFragment, nullptr);
+	s_Data.LitShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Lit.vert").string().c_str(),
+		Firebox::EngineContent::Get("Shaders/GLSL/Lit.frag").string().c_str(), nullptr);
+	s_Data.UnlitShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Unlit.vert").string().c_str(),
+		Firebox::EngineContent::Get("Shaders/GLSL/Unlit.frag").string().c_str(), nullptr);
+	s_Data.DepthShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/DepthVis.vert").string().c_str(),
+		Firebox::EngineContent::Get("Shaders/GLSL/DepthVis.frag").string().c_str(), nullptr);
 
 	s_Data.MainFramebuffer = Firebox::Framebuffer::Create({ 800, 600 });
 
-	s_Data.ShadowDepthShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::ShadowMapDepthVertex, Firebox::Shaders::GLSL::ShadowMapDepthFragment,
-		Firebox::Shaders::GLSL::ShadowMapDepthGeometry);
+	s_Data.ShadowDepthShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/ShadowMap.vert").string().c_str(),
+		Firebox::EngineContent::Get("Shaders/GLSL/ShadowMap.frag").string().c_str(), 
+		Firebox::EngineContent::Get("Shaders/GLSL/ShadowMap.geom").string().c_str());
 	s_Data.ShadowMap = Firebox::ShadowMap::Create(4096);
 
 	s_ShadowUniformBuffer = Firebox::UniformBuffer::Create();
 
-	s_Data.LightShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::LightVertex, Firebox::Shaders::GLSL::LightFragment, nullptr);
-	s_Data.GridShader = Shader::CreateFromSource(Firebox::Shaders::GLSL::GridVertexShader, Firebox::Shaders::GLSL::GridFragmentShader, nullptr);
+	s_Data.LightShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Light.vert").string().c_str(),
+		Firebox::EngineContent::Get("Shaders/GLSL/Light.frag").string().c_str(), nullptr);
+	s_Data.GridShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Grid.vert").string().c_str(),
+		Firebox::EngineContent::Get("Shaders/GLSL/Grid.frag").string().c_str(), nullptr);
 
-	s_Data.DefaultMaterial = CreateRef<Material>(s_Data.DefaultShader);
-	s_Data.DefaultMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Default.png").string()));
-	s_Data.DefaultMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Default.png").string()));
-	s_Data.DefaultMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineAssets::Get("Textures/T_Default.png").string()));
+	s_Data.DefaultMaterial = CreateRef<Material>(s_Data.LitShader);
+	s_Data.DefaultMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Default.png").string()));
+	s_Data.DefaultMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Default.png").string()));
+	s_Data.DefaultMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Default.png").string()));
 
-	FB_ASSERT(s_Data.DefaultShader, "DefaultShader is null after creation!");
+	FB_ASSERT(s_Data.LitShader, "DefaultShader is null after creation!");
 	s_Grid = CreateRef<Firebox::Grid>();
 }
 
@@ -104,7 +107,12 @@ void Firebox::Renderer3D::EndScene()
 
 void Firebox::Renderer3D::DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform)
 {
-	s_Data.RenderQueue.push_back({ mesh->GetVertexArray(), material, transform.GetTransform(), transform.GetInverseNormal()});
+	s_Data.RenderQueue.push_back({ mesh->GetVertexArray(), material, transform.GetTransform(), transform.GetInverseNormal(), nullptr});
+}
+
+void Firebox::Renderer3D::DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform, const Ref<Animator> animator)
+{
+	s_Data.RenderQueue.push_back({ mesh->GetVertexArray(), material, transform.GetTransform(), transform.GetInverseNormal(), animator });
 }
 
 void Firebox::Renderer3D::DrawGrid()
@@ -131,6 +139,7 @@ void Firebox::Renderer3D::Flush()
 {
 	s_Data.RendererAPI->SetViewport(0, 0, s_Data.MainFramebuffer->GetSpecs().Width, s_Data.MainFramebuffer->GetSpecs().Height);
 	s_Data.RendererAPI->Clear();
+	Ref<Animator> lastBoundAnimator = nullptr;
 
 	for(auto& cmd : s_Data.RenderQueue)
 	{
@@ -139,7 +148,7 @@ void Firebox::Renderer3D::Flush()
 		switch (s_ViewMode)
 		{
 		case ViewMode::Lit:
-			activeShader = s_Data.DefaultShader;
+			activeShader = s_Data.LitShader;
 			activeShader->UseShader();
 			activeShader->SetFloat("u_FarPlane", s_Data.FarPlane);
 			activeShader->SetInt("u_CascadeCount", s_Data.ShadowMap->GetCascadeLevels().size());
@@ -154,6 +163,23 @@ void Firebox::Renderer3D::Flush()
 			activeShader->SetVector3("u_ViewPos", s_Data.CameraPosition);
 			activeShader->SetMat3("u_InverseNormal", cmd.InverseNormal);
 
+			if (cmd.Animator)
+			{
+				if (cmd.Animator != lastBoundAnimator)
+				{
+					auto transforms = cmd.Animator->GetFinalBoneMatrices();
+					for (size_t i = 0; i < transforms.size(); i++)
+						activeShader->SetMat4("u_FinalBoneMatrices[" + std::to_string(i) + "]", transforms[i]);
+					lastBoundAnimator = cmd.Animator;
+				}
+			}
+			else
+			{
+				lastBoundAnimator = nullptr;
+				for (size_t i = 0; i < 256; i++)
+					activeShader->SetMat4("u_FinalBoneMatrices[" + std::to_string(i) + "]", Mat4(1.0f));
+			}
+			
 			activeShader->SetVector3("u_DirectionalLight.direction", s_Data.DirectionalLight.Direction);
 			activeShader->SetVector3("u_DirectionalLight.ambient", s_Data.DirectionalLight.Color * 0.2f);
 			activeShader->SetVector3("u_DirectionalLight.diffuse", s_Data.DirectionalLight.Color);
