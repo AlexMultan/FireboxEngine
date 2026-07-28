@@ -50,7 +50,6 @@ namespace FireboxEditor {
 		StatsPanel m_StatsPanel;
 
 		Ref<Firebox::PerspectiveCamera> m_EditorCamera;
-		Firebox::Entity m_DirectionalLight;
 		Firebox::Entity m_FloorEntity{};
 		Ref<Firebox::StaticMesh> m_FloorMesh;
 		Firebox::Entity m_BunnyEntity{};
@@ -62,11 +61,13 @@ namespace FireboxEditor {
 
 		Ref<Firebox::Material> m_WoodMaterial;
 
+#if 0
 		Firebox::Entity m_CharacterEntity{};
 		Ref<Firebox::StaticMesh> m_CharacterModel;
 		Ref<Firebox::Material> m_CharacterMaterial1;
 		Ref<Firebox::Material> m_CharacterMaterial2;
 		Firebox::Animation m_RunningAnim;
 		Ref<Firebox::Animator> m_CharacterAnimator;
+#endif
 	};
 }

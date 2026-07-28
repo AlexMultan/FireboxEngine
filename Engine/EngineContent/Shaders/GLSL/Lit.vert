@@ -13,7 +13,7 @@
     uniform mat3 u_InverseNormal;
     uniform float u_Tiling;
 
-    const int MAX_BONES = 256;
+    const int MAX_BONES = 100;
     const int MAX_BONE_INFLUENCE = 4;
     uniform mat4 u_FinalBoneMatrices[MAX_BONES];
 

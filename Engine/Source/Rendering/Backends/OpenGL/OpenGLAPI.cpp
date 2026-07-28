@@ -6,6 +6,11 @@
 Firebox::OpenGL::OpenGLAPI::OpenGLAPI()
 {
 	FB_CORE_INFO("OpenGL version: {0}", (const char*)glGetString(GL_VERSION));
+
+	const GLubyte* renderer = glGetString(GL_RENDERER);
+	if (renderer) {
+		FB_CORE_INFO("Device: {0}", (const char*)renderer);
+	}
 }
 
 Firebox::OpenGL::OpenGLAPI::~OpenGLAPI()

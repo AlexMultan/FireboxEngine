@@ -55,6 +55,7 @@ namespace nlohmann {
 		}
 	};
 
+#if 0
 	template<>
 	struct adl_serializer<SkyboxComponent>
 	{
@@ -74,6 +75,7 @@ namespace nlohmann {
 				sb.Skybox = CreateRef<Firebox::Skybox>(faces);
 		}
 	};
+#endif
 
 	template<>
 	struct adl_serializer<DirectionalLightComponent>
@@ -86,10 +88,10 @@ namespace nlohmann {
 			};
 		}
 
-		static void from_json(const JSON& j, DirectionalLightComponent& sb)
+		static void from_json(const JSON& j, DirectionalLightComponent& dlc)
 		{
-			j.at("Direction").get_to(sb.Direction);
-			j.at("Color").get_to(sb.Color);
+			j.at("Direction").get_to(dlc.Direction);
+			j.at("Color").get_to(dlc.Color);
 		}
 	};
 }

@@ -97,12 +97,8 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_JerrycanEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Jerrycan");
     m_JerrycanEntity.AddComponent<StaticMeshComponent>(m_JerrycanMesh);
     m_JerrycanEntity.GetComponent<TransformComponent>().Position.y = 0.5f;
-    
-    m_DirectionalLight = m_EditorContext.GetCurrentScene()->CreateEntity("Directional Light");
-    m_DirectionalLight.AddComponent<DirectionalLightComponent>();
-    m_DirectionalLight.GetComponent<DirectionalLightComponent>().Direction = { -0.2f, -1.0f, -0.3f };
-    m_DirectionalLight.GetComponent<DirectionalLightComponent>().Color = { 1.0f, 0.89f, 0.96f };
 
+#if 0
     m_CharacterModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/Ch15_nonPBR.dae").string());
     m_CharacterMaterial1 = CreateRef<Firebox::Material>();
     m_CharacterMaterial1->SetDiffuseTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/Ch15_1001_Diffuse.png").string()));
@@ -120,7 +116,7 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_CharacterAnimator = CreateRef<Firebox::Animator>(&m_RunningAnim);
     m_CharacterEntity.AddComponent<AnimatorComponent>(m_CharacterAnimator);
     m_CharacterEntity.GetComponent<AnimatorComponent>().Animator->PlayAnimation(&m_RunningAnim);
-
+#endif
 }
 
 void FireboxEditor::EditorViewport::OnDetach()
@@ -154,7 +150,7 @@ void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
 
 void FireboxEditor::EditorViewport::OnRender(float deltaTime)
 {
-    Firebox::Renderer3D::BeginScene(*m_EditorCamera, m_DirectionalLight.GetComponent<DirectionalLightComponent>());
+    Firebox::Renderer3D::BeginScene(*m_EditorCamera);
     m_EditorContext.GetCurrentScene()->OnUpdate(deltaTime);
     Firebox::Renderer3D::EndScene();
     Firebox::Renderer3D::SetGridSize(m_ViewportPanel.GetGridSize());
