@@ -70,6 +70,27 @@ void Firebox::Renderer3D::Shutdown()
 	s_Data.RenderQueue.clear();
 }
 
+void Firebox::Renderer3D::BeginScene(const Camera& camera)
+{
+	s_Data.RendererAPI->ClearColor(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
+	s_Data.RendererAPI->Clear();
+
+	s_Data.CameraPosition = camera.GetPosition();
+	s_Data.NearPlane = camera.GetNearPlane();
+	s_Data.FarPlane = camera.GetFarPlane();
+	s_Data.FOV = camera.GetFOV();
+	s_Data.AspectRatio = camera.GetAspectRatio();
+	s_Data.ViewProjectionMatrix = camera.GetPerspective() * camera.GetViewMatrix();
+	s_Data.ViewMatrix = camera.GetViewMatrix();
+	s_Data.ProjectionMatrix = camera.GetPerspective();
+
+	s_Data.ShadowMap->SetShadowMapProps(s_Data.FOV, s_Data.NearPlane, s_Data.FarPlane, s_Data.AspectRatio, s_Data.ViewMatrix,
+		s_Data.DirectionalLight.Direction);
+	s_Data.ShadowMap->SetCascadeLevels();
+
+	s_Data.RenderQueue.clear();
+}
+
 void Firebox::Renderer3D::BeginScene(const Camera& camera, const DirectionalLightComponent& directionalLight)
 {
 	s_Data.RendererAPI->ClearColor(Vector4(0.1f, 0.1f, 0.1f, 1.0f));
@@ -130,9 +151,12 @@ void Firebox::Renderer3D::DrawGrid()
 void Firebox::Renderer3D::DrawSkybox(const Ref<Skybox>& skybox)
 {
 	if (skybox) [[likely]]
-	{
 		s_Data.ActiveSkybox = skybox;
-	}
+}
+
+void Firebox::Renderer3D::SetDirectionalLight(const DirectionalLightComponent& directionalLight)
+{
+	s_Data.DirectionalLight = directionalLight;
 }
 
 void Firebox::Renderer3D::Flush()
@@ -176,7 +200,7 @@ void Firebox::Renderer3D::Flush()
 			else
 			{
 				lastBoundAnimator = nullptr;
-				for (size_t i = 0; i < 256; i++)
+				for (size_t i = 0; i < 100; i++)
 					activeShader->SetMat4("u_FinalBoneMatrices[" + std::to_string(i) + "]", Mat4(1.0f));
 			}
 			

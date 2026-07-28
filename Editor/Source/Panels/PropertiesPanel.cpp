@@ -59,11 +59,6 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 			ImGui::EndPopup();
 		}
 
-		if (m_SelectedEntity.HasComponent<DirectionalLightComponent>())
-		{
-			EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<DirectionalLightComponent>().Direction, "Light Dir");
-		}
-
 		if (m_SelectedEntity.HasComponent<TransformComponent>())
 		{
 			PushTreeNodeStyle();
@@ -140,6 +135,24 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 				auto& mat = m_SelectedEntity.GetComponent<MaterialComponent>();
 				ImGui::Image((ImTextureID)(uintptr_t)mat.Material->GetDiffuse()->GetTextureID(),
 					{ 64.0f, 64.0f }, ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::TreePop();
+			}
+		}
+
+		if (m_SelectedEntity.HasComponent<DirectionalLightComponent>())
+		{
+			PushTreeNodeStyle();
+
+			ImGuiTreeNodeFlags dirLightTreeFlags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_DefaultOpen;
+			bool dirLightTree = ImGui::TreeNodeEx("Directional Light", dirLightTreeFlags);
+
+			PopTreeNodeStyle();
+
+			if (dirLightTree)
+			{
+				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<DirectionalLightComponent>().Direction, "Direction");
+				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<DirectionalLightComponent>().Color, "Color");
+				Firebox::Renderer3D::SetDirectionalLight(m_SelectedEntity.GetComponent<DirectionalLightComponent>());
 				ImGui::TreePop();
 			}
 		}

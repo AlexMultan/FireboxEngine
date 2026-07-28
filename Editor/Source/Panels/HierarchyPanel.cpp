@@ -83,6 +83,9 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 				Firebox::Entity directionalLightEntity = scene->CreateEntity("Directional Light");
 				m_Context.SetSelectedEntity(directionalLightEntity);
 				directionalLightEntity.AddComponent<DirectionalLightComponent>();
+				directionalLightEntity.GetComponent<DirectionalLightComponent>().Direction = { -0.2f, -1.0f, -0.3f };
+				directionalLightEntity.GetComponent<DirectionalLightComponent>().Color = { 1.0f, 0.89f, 0.96f };
+				Firebox::Renderer3D::SetDirectionalLight(directionalLightEntity.GetComponent<DirectionalLightComponent>());
 			}
 
 			if (ImGui::MenuItem("Skybox"))

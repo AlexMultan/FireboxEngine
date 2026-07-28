@@ -33,8 +33,12 @@ project "Engine"
     objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
     
     files{
-        "%{prj.name}/Source/**/**.h",
-        "%{prj.name}/Source/**/**.cpp",
+        "%{prj.name}/Source/**.h",
+        "%{prj.name}/Source/**.cpp",
+        "%{prj.name}/EngineContent/Shaders/GLSL/**.vert",
+        "%{prj.name}/EngineContent/Shaders/GLSL/**.frag",
+        "%{prj.name}/EngineContent/Shaders/GLSL/**.geom",
+        "%{prj.name}/EngineContent/Shaders/GLSL/**.comp"
     }
 
     includedirs{

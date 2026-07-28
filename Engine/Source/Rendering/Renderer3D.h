@@ -30,6 +30,7 @@ namespace Firebox {
 		static void Init();
 		static void Shutdown();
 
+		static void BeginScene(const Camera& camera);
 		static void BeginScene(const Camera& camera, const DirectionalLightComponent& directionalLight);
 		static void EndScene();
 
@@ -37,6 +38,7 @@ namespace Firebox {
 		static void DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform, const Ref<Animator> animator);
 		static void DrawGrid();
 		static void DrawSkybox(const Ref<Skybox>& skybox);
+		static void SetDirectionalLight(const DirectionalLightComponent& directionalLight);
 
 		static Ref<Shader> GetLitShader();
 		static Ref<Shader> GetDepthShader();
@@ -81,7 +83,7 @@ namespace Firebox {
 			float NearPlane;
 			float FOV;
 			float AspectRatio;
-			DirectionalLightComponent DirectionalLight;
+			DirectionalLightComponent DirectionalLight{ {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
 			Ref<ShadowMap> ShadowMap;
 			Ref<Framebuffer> MainFramebuffer;
 			Ref<Skybox> ActiveSkybox = nullptr;

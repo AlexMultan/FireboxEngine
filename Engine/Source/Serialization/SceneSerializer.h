@@ -23,13 +23,13 @@ namespace nlohmann {
 					{"Tag", registry.get<TagComponent>(handle).Tag},
 					{"Transform", registry.get<TransformComponent>(handle)}
 				};
-
+/*
 				if (registry.any_of<SkyboxComponent>(handle))
 				{
 					entityJson["Skybox"] = registry.get<SkyboxComponent>(handle);
-				}
+				}*/
 
-				if (registry.any_of<SkyboxComponent>(handle))
+				if (registry.any_of<DirectionalLightComponent>(handle))
 				{
 					entityJson["Directional Light"] = registry.get<DirectionalLightComponent>(handle);
 				}
@@ -50,10 +50,10 @@ namespace nlohmann {
 				e.AddComponent<TagComponent>(entityJson.at("Tag").get<String>());
 				e.AddComponent<TransformComponent>(entityJson.at("Transform").get<TransformComponent>());
 
-				if (entityJson.contains("Skybox"))
+				/*if (entityJson.contains("Skybox"))
 				{
 					e.AddComponent<SkyboxComponent>(entityJson.at("Skybox").get<SkyboxComponent>());
-				}
+				}*/
 
 				if (entityJson.contains("Directional Light"))
 				{
