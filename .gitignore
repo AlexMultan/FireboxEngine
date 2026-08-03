@@ -3,10 +3,11 @@ Binaries/
 Intermediate/
 bin/
 bin-int/
+ThirdParty/VulkanSDK/
 
-Editor/Resources/Models/SM_Fireaxe.obj
-Engine/EngineAssets/Textures/T_Fireaxe_BC.tga
-Engine/EngineAssets/Textures/T_Fireaxe_N.tga
+Resources/EditorContent/Models/SM_Fireaxe.obj
+Resources/EngineAssets/Textures/T_Fireaxe_BC.tga
+Resources/EngineAssets/Textures/T_Fireaxe_N.tga
 
 *.user
 *.vcxproj

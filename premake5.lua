@@ -19,26 +19,30 @@ IncludeDir["entt"] = "ThirdParty/entt/include"
 IncludeDir["assimp"] = "ThirdParty/assimp/include"
 IncludeDir["ImGuizmo"] = "ThirdParty/ImGuizmo/src"
 IncludeDir["json"] = "ThirdParty/json/include"
+IncludeDir["VulkanSDK"] = "ThirdParty/VulkanSDK/Include"
+
+LibDir = {}
+LibDir["VulkanSDK"] = "ThirdParty/VulkanSDK/Lib"
 
 include "ThirdParty/Glad"
 include "ThirdParty/ImGui"
 include "ThirdParty/ImGuizmo"
 include "ThirdParty/assimp"
 
-project "Engine"
-    location "Engine"
+project "FireboxRuntime"
+    location "Engine/Source/Runtime"
     language "C++"
 
     targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
     objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
     
     files{
-        "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp",
-        "%{prj.name}/EngineContent/Shaders/GLSL/**.vert",
-        "%{prj.name}/EngineContent/Shaders/GLSL/**.frag",
-        "%{prj.name}/EngineContent/Shaders/GLSL/**.geom",
-        "%{prj.name}/EngineContent/Shaders/GLSL/**.comp"
+        "Engine/Source/Runtime/**.h",
+        "Engine/Source/Runtime/**.cpp",
+        "Resources/EngineContent/Shaders/GLSL/**.vert",
+        "Resources/EngineContent/Shaders/GLSL/**.frag",
+        "Resources/EngineContent/Shaders/GLSL/**.geom",
+        "Resources/EngineContent/Shaders/GLSL/**.comp"
     }
 
     includedirs{
@@ -52,7 +56,8 @@ project "Engine"
         "%{IncludeDir.assimp}",
         "%{IncludeDir.ImGuizmo}",
         "%{IncludeDir.json}",
-        "%{prj.name}/Source"
+        "%{IncludeDir.VulkanSDK}",
+        "Engine/Source/Runtime"
     }
 
     removefiles{
@@ -65,7 +70,8 @@ project "Engine"
         "Glad",
         "imgui",
         "ImGuizmo",
-        "assimp"
+        "assimp",
+        "vulkan-1"
         }
 
     defines{
@@ -73,7 +79,8 @@ project "Engine"
     }
 
     libdirs{
-        "ThirdParty/SDL/lib/x64"
+        "ThirdParty/SDL/lib/x64",
+        "%{LibDir.VulkanSDK}"
     }
 
     filter "system:windows"
@@ -87,9 +94,9 @@ project "Engine"
         kind "SharedLib"
         defines "FIREBOX_BUILD_DLL"
         postbuildcommands{
-            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Editor",
-            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Editor",
-            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Editor",
+            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
 
             "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame",
             "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame",
@@ -100,8 +107,8 @@ project "Engine"
         kind "StaticLib"
         defines "FIREBOX_STATIC"
         postbuildcommands{
-            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Editor",
-            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Editor",
+            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
             "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame",
             "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame"
         }
@@ -140,7 +147,7 @@ project "SampleGame"
     }
 
     links{
-        "Engine"
+        "FireboxRuntime"
     }
 
     includedirs{
@@ -153,7 +160,7 @@ project "SampleGame"
         "ThirdParty/ImGuizmo/src",
         "ThirdParty/assimp/include",
         "ThirdParty/json/include",
-        "Engine/Source"
+        "Engine/Source/Runtime"
     }
 
     filter "system:windows"
@@ -192,8 +199,8 @@ project "SampleGame"
         filter {}
 
 
-project "Editor"
-    location "Editor"
+project "FireboxEditor"
+    location "Engine/Source/Editor"
     kind "ConsoleApp"
     language "C++"
 
@@ -201,12 +208,12 @@ project "Editor"
     objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
     
     files{
-        "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp",
+        "Engine/Source/Editor/**.h",
+        "Engine/Source/Editor/**.cpp",
     }
 
     links{
-        "Engine",
+        "FireboxRuntime",
         "SDL3",
         "opengl32.lib",
         "Glad",
@@ -230,9 +237,9 @@ project "Editor"
         "ThirdParty/assimp/include",
         "ThirdParty/ImGuizmo/src",
         "ThirdParty/json/include",
-        "Engine/Source",
+        "Engine/Source/Runtime",
         "%{IncludeDir.Glad}",
-        "%{prj.name}/Source"
+        "Engine/Source/Editor"
     }
 
     filter "system:windows"
