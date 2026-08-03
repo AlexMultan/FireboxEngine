@@ -1,8 +1,6 @@
 @echo off
 REM ============================================================
 REM  Downloads and installs the latest Vulkan SDK (Windows x64)
-REM  into D:\dev\VulkanForDummies\ThirdParty\VulkanSDK
-REM
 REM  Requires: curl (built into Windows 10/11)
 REM ============================================================
 
