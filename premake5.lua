@@ -1,6 +1,7 @@
+include "vendor/premake-plugins/export-compile-commands.lua"
+
 workspace "FireboxEngine"
     architecture "x64"
-
     configurations{
         "Debug",
         "Release",
@@ -25,20 +26,20 @@ include "ThirdParty/ImGui"
 include "ThirdParty/ImGuizmo"
 include "ThirdParty/assimp"
 
-project "Engine"
-    location "Engine"
+project "FireboxRuntime"
+    location "Engine/Source/Runtime"
     language "C++"
 
     targetdir ("Binaries/" .. outputdir .. "/%{prj.name}")
     objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
     
     files{
-        "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp",
-        "%{prj.name}/EngineContent/Shaders/GLSL/**.vert",
-        "%{prj.name}/EngineContent/Shaders/GLSL/**.frag",
-        "%{prj.name}/EngineContent/Shaders/GLSL/**.geom",
-        "%{prj.name}/EngineContent/Shaders/GLSL/**.comp"
+        "Engine/Source/Runtime/**.h",
+        "Engine/Source/Runtime/**.cpp",
+        "Engine/Shaders/GLSL/**.vert",
+        "Engine/Shaders/GLSL/**.frag",
+        "Engine/Shaders/GLSL/**.geom",
+        "Engine/Shaders/GLSL/**.comp"
     }
 
     includedirs{
@@ -52,7 +53,7 @@ project "Engine"
         "%{IncludeDir.assimp}",
         "%{IncludeDir.ImGuizmo}",
         "%{IncludeDir.json}",
-        "%{prj.name}/Source"
+        "Engine/Source/Runtime"
     }
 
     removefiles{
@@ -65,7 +66,7 @@ project "Engine"
         "Glad",
         "imgui",
         "ImGuizmo",
-        "assimp"
+        "assimp",
         }
 
     defines{
@@ -75,6 +76,16 @@ project "Engine"
     libdirs{
         "ThirdParty/SDL/lib/x64"
     }
+
+    filter "action:vs2022"
+        toolset "msc"
+
+    filter "action:gmake2"
+        toolset "clang"
+        buildoptions {
+            "-Wall",
+            "-Wextra"
+        }
 
     filter "system:windows"
         cppdialect "C++20"
@@ -87,9 +98,9 @@ project "Engine"
         kind "SharedLib"
         defines "FIREBOX_BUILD_DLL"
         postbuildcommands{
-            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Editor",
-            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Editor",
-            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Editor",
+            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
 
             "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame",
             "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame",
@@ -100,8 +111,8 @@ project "Engine"
         kind "StaticLib"
         defines "FIREBOX_STATIC"
         postbuildcommands{
-            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Editor",
-            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Editor",
+            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
             "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame",
             "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame"
         }
@@ -140,7 +151,7 @@ project "SampleGame"
     }
 
     links{
-        "Engine"
+        "FireboxRuntime"
     }
 
     includedirs{
@@ -153,8 +164,19 @@ project "SampleGame"
         "ThirdParty/ImGuizmo/src",
         "ThirdParty/assimp/include",
         "ThirdParty/json/include",
-        "Engine/Source"
+        "Engine/Source/Runtime"
     }
+
+    filter "action:vs2022"
+        toolset "msc"
+
+    filter "action:gmake2"
+        toolset "clang"
+        buildoptions {
+            "-Wall",
+            "-Wextra"
+        }
+
 
     filter "system:windows"
         cppdialect "C++20"
@@ -192,8 +214,8 @@ project "SampleGame"
         filter {}
 
 
-project "Editor"
-    location "Editor"
+project "FireboxEditor"
+    location "Engine/Source/Editor"
     kind "ConsoleApp"
     language "C++"
 
@@ -201,12 +223,12 @@ project "Editor"
     objdir ("Intermediate/" .. outputdir .. "/%{prj.name}")
     
     files{
-        "%{prj.name}/Source/**.h",
-        "%{prj.name}/Source/**.cpp",
+        "Engine/Source/Editor/**.h",
+        "Engine/Source/Editor/**.cpp",
     }
 
     links{
-        "Engine",
+        "FireboxRuntime",
         "SDL3",
         "opengl32.lib",
         "Glad",
@@ -230,10 +252,21 @@ project "Editor"
         "ThirdParty/assimp/include",
         "ThirdParty/ImGuizmo/src",
         "ThirdParty/json/include",
-        "Engine/Source",
+        "Engine/Source/Runtime",
         "%{IncludeDir.Glad}",
-        "%{prj.name}/Source"
+        "Engine/Source/Editor"
     }
+
+    filter "action:vs2022"
+        toolset "msc"
+
+    filter "action:gmake2"
+        toolset "clang"
+        buildoptions {
+            "-Wall",
+            "-Wextra"
+        }
+
 
     filter "system:windows"
         cppdialect "C++20"
