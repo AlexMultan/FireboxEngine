@@ -154,8 +154,8 @@ void Firebox::Renderer3D::EndScene()
 	GeometryPass();
 	ShadowMaskPass();
 	RenderSkybox();
-	Flush();
 	DrawGrid();
+	Flush();
 	s_Data.MainFramebuffer->UnbindFramebuffer();
 }
 

@@ -32,7 +32,7 @@ void Firebox::Application::PushOverlay(Layer* layer)
 
 void Firebox::Application::Run()
 {
-    m_Window->SetMaxFPS(9999.0f);
+    m_Window->SetMaxFPS(120.0f);
     Firebox::Renderer3D::Init();
     for (Layer* layer : m_LayerStack)
     {

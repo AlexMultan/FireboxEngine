@@ -12,5 +12,6 @@ Engine/EngineAssets/Textures/T_Fireaxe_N.tga
 *.vcxproj
 *.filters
 *.sln
+*.log
 
 !/vendor/bin/
