@@ -25,7 +25,7 @@ namespace FireboxEditor {
 		ViewportPanel(const char* name, EditorContext& context);
 		~ViewportPanel();
 
-		void RenderViewport(const Ref<Firebox::Framebuffer>& framebuffer, const Mat4& viewMatrix, const Mat4& projectionMatrix);
+		void RenderViewport(const Mat4& viewMatrix, const Mat4& projectionMatrix);
 
 		inline const Vector2& GetViewportSize() { return m_ViewportSize; }
 		inline bool IsFocused() const { return m_IsFocused; }

@@ -3,7 +3,7 @@
 
 Firebox::Material::Material()
 {
-	m_Shader = Firebox::Renderer3D::GetLitShader();
+	m_Shader = Firebox::Renderer3D::GetGBufferShader();
 }
 
 Firebox::Material::Material(const Ref<Shader>& shader) : m_Shader(shader)
@@ -41,9 +41,21 @@ void Firebox::Material::BindMaterial() const
 
 	if (m_CubemapTexture)
 		m_Shader->SetInt("u_SkyboxTex", 3);
-	else
-	{
-		m_Shader->SetFloat("u_Material.shininess", m_Shininess);
-		m_Shader->SetFloat("u_Tiling", m_Tiling);
-	}
+}
+
+void Firebox::Material::BindMaterial(const Ref<Shader>& targetShader) const
+{
+	targetShader->UseShader();
+	BindTextures();
+	if (m_DiffuseTexture)
+		targetShader->SetInt("u_Material.diffuse", 0);
+
+	if (m_SpecularTexture)
+		targetShader->SetInt("u_Material.specular", 1);
+
+	if (m_NormalTexture)
+		targetShader->SetInt("u_Material.normal", 2);
+
+	if (m_CubemapTexture)
+		targetShader->SetInt("u_SkyboxTex", 3);
 }

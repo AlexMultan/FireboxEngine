@@ -10,8 +10,8 @@ void FireboxEditor::MaterialEditor::DrawMaterialEditor(bool& open, const Ref<Fir
 
 		if (mat)
 		{
-			ImGui::DragFloat("Shininess", &mat->GetShininess(), 0.1f);
-			ImGui::DragFloat("Tiling", &mat->GetTiling(), 0.005f);
+			ImGui::DragFloat("Shininess", 0, 0.1f);
+			ImGui::DragFloat("Tiling", 0, 0.005f);
 		}
 
 		ImGui::End();

@@ -5,7 +5,7 @@
 #include <SDL3/SDL.h>
 #include <glad/glad.h>
 
-Firebox::OpenGLVertexBuffer::OpenGLVertexBuffer(uint size)
+Firebox::OpenGL::OpenGLVertexBuffer::OpenGLVertexBuffer(uint size)
 {
 	FB_ASSERT(sizeof(uint32_t) == sizeof(GLuint), "Size in bytes of uint32_t doesn't match the size of GLuint!");
 	glGenBuffers(1, &m_RendererID);
@@ -14,7 +14,7 @@ Firebox::OpenGLVertexBuffer::OpenGLVertexBuffer(uint size)
 	glCheckError();
 }
 
-Firebox::OpenGLVertexBuffer::OpenGLVertexBuffer(const void* data, uint size)
+Firebox::OpenGL::OpenGLVertexBuffer::OpenGLVertexBuffer(const void* data, uint size)
 {
 	FB_ASSERT(sizeof(uint32_t) == sizeof(GLuint), "Size in bytes of uint32_t doesn't match the size of GLuint!");
 	while (glGetError() != GL_NO_ERROR);
@@ -24,25 +24,28 @@ Firebox::OpenGLVertexBuffer::OpenGLVertexBuffer(const void* data, uint size)
 	glCheckError();
 }
 
-Firebox::OpenGLVertexBuffer::~OpenGLVertexBuffer()
+Firebox::OpenGL::OpenGLVertexBuffer::~OpenGLVertexBuffer()
 {
-	glDeleteBuffers(1, &m_RendererID);
-	glCheckError();
+	if (m_RendererID != -1)
+	{
+		glDeleteBuffers(1, &m_RendererID);
+		glCheckError();
+	}
 }
 
-void Firebox::OpenGLVertexBuffer::BindBuffer() const
+void Firebox::OpenGL::OpenGLVertexBuffer::BindBuffer() const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 	glCheckError();
 }
 
-void Firebox::OpenGLVertexBuffer::UnbindBuffer() const
+void Firebox::OpenGL::OpenGLVertexBuffer::UnbindBuffer() const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glCheckError();
 }
 
-void Firebox::OpenGLVertexBuffer::SetBufferData(const void* data, uint size)
+void Firebox::OpenGL::OpenGLVertexBuffer::SetBufferData(const void* data, uint size)
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);

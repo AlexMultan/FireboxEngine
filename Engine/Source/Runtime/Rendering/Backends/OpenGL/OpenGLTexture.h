@@ -8,7 +8,7 @@ namespace Firebox {
 	{
 	public:
 		OpenGLTexture(const String& path);
-		OpenGLTexture(const DynamicArray<String>& faces);
+		OpenGLTexture(const std::vector<String>& faces);
 		~OpenGLTexture();
 
 		virtual void BindTexture(uint slot) override;

@@ -4,9 +4,9 @@
 
 namespace Firebox::PrimitiveShapes {
 
-	struct Cube
+	struct Box
 	{
-        DynamicArray<Vertex> vertices = {
+        std::vector<Vertex> vertices = {
             {{ -0.5f, -0.5f, -0.5f }, { 0.0f,  0.0f, -1.0f }, { 0.0f,  0.0f }},
             {{  0.5f, -0.5f, -0.5f }, { 0.0f,  0.0f, -1.0f }, { 1.0f,  0.0f }},
             {{  0.5f,  0.5f, -0.5f }, { 0.0f,  0.0f, -1.0f }, { 1.0f,  1.0f }},
@@ -33,7 +33,7 @@ namespace Firebox::PrimitiveShapes {
             {{ -0.5f,  0.5f,  0.5f }, { 0.0f,  1.0f,  0.0f }, { 0.0f,  0.0f }}
         };
 
-        DynamicArray<uint> indices = {
+        std::vector<uint> indices = {
              0,  1,  2,   2,  3,  0,
              4,  6,  5,   4,  7,  6,
              8, 10,  9,   8, 11, 10,
@@ -42,4 +42,19 @@ namespace Firebox::PrimitiveShapes {
              20, 22, 21,  20, 23, 22
         };
 	};
+
+    struct Quad
+    {
+        std::vector<Vertex> vertices = {
+            {{ -1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, { 0.0f, 0.0f }},
+            {{ 1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, { 1.0f, 0.0f }},
+            {{ 1.0f,  1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, { 1.0f, 1.0f }},
+            {{ -1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0f }}
+        };
+
+        std::vector<uint> indices = {
+            0, 1, 2,
+            2, 3, 0
+        };
+    };
 }

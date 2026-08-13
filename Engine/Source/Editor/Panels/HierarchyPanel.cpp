@@ -30,8 +30,8 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 	ImGui::Begin(m_Name.c_str());
 
 	ImGuiTreeNodeFlags hierarchyNodeFlags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
-
-	if (ImGui::TreeNodeEx("Scene", hierarchyNodeFlags))
+	const char* sceneName = scene->GetSceneName().c_str();
+	if (ImGui::TreeNodeEx(sceneName, hierarchyNodeFlags))
 	{
 		auto& registry = scene->GetRegistry();
 		for (auto e : registry.view<IdComponent>())
@@ -74,7 +74,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 			{
 				Firebox::Entity cubeEntity = scene->CreateEntity("Cube");
 				m_Context.SetSelectedEntity(cubeEntity);
-				cubeEntity.AddComponent<MeshComponent>(Firebox::PrimitiveShapes::Cube().vertices, Firebox::PrimitiveShapes::Cube().indices);
+				cubeEntity.AddComponent<MeshComponent>(Firebox::PrimitiveShapes::Box().vertices, Firebox::PrimitiveShapes::Box().indices);
 				cubeEntity.AddComponent<MaterialComponent>(Firebox::Renderer3D::GetDefaultMaterial());
 			}
 
@@ -86,6 +86,22 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 				directionalLightEntity.GetComponent<DirectionalLightComponent>().Direction = { -0.2f, -1.0f, -0.3f };
 				directionalLightEntity.GetComponent<DirectionalLightComponent>().Color = { 1.0f, 0.89f, 0.96f };
 				Firebox::Renderer3D::SetDirectionalLight(directionalLightEntity.GetComponent<DirectionalLightComponent>());
+			}
+
+			if (ImGui::MenuItem("Point Light"))
+			{
+				Firebox::Entity pointLightEntity = scene->CreateEntity("Point Light");
+				m_Context.SetSelectedEntity(pointLightEntity);
+				pointLightEntity.AddComponent<PointLightComponent>();
+				Firebox::Renderer3D::GetPointLights().emplace_back(pointLightEntity.GetComponent<PointLightComponent>());
+			}
+
+			if (ImGui::MenuItem("Spot Light"))
+			{
+				Firebox::Entity spotLightEntity = scene->CreateEntity("Spot Light");
+				m_Context.SetSelectedEntity(spotLightEntity);
+				spotLightEntity.AddComponent<SpotLightComponent>();
+				Firebox::Renderer3D::GetSpotLights().emplace_back(spotLightEntity.GetComponent<SpotLightComponent>());
 			}
 
 			if (ImGui::MenuItem("Skybox"))

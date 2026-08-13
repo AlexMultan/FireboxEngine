@@ -11,10 +11,10 @@ namespace Firebox {
 		void Update(float deltaTime);
 		void PlayAnimation(Animation* animation);
 		void CalculateBoneTransform(const AssimpNodeData* node, Mat4 parentTransform);
-		DynamicArray<Mat4> GetFinalBoneMatrices() { return m_FinalBoneMatrices; }
+		std::vector<Mat4> GetFinalBoneMatrices() { return m_FinalBoneMatrices; }
 
 	private:
-		DynamicArray<Mat4> m_FinalBoneMatrices;
+		std::vector<Mat4> m_FinalBoneMatrices;
 		Animation* m_CurrentAnimation;
 		float m_CurrentTime;
 		float m_DeltaTime;

@@ -44,9 +44,9 @@ namespace Firebox {
 		Mat4 InterpolateScaling(float animTime);
 
 	private:
-		DynamicArray<KeyPosition> m_Positions;
-		DynamicArray<KeyRotation> m_Rotations;
-		DynamicArray<KeyScale> m_Scales;
+		std::vector<KeyPosition> m_Positions;
+		std::vector<KeyRotation> m_Rotations;
+		std::vector<KeyScale> m_Scales;
 		int m_NumPositions;
 		int m_NumRotations;
 		int m_NumScalings;

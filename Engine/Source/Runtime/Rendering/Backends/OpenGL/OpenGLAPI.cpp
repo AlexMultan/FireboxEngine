@@ -33,9 +33,9 @@ void Firebox::OpenGL::OpenGLAPI::ClearColor(const Vector4& color)
 	glClearColor(color.r, color.g, color.b, color.a);
 }
 
-void Firebox::OpenGL::OpenGLAPI::Clear()
+void Firebox::OpenGL::OpenGLAPI::Clear(APIEnum func)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClear(ToGLEnum(func));
 }
 
 void Firebox::OpenGL::OpenGLAPI::SetViewport(uint x, uint y, uint width, uint height)
@@ -59,11 +59,6 @@ void Firebox::OpenGL::OpenGLAPI::SetDepthFunc(APIEnum func)
 void Firebox::OpenGL::OpenGLAPI::ClearDepth(float value)
 {
 	glClearDepth(value);
-}
-
-void Firebox::OpenGL::OpenGLAPI::Clear(APIEnum func)
-{
-	glClear(ToGLEnum(func));
 }
 
 void Firebox::OpenGL::OpenGLAPI::BindTexture(uint slot, uint textureID)
@@ -96,6 +91,16 @@ void Firebox::OpenGL::OpenGLAPI::BufferSubData(APIEnum target, uint offset, size
 void Firebox::OpenGL::OpenGLAPI::CullFace(APIEnum target)
 {
 	glCullFace(ToGLEnum(target));
+}
+
+void Firebox::OpenGL::OpenGLAPI::Enable(APIEnum target)
+{
+	glEnable(ToGLEnum(target));
+}
+
+void Firebox::OpenGL::OpenGLAPI::Disable(APIEnum target)
+{
+	glDisable(ToGLEnum(target));
 }
 
 GLenum Firebox::OpenGL::OpenGLAPI::ToGLEnum(APIEnum value)
@@ -147,6 +152,14 @@ GLenum Firebox::OpenGL::OpenGLAPI::ToGLEnum(APIEnum value)
 		case APIEnum::API_UNIFORM_BUFFER:   return GL_UNIFORM_BUFFER;
 		case APIEnum::API_BACK:   return GL_BACK;
 		case APIEnum::API_FRONT:   return GL_FRONT;
+
+		case APIEnum::API_BLEND: return GL_BLEND;
+		case APIEnum::API_DEPTH_TEST: return GL_DEPTH_TEST;
+		case APIEnum::API_CULL_FACE: return GL_CULL_FACE;
+		case APIEnum::API_DITHER: return GL_DITHER;
+		case APIEnum::API_MULTISAMPLE: return GL_MULTISAMPLE;
+		case APIEnum::API_STENCIL_TEST: return GL_STENCIL_TEST;
+		case APIEnum::API_SCISSOR_TEST: return GL_SCISSOR_TEST;
 	}
 
 	FB_ASSERT(false, "Unsupported APIEnum value in OpenGLAPI::ToGLEnum");

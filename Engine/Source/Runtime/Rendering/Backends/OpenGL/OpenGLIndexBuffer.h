@@ -2,7 +2,7 @@
 
 #include "Rendering/Buffers/IndexBuffer.h"
 
-namespace Firebox {
+namespace Firebox::OpenGL {
 
 	class OpenGLIndexBuffer : public IndexBuffer
 	{

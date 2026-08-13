@@ -48,11 +48,10 @@ void Firebox::ShadowMap::SetShadowMapProps(float fov, float nearPlane, float far
 }
 
 
-DynamicArray<Mat4> Firebox::ShadowMap::GetLightSpaceMatrices()
+std::vector<Mat4> Firebox::ShadowMap::GetLightSpaceMatrices()
 {
-	DynamicArray<Mat4> ret;
 	size_t cascadeCount = m_ShadowCascadeLevels.size();
-	ret.reserve(cascadeCount);
+	std::vector<Mat4> ret(cascadeCount);
 	for (size_t i = 0; i < cascadeCount; i++)
 	{
 		float prevSplit = (i == 0) ? m_ShadowMapProps.NearPlane : m_ShadowCascadeLevels[i - 1];
@@ -63,12 +62,11 @@ DynamicArray<Mat4> Firebox::ShadowMap::GetLightSpaceMatrices()
 	return ret;
 }
 
-DynamicArray<Vector3> Firebox::ShadowMap::GetFrustumCornersWorldSpace(const Mat4& projection, const Mat4& view)
+std::vector<Vector3> Firebox::ShadowMap::GetFrustumCornersWorldSpace(const Mat4& projection, const Mat4& view)
 {
 	Mat4 inverse = glm::inverse(projection * view);
 
-	DynamicArray<Vector3> corners;
-	corners.reserve(8);
+	std::vector<Vector3> corners(8);
 	for (int x = 0; x < 2; x++)
 	{
 		for (int y = 0; y < 2; y++)

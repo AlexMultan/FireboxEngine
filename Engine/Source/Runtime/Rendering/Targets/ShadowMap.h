@@ -29,11 +29,11 @@ namespace Firebox {
 		virtual uint GetDepthTexture() const = 0;
 		static Ref<ShadowMap> Create(uint resolution);
 		
-		inline const DynamicArray<float>& GetCascadeLevels() const { return m_ShadowCascadeLevels; }
+		inline const std::vector<float>& GetCascadeLevels() const { return m_ShadowCascadeLevels; }
 		void SetCascadeLevels();
 		void SetShadowMapProps(float fov, float nearPlane, float farPlane, float aspectRatio, const Mat4& viewMatrix, const Vector3& lightDir);
-		DynamicArray<Vector3> GetFrustumCornersWorldSpace(const Mat4& projection, const Mat4& view);
-		DynamicArray<Mat4> GetLightSpaceMatrices();
+		std::vector<Vector3> GetFrustumCornersWorldSpace(const Mat4& projection, const Mat4& view);
+		std::vector<Mat4> GetLightSpaceMatrices();
 
 	protected:
 		ShadowMapProps m_ShadowMapProps;
@@ -41,7 +41,7 @@ namespace Firebox {
 		uint m_LightFBO = 0;
 		uint m_DepthMapResolution = 4096;
 		Mat4 m_LightSpaceMatrix = Mat4(1.0f);
-		DynamicArray<float> m_ShadowCascadeLevels{};
+		std::vector<float> m_ShadowCascadeLevels{};
 		
 	private:
 		Mat4 GetLightSpaceMatrix(const float nearPlane, const float farPlane);

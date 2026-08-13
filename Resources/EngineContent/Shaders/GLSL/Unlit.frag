@@ -2,11 +2,11 @@
 
     out vec4 FragColor;
 
-    uniform sampler2D u_Diffuse;
+    uniform sampler2D gAlbedoSpec;
 
     in vec2 TexCoords;
 
     void main()
     {
-        FragColor = vec4(texture(u_Diffuse, TexCoords));
+        FragColor = vec4(texture(gAlbedoSpec, TexCoords).rgb, 1.0);
     }

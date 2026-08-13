@@ -2,8 +2,7 @@
 
 #include "Rendering/Buffers/VertexBuffer.h"
 
-
-namespace Firebox {
+namespace Firebox::OpenGL {
 
 	class OpenGLVertexBuffer : public VertexBuffer
 	{

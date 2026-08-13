@@ -61,7 +61,31 @@ struct SkyboxComponent
 
 struct PostProcessComponent
 {
-	float Gamma = 1.5;
+	// Color Grading
+	float Gamma = 1.5f;
+	float Contrast = 1.0f;
+	float Saturation = 1.0f;
+	float Gain = 1.0f;
+	float Temperature = 6500.0f;
+	float Tint = 0.0f;
+
+	// Lens
+	float BloomIntensity = 0.75f;
+	float Exposure = 1.0f;
+	float VignetterIntensity = 0.4f;
+	float Sharpen = 0.0f;
+	float ChromaticAbberrationIntensity = 0.0f;
+
+	// Film
+	float Slope = 0.9f;
+	float Toe = 0.5f;
+
+	// Rendering Features
+	float AmbientOcculusionIntensity = 0.5f;
+	float AmbientOcculusionRadius = 200.0f;
+	float MotionBlurIntensity = 0.5f;
+
+	bool InfiniteExtent = true;
 
 	PostProcessComponent() = default;
 	PostProcessComponent(const PostProcessComponent&) = default;

@@ -2,7 +2,7 @@
 
 #include "Rendering/Buffers/VertexArray.h"
 
-namespace Firebox {
+namespace Firebox::OpenGL {
 
 	class OpenGLVertexArray : public VertexArray
 	{
@@ -20,6 +20,6 @@ namespace Firebox {
 	private:
 		uint32_t m_RendererID = 0;
 		Ref<IndexBuffer> m_IndexBuffer;
-		DynamicArray<Ref<VertexBuffer>> m_VertexBuffers;
+		std::vector<Ref<VertexBuffer>> m_VertexBuffers;
 	};
 }

@@ -9,7 +9,9 @@ namespace EditorUI {
 	class FloatParameters
 	{
 	public:
+		static void Float1(float* otherFloat, const char* label);
+		static void Float2(Vector2* otherVector, const char* label);
 		static void Float3(Vector3* otherVector, const char* label);
-		static void DrawParameter(const char* text, const char* groupLabel, Vector4 color, float* parameter);
+		static void DrawParameter(const char* text, const char* groupLabel, Vector4 color, float* parameter, bool labelBox);
 	};
 }

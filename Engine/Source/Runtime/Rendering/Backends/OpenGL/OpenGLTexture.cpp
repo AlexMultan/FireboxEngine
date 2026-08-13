@@ -46,7 +46,7 @@ Firebox::OpenGLTexture::OpenGLTexture(const String& path)
 	stbi_image_free(data);
 }
 
-Firebox::OpenGLTexture::OpenGLTexture(const DynamicArray<String>& faces)
+Firebox::OpenGLTexture::OpenGLTexture(const std::vector<String>& faces)
 {
 	glGenTextures(1, &m_CubemapTextureID);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_CubemapTextureID);

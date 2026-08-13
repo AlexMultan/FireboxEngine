@@ -1,13 +1,17 @@
 #pragma once
 
+#include "Core/Core.h"
+
+#include <type_traits>
+
 namespace Firebox {
 
-	enum class APIEnum
+	enum class APIEnum : uint
 	{
 		// Masks
-		API_DEPTH_BUFFER_BIT,
-		API_STENCIL_BUFFER_BIT,
-		API_COLOR_BUFFER_BIT,
+		API_DEPTH_BUFFER_BIT = 1 << 0,
+		API_STENCIL_BUFFER_BIT = 1 << 1,
+		API_COLOR_BUFFER_BIT = 1 << 2,
 
 		// Booleans
 		API_FALSE,
@@ -50,6 +54,30 @@ namespace Firebox {
 		API_UNIFORM_BUFFER,
 
 		API_BACK,
-		API_FRONT
+		API_FRONT,
+
+		API_BLEND,
+		API_DEPTH_TEST,
+		API_CULL_FACE,
+		API_DITHER,
+		API_MULTISAMPLE,
+		API_STENCIL_TEST,
+		API_SCISSOR_TEST
 	};
+
+	inline constexpr APIEnum operator|(APIEnum lApiEnum, APIEnum rApiEnum)
+	{
+		return static_cast<APIEnum>(
+			static_cast<std::underlying_type_t<APIEnum>>(lApiEnum) | 
+			static_cast<std::underlying_type_t<APIEnum>>(rApiEnum)
+			);
+	}
+
+	inline constexpr APIEnum operator&(APIEnum lApiEnum, APIEnum rApiEnum)
+	{
+		return static_cast<APIEnum>(
+			static_cast<std::underlying_type_t<APIEnum>>(lApiEnum) &
+			static_cast<std::underlying_type_t<APIEnum>>(rApiEnum)
+			);
+	}
 }

@@ -10,7 +10,7 @@ namespace Firebox {
 	class FIREBOX_API Mesh
 	{
 	public:
-		Mesh(const DynamicArray<Vertex>& vertices, const DynamicArray<uint>& indices);
+		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint>& indices);
 		const Ref<VertexArray>& GetVertexArray() const { return m_VAO; }
 
 	private:

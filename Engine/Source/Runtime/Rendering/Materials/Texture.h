@@ -10,7 +10,7 @@ namespace Firebox {
 		virtual ~Texture() = default;
 
 		static Ref<Texture> Create(const String& path);
-		static Ref<Texture> CreateCubemap(const DynamicArray<String>& faces);
+		static Ref<Texture> CreateCubemap(const std::vector<String>& faces);
 		virtual void BindTexture(uint slot) = 0;
 		virtual void BindCubemapTexture(uint slot) = 0;
 		virtual void UnbindTexture() = 0;

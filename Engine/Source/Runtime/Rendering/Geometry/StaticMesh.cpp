@@ -19,10 +19,7 @@ namespace Firebox {
 	void StaticMesh::SetMaterial(size_t slotIndex, const Ref<Material>& material, float tiling)
 	{
 		if (slotIndex < m_Materials.size())
-		{
 			m_Materials[slotIndex] = material;
-			m_Materials[slotIndex]->SetTiling(tiling);
-		}
 	}
 
 	void StaticMesh::LoadModel(const String& path)
@@ -67,8 +64,8 @@ namespace Firebox {
 
 	Ref<Mesh> StaticMesh::ProcessMesh(aiMesh* mesh, const aiScene* scene)
 	{
-		DynamicArray<Vertex> vertices;
-		DynamicArray<uint> indices;
+		std::vector<Vertex> vertices;
+		std::vector<uint> indices;
 
 		for (size_t i = 0; i < mesh->mNumVertices; i++)
 		{
@@ -156,10 +153,6 @@ namespace Firebox {
 			material->SetNormalTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
 		}
 
-		float shininess = 32.0f;
-		mat->Get(AI_MATKEY_SHININESS, shininess);
-		material->SetShininess(shininess);
-
 		return material;
 	}
 
@@ -196,7 +189,7 @@ namespace Firebox {
 			}
 		}
 	}
-	void StaticMesh::ExtractBoneWeightForVertices(DynamicArray<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
+	void StaticMesh::ExtractBoneWeightForVertices(std::vector<Vertex>& vertices, aiMesh* mesh, const aiScene* scene)
 	{
 		for (int i = 0; i < mesh->mNumBones; i++)
 		{

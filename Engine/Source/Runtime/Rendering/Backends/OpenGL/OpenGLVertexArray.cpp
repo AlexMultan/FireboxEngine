@@ -21,27 +21,27 @@ static GLenum ShaderDataTypeToOpenGLBaseType(Firebox::ShaderDataType type)
 	return 0;
 }
 
-Firebox::OpenGLVertexArray::OpenGLVertexArray()
+Firebox::OpenGL::OpenGLVertexArray::OpenGLVertexArray()
 {
 	glGenVertexArrays(1, &m_RendererID);
 }
 
-Firebox::OpenGLVertexArray::~OpenGLVertexArray()
+Firebox::OpenGL::OpenGLVertexArray::~OpenGLVertexArray()
 {
 	glDeleteVertexArrays(1, &m_RendererID);
 }
 
-void Firebox::OpenGLVertexArray::Bind() const
+void Firebox::OpenGL::OpenGLVertexArray::Bind() const
 {
 	glBindVertexArray(m_RendererID);
 }
 
-void Firebox::OpenGLVertexArray::Unbind() const
+void Firebox::OpenGL::OpenGLVertexArray::Unbind() const
 {
 	glBindVertexArray(0);
 }
 
-void Firebox::OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
+void Firebox::OpenGL::OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 {
 	glBindVertexArray(m_RendererID);
 	vertexBuffer->BindBuffer();
@@ -58,7 +58,7 @@ void Firebox::OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertex
 	m_VertexBuffers.push_back(vertexBuffer);
 }
 
-void Firebox::OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
+void Firebox::OpenGL::OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 {
 	glBindVertexArray(m_RendererID);
 	indexBuffer->Bind();

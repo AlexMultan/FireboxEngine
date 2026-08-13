@@ -33,8 +33,8 @@ namespace FireboxEditor {
 		Ref<Firebox::Scene> m_CurrentScene;
 		fs::path m_SelectedDirectory;
 
-		DynamicArray<std::function<void(Firebox::Entity)>> m_EntitySelectionListeners;
-		DynamicArray<std::function<void(const Ref<Firebox::Scene>&)>> m_SceneChangeListeners;
-		DynamicArray<std::function<void(const fs::path&)>> m_DirectorySelectionListeners;
+		std::vector<std::function<void(Firebox::Entity)>> m_EntitySelectionListeners;
+		std::vector<std::function<void(const Ref<Firebox::Scene>&)>> m_SceneChangeListeners;
+		std::vector<std::function<void(const fs::path&)>> m_DirectorySelectionListeners;
 	};
 }

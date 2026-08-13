@@ -4,6 +4,8 @@
 #include "Core/Log.h"
 #include "Utils/DebugTools.h"
 #include "Utils/String.h"
+#include "Components/CoreComponents.h"
+#include "Rendering/Renderer3D.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -28,7 +30,7 @@ FireboxEditor::ViewportPanel::~ViewportPanel()
 
 }
 
-void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer>& framebuffer, const Mat4& viewMatrix, const Mat4& projectionMatrix)
+void FireboxEditor::ViewportPanel::RenderViewport(const Mat4& viewMatrix, const Mat4& projectionMatrix)
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::SetNextWindowBgAlpha(0.0f);
@@ -37,13 +39,13 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 
 	Vector2 size = { ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y };
 
-	uint texID = framebuffer->GetColorAttachment();
+	uint texID = Firebox::Renderer3D::GetMainFramebuffer()->GetColorAttachment();
 	ImGui::Image((ImTextureID)(uintptr_t)texID, { m_ViewportSize.x, m_ViewportSize.y }, ImVec2(0, 1), ImVec2(1, 0));
 
 	if (size.x > 0.0f && size.y > 0.0f && (size.x != m_ViewportSize.x || size.y != m_ViewportSize.y))
 	{
 		m_ViewportSize = Vector2(size.x, size.y);
-		framebuffer->ResizeFramebuffer(size.x, size.y);
+		Firebox::Renderer3D::OnViewportResize(size.x, size.y);
 	}
 
 	m_IsFocused = ImGui::IsWindowHovered();
@@ -151,7 +153,7 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Ref<Firebox::Framebuffer
 	if (ImGui::BeginPopup("RenderingSettingsPopup", popupFlags))
 	{
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
-		static const char* viewModes[]{ "Lit", "Unlit", "Depth", "Shadow Map" };
+		static const char* viewModes[]{ "Lit", "Unlit", "Depth", "Shadow Map", "Cascade Levels" };
 		static int selectedMode = 0;
 		if (ImGui::Combo("View Mode", &selectedMode, viewModes, IM_ARRAYSIZE(viewModes)))
 		{

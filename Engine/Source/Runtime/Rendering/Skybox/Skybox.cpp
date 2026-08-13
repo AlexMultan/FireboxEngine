@@ -30,7 +30,7 @@ Firebox::Skybox::Skybox()
 	m_SkyboxMaterial->SetCubemapTexture(Firebox::Texture::CreateCubemap(m_Faces));
 }
 
-Firebox::Skybox::Skybox(const DynamicArray<String>& faces)
+Firebox::Skybox::Skybox(const std::vector<String>& faces)
 {
 	m_VAO = VertexArray::Create();
 	m_VAO->Bind();

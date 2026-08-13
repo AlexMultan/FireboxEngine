@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-Firebox::Mesh::Mesh(const DynamicArray<Vertex>& vertices, const DynamicArray<uint>& indices)
+Firebox::Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint>& indices)
 {
 	m_VAO = VertexArray::Create();
 	m_VAO->Bind();

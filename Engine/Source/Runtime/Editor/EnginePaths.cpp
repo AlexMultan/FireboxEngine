@@ -3,21 +3,21 @@
 
 namespace Firebox::EngineContent {
 
-	static std::filesystem::path g_Root;
+	static std::filesystem::path g_ContentRoot;
 
 	void Init()
 	{
-		g_Root = Firebox::FileSystem::GoUpDirectories(Firebox::FileSystem::GetExecutableDir(), 3) / "Resources" / "EngineContent";
+		g_ContentRoot = Firebox::FileSystem::GoUpDirectories(Firebox::FileSystem::GetExecutableDir(), 3) / "Resources" / "EngineContent";
 	}
 
 	std::filesystem::path Get(std::string_view relativePath)
 	{
-		return (g_Root / relativePath).lexically_normal();
+		return (g_ContentRoot / relativePath).lexically_normal();
 	}
 
 	FIREBOX_API std::filesystem::path GetRootPath()
 	{
-		return g_Root.lexically_normal();
+		return g_ContentRoot.lexically_normal();
 	}
 
 }

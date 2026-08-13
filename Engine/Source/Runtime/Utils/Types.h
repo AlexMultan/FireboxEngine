@@ -23,9 +23,6 @@ typedef uint64_t uint64;
 using String = std::string;
 
 template<typename T>
-using DynamicArray = std::vector<T>;
-
-template<typename T>
 using Ref = std::shared_ptr<T>;
 
 template<typename T>

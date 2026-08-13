@@ -64,12 +64,12 @@ namespace nlohmann {
 			if (sb.Skybox)
 				j = JSON{ {"Faces", sb.Skybox->GetFaces()} };
 			else
-				j = JSON{ {"Faces", DynamicArray<String>{}} };
+				j = JSON{ {"Faces", std::vector<String>{}} };
 		}
 
 		static void from_json(const JSON& j, SkyboxComponent& sb)
 		{
-			DynamicArray<String> faces;
+			std::vector<String> faces;
 			j.at("Faces").get_to(faces);
 			if (!faces.empty())
 				sb.Skybox = CreateRef<Firebox::Skybox>(faces);

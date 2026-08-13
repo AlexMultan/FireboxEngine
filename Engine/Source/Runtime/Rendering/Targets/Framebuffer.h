@@ -18,6 +18,7 @@ namespace Firebox {
 		virtual void ClearFramebuffer() = 0;
 		virtual uint GetColorAttachment() const = 0;
 		virtual const FramebufferSpecification& GetSpecs() const = 0;
+		virtual const uint GetID() const = 0;
 
 		static Ref<Framebuffer> Create(const FramebufferSpecification& specs);
 	};

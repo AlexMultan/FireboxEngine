@@ -10,7 +10,7 @@ namespace Firebox {
 		Mat4 Transformation;
 		String Name;
 		int ChildrenCount;
-		DynamicArray<AssimpNodeData> Children;
+		std::vector<AssimpNodeData> Children;
 	};
 
 	class FIREBOX_API Animation
@@ -33,7 +33,7 @@ namespace Firebox {
 	private:
 		float m_TicksPerSecond;
 		float m_Duration;
-		DynamicArray<Bone> m_Bones;
+		std::vector<Bone> m_Bones;
 		AssimpNodeData m_RootNode;
 		std::map<String, BoneInfo> m_BoneInfoMap;
 	};

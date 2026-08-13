@@ -9,8 +9,8 @@ namespace Firebox {
 	class FIREBOX_API LayerStack
 	{
 	private:
-		DynamicArray<Layer*> m_Layers;
-		DynamicArray<Layer*>::iterator m_LayerInsert;
+		std::vector<Layer*> m_Layers;
+		std::vector<Layer*>::iterator m_LayerInsert;
 
 	public:
 		LayerStack();
@@ -21,12 +21,12 @@ namespace Firebox {
 		void PopLayer(Layer* layer);
 		void PopOverlay(Layer* overlay);
 		
-		DynamicArray<Layer*>::iterator begin()
+		std::vector<Layer*>::iterator begin()
 		{
 			return m_Layers.begin();
 		}
 
-		DynamicArray<Layer*>::iterator end()
+		std::vector<Layer*>::iterator end()
 		{
 			return m_Layers.end();
 		}

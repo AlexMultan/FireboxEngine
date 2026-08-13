@@ -140,7 +140,7 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 		{
 			PushTreeNodeStyle();
 
-			bool dirLightTree = ImGui::TreeNodeEx("Directional Light", defaultFlags);
+			bool dirLightTree = ImGui::TreeNodeEx("Directional Light Settings", defaultFlags);
 
 			PopTreeNodeStyle();
 
@@ -149,6 +149,47 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<DirectionalLightComponent>().Direction, "Direction");
 				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<DirectionalLightComponent>().Color, "Color");
 				Firebox::Renderer3D::SetDirectionalLight(m_SelectedEntity.GetComponent<DirectionalLightComponent>());
+				ImGui::TreePop();
+			}
+		}
+
+		if (m_SelectedEntity.HasComponent<PointLightComponent>())
+		{
+			PushTreeNodeStyle();
+
+			bool pointLightTree = ImGui::TreeNodeEx("Point Light Settings", defaultFlags);
+
+			PopTreeNodeStyle();
+
+			if (pointLightTree)
+			{
+				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<PointLightComponent>().Position, "Position");
+				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<PointLightComponent>().Color, "Color");
+				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PointLightComponent>().Constant, "Constant");
+				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PointLightComponent>().Linear, "Linear");
+				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PointLightComponent>().Quadratic, "Quadratic");
+				ImGui::TreePop();
+			}
+		}
+
+		if (m_SelectedEntity.HasComponent<SpotLightComponent>())
+		{
+			PushTreeNodeStyle();
+
+			bool spotLightTree = ImGui::TreeNodeEx("Spot Light Settings", defaultFlags);
+
+			PopTreeNodeStyle();
+
+			if (spotLightTree)
+			{
+				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<SpotLightComponent>().Position, "Position");
+				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<SpotLightComponent>().Direction, "Direction");
+				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<SpotLightComponent>().Color, "Color");
+				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<SpotLightComponent>().Constant, "Constant");
+				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<SpotLightComponent>().Linear, "Linear");
+				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<SpotLightComponent>().Quadratic, "Quadratic");
+				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<SpotLightComponent>().CutOff, "CutOff");
+				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<SpotLightComponent>().OuterCutOff, "OuterCutOff");
 				ImGui::TreePop();
 			}
 		}
@@ -177,7 +218,7 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 			if (postProcessTree)
 			{
-				ImGui::DragFloat("Gamma", &m_Context.GetSelectedEntity().GetComponent<PostProcessComponent>().Gamma, 0.05f);
+				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PostProcessComponent>().Gamma, "Gamma");
 				Firebox::Renderer3D::SetPostProcessSettings(m_Context.GetSelectedEntity().GetComponent<PostProcessComponent>());
 				ImGui::TreePop();
 			}

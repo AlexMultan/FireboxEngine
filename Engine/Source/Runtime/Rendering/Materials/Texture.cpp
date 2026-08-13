@@ -9,7 +9,7 @@ Ref<Firebox::Texture> Firebox::Texture::Create(const String& path)
 	return texture;
 }
 
-Ref<Firebox::Texture> Firebox::Texture::CreateCubemap(const DynamicArray<String>& faces)
+Ref<Firebox::Texture> Firebox::Texture::CreateCubemap(const std::vector<String>& faces)
 {
 	return CreateRef<OpenGLTexture>(faces);
 }

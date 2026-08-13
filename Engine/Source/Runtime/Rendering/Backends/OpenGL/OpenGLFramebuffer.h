@@ -15,6 +15,7 @@ namespace Firebox::OpenGL {
 		virtual void ClearFramebuffer() override;
 		virtual uint GetColorAttachment() const override { return m_ColorAttachment; }
 		virtual const FramebufferSpecification& GetSpecs() const override { return m_Specs; }
+		virtual const uint GetID() const override { return m_FBO; }
 
 	private:
 		void Invalidate();

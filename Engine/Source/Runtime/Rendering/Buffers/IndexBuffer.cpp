@@ -7,6 +7,6 @@ Ref<Firebox::IndexBuffer> Firebox::IndexBuffer::Create(const uint* indices, uint
 	switch (RendererAPI::GetAPI())
 	{
 		case RendererAPI::API::None:    FB_CORE_CRITICAL("API not specified!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return CreateRef<OpenGLIndexBuffer>(indices, count);
+		case RendererAPI::API::OpenGL:  return CreateRef<Firebox::OpenGL::OpenGLIndexBuffer>(indices, count);
 	}
 }
