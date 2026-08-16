@@ -94,6 +94,8 @@ void Firebox::OpenGL::OpenGLGBuffer::Invalidate()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, m_GBufferInfo.Width, m_GBufferInfo.Height, 0, GL_RGBA, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_GBufferInfo.Position, 0);
 
     glGenTextures(1, &m_GBufferInfo.Normal);
@@ -101,6 +103,7 @@ void Firebox::OpenGL::OpenGLGBuffer::Invalidate()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, m_GBufferInfo.Width, m_GBufferInfo.Height, 0, GL_RGBA, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_GBufferInfo.Normal, 0);
 
     glGenTextures(1, &m_GBufferInfo.AlbedoSpec);
@@ -121,7 +124,7 @@ void Firebox::OpenGL::OpenGLGBuffer::Invalidate()
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_GBufferInfo.RenderBuffer);
 
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-        FB_CORE_ERROR("Framebuffer is not complete!");
+        FB_CORE_ERROR("GBuffer is not complete!");
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

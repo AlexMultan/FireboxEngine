@@ -10,6 +10,7 @@ namespace Firebox {
 		virtual ~Shader() = default;
 
 		virtual void UseShader() = 0;
+		virtual void SetBool(const String& name, bool value) = 0;
 		virtual void SetFloat(const String& name, float value) = 0;
 		virtual void SetInt(const String& name, int value) = 0;
 		virtual void SetVector3(const String& name, Vector3 vector3) = 0;

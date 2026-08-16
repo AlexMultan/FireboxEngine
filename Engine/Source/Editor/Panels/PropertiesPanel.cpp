@@ -148,9 +148,9 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 			{
 				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<DirectionalLightComponent>().Direction, "Direction");
 				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<DirectionalLightComponent>().Color, "Color");
-				Firebox::Renderer3D::SetDirectionalLight(m_SelectedEntity.GetComponent<DirectionalLightComponent>());
 				ImGui::TreePop();
 			}
+			Firebox::Renderer3D::SetDirectionalLight(m_SelectedEntity.GetComponent<DirectionalLightComponent>());
 		}
 
 		if (m_SelectedEntity.HasComponent<PointLightComponent>())
@@ -218,10 +218,23 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 			if (postProcessTree)
 			{
-				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PostProcessComponent>().Gamma, "Gamma");
-				Firebox::Renderer3D::SetPostProcessSettings(m_Context.GetSelectedEntity().GetComponent<PostProcessComponent>());
+				if (ImGui::TreeNodeEx("Color Grading", ImGuiTreeNodeFlags_Framed))
+				{
+					EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PostProcessComponent>().Gamma, "Gamma");
+					ImGui::TreePop();
+				}
+
+				if (ImGui::TreeNodeEx("Ambient Occlusion", ImGuiTreeNodeFlags_Framed))
+				{
+					EditorUI::FloatParameters::Int1(&m_SelectedEntity.GetComponent<PostProcessComponent>().AmbientOcclusionKernelSize, "Kernel Size");
+					EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PostProcessComponent>().AmbientOcclusionIntensity, "Intensity");
+					EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PostProcessComponent>().AmbientOcclusionRadius, "Radius");
+					EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PostProcessComponent>().AmbientOcclusionBias, "Bias");
+					ImGui::TreePop();
+				}
 				ImGui::TreePop();
 			}
+			Firebox::Renderer3D::SetPostProcessSettings(m_Context.GetSelectedEntity().GetComponent<PostProcessComponent>());
 		}
 	}
 	else

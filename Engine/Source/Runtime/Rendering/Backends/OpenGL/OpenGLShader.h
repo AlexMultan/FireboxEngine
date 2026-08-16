@@ -13,6 +13,7 @@ namespace Firebox {
 
 		void Compile(const char* vertexShader, const char* fragmentShader, const char* geomatryShader);
 		virtual void UseShader() override;
+		virtual void SetBool(const String& name, bool value) override;
 		virtual void SetFloat(const String& name, float value) override;
 		virtual void SetInt(const String& name, int value) override;
 		virtual void SetVector3(const String& name, Vector3 vector3) override;

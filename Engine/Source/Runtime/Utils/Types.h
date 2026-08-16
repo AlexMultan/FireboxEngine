@@ -67,9 +67,4 @@ namespace Utils {
 	{
 		return value >= min && value <= max;
 	}
-
-	static inline bool InRange(const Vector2& value, const Vector2& min, const Vector2& max)
-	{
-		return value.x >= min.x && value.x <= max.x && value.y >= min.y && value.y <= max.y;
-	}
 }

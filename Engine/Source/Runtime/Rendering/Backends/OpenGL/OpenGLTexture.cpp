@@ -122,3 +122,4 @@ void Firebox::OpenGLTexture::DeleteTexture()
 {
 	glDeleteTextures(1, &m_TextureID);
 }
+

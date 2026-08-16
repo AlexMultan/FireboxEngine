@@ -2,6 +2,7 @@
 
 #include "Utils/Types.h"
 #include "Utils/Timer.h"
+#include "Math/Math.h"
 
 #ifdef FIREBOX_PLATFORM_WIN64
 	#ifdef FIREBOX_BUILD_DLL

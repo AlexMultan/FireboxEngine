@@ -24,7 +24,11 @@ const Ref<Firebox::ShadowMask>& Firebox::Renderer3D::GetShadowMask() { return s_
 Ref<Firebox::Shader> Firebox::Renderer3D::GetLitShader() { return s_Data.LitShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetGBufferShader() { return s_Data.GBufferShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetShadowMaskShader() { return s_Data.ShadowMaskShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetUnlitShader() { return s_Data.UnlitShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetAlbedoVisShader() { return s_Data.AlbedoVisShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetNormalVisShader() { return s_Data.NormalVisShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetPositionVisShader() { return s_Data.PositionVisShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetSSAOShader() { return s_Data.SSAOShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetSSAOBlurShader() { return s_Data.SSAOBlurShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetDepthShader() { return s_Data.DepthShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetShadowShader() { return s_Data.ShadowDepthShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetDebugCascadeLevelsShader() { return s_Data.DebugCascadeLevelsShader; }
@@ -45,7 +49,7 @@ void Firebox::Renderer3D::Init()
 	s_Data.RendererAPI->Init();
 
 	FB_CORE_TRACE("Creating LitShader...");
-	s_Data.LitShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Lit.vert").string().c_str(),
+	s_Data.LitShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
 		Firebox::EngineContent::Get("Shaders/GLSL/Lit.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating GBufferShader...");
@@ -56,12 +60,28 @@ void Firebox::Renderer3D::Init()
 	s_Data.ShadowMaskShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/ShadowMask.vert").string().c_str(),
 		Firebox::EngineContent::Get("Shaders/GLSL/ShadowMask.frag").string().c_str(), nullptr);
 
-	FB_CORE_TRACE("Creating UnlitShader...");
-	s_Data.UnlitShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Unlit.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/Unlit.frag").string().c_str(), nullptr);
+	FB_CORE_TRACE("Creating AlbedoVisShader...");
+	s_Data.AlbedoVisShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Get("Shaders/GLSL/AlbedoVis.frag").string().c_str(), nullptr);
+
+	FB_CORE_TRACE("Creating NormalVisShader...");
+	s_Data.NormalVisShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Get("Shaders/GLSL/NormalVis.frag").string().c_str(), nullptr);
+
+	FB_CORE_TRACE("Creating PositionVisShader...");
+	s_Data.PositionVisShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Get("Shaders/GLSL/PositionVis.frag").string().c_str(), nullptr);
+
+	FB_CORE_TRACE("Creating SSAOShader...");
+	s_Data.SSAOShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Get("Shaders/GLSL/SSAO.frag").string().c_str(), nullptr);
+
+	FB_CORE_TRACE("Creating SSAOBlurShader...");
+	s_Data.SSAOBlurShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Get("Shaders/GLSL/SSAO_Blur.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating DepthShader...");
-	s_Data.DepthShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/DepthVis.vert").string().c_str(),
+	s_Data.DepthShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
 		Firebox::EngineContent::Get("Shaders/GLSL/DepthVis.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating ShadowMapShader...");
@@ -72,7 +92,7 @@ void Firebox::Renderer3D::Init()
 
 	s_ShadowUniformBuffer = Firebox::UniformBuffer::Create();
 
-	s_Data.DebugCascadeLevelsShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/DebugCascadeLevels.vert").string().c_str(),
+	s_Data.DebugCascadeLevelsShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
 		Firebox::EngineContent::Get("Shaders/GLSL/DebugCascadeLevels.frag").string().c_str(), nullptr);
 
 	s_Data.LightShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Light.vert").string().c_str(),
@@ -86,10 +106,17 @@ void Firebox::Renderer3D::Init()
 	s_Data.DefaultMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Default.png").string()));
 
 	s_Data.MainFramebuffer = Firebox::Framebuffer::Create({ k_DefaultFramebufferWidth, k_DefaultFramebufferHeight });
+
 	s_Data.gBuffer = Firebox::GBuffer::Create();
 	s_Data.gBuffer->ResizeGBuffer(s_Data.MainFramebuffer->GetSpecs().Width, s_Data.MainFramebuffer->GetSpecs().Height);
+
 	s_Data.ShadowMask = Firebox::ShadowMask::Create();
 	s_Data.ShadowMask->ResizeShadowMask(s_Data.MainFramebuffer->GetSpecs().Width, s_Data.MainFramebuffer->GetSpecs().Height);
+
+	s_Data.SSAO = Firebox::SSAO::Create();
+	s_Data.SSAO->ResizeSSAOBuffer(s_Data.MainFramebuffer->GetSpecs().Width, s_Data.MainFramebuffer->GetSpecs().Height);
+	s_Data.SSAO->GenerateSampleKernel();
+	s_Data.SSAO->GenerateNoiseTexture();
 
 	s_ViewportQuad = CreateScope<Firebox::Quad>();
 
@@ -105,6 +132,27 @@ void Firebox::Renderer3D::Init()
 	s_Data.LitShader->SetInt("u_gNormal", 28);
 	s_Data.LitShader->SetInt("u_gAlbedoSpec", 29);
 	s_Data.LitShader->SetInt("u_ShadowMask", 30);
+	s_Data.LitShader->SetInt("u_SSAO", 24);
+
+	s_Data.DepthShader->UseShader();
+	s_Data.DepthShader->SetInt("u_gPosition", 27);
+
+	s_Data.AlbedoVisShader->UseShader();
+	s_Data.AlbedoVisShader->SetInt("u_gAlbedoSpec", 29);
+
+	s_Data.NormalVisShader->UseShader();
+	s_Data.NormalVisShader->SetInt("u_gNormal", 28);
+
+	s_Data.PositionVisShader->UseShader();
+	s_Data.PositionVisShader->SetInt("u_gPosition", 27);
+
+	s_Data.SSAOShader->UseShader();
+	s_Data.SSAOShader->SetInt("u_gPosition", 27);
+	s_Data.SSAOShader->SetInt("u_gNormal", 28);
+	s_Data.SSAOShader->SetInt("u_NoiseTexture", 26);
+
+	s_Data.SSAOBlurShader->UseShader();
+	s_Data.SSAOBlurShader->SetInt("u_SSAOTexture", 25);
 
 	s_Data.DebugCascadeLevelsShader->UseShader();
 	s_Data.DebugCascadeLevelsShader->SetInt("u_gPosition", 27);
@@ -152,6 +200,7 @@ void Firebox::Renderer3D::EndScene()
 	ShadowMapPass();
 	s_Data.MainFramebuffer->BindFramebuffer();
 	GeometryPass();
+	SSAOPass();
 	ShadowMaskPass();
 	RenderSkybox();
 	DrawGrid();
@@ -209,13 +258,15 @@ void Firebox::Renderer3D::SetPostProcessSettings(const PostProcessComponent& pos
 	s_Data.PostProcessing.Tint = postProcess.Tint;
 	s_Data.PostProcessing.BloomIntensity = postProcess.BloomIntensity;
 	s_Data.PostProcessing.Exposure = postProcess.Exposure;
-	s_Data.PostProcessing.VignetteIntensity = postProcess.VignetterIntensity;
+	s_Data.PostProcessing.VignetteIntensity = postProcess.VignetteIntensity;
 	s_Data.PostProcessing.Sharpen = postProcess.Sharpen;
-	s_Data.PostProcessing.ChromaticAberrationIntensity = postProcess.ChromaticAbberrationIntensity;
+	s_Data.PostProcessing.ChromaticAbberrationIntensity = postProcess.ChromaticAbberrationIntensity;
 	s_Data.PostProcessing.Slope = postProcess.Slope;
 	s_Data.PostProcessing.Toe = postProcess.Toe;
-	s_Data.PostProcessing.AmbientOcclusionIntensity = postProcess.AmbientOcculusionIntensity;
-	s_Data.PostProcessing.AmbientOcclusionRadius = postProcess.AmbientOcculusionRadius;
+	s_Data.PostProcessing.AmbientOcclusionKernelSize = postProcess.AmbientOcclusionKernelSize;
+	s_Data.PostProcessing.AmbientOcclusionIntensity = postProcess.AmbientOcclusionIntensity;
+	s_Data.PostProcessing.AmbientOcclusionRadius = postProcess.AmbientOcclusionRadius;
+	s_Data.PostProcessing.AmbientOcclusionBias = postProcess.AmbientOcclusionBias;
 	s_Data.PostProcessing.MotionBlurIntensity = postProcess.MotionBlurIntensity;
 	s_Data.PostProcessing.InfiniteExtent = postProcess.InfiniteExtent;
 }
@@ -318,13 +369,8 @@ Ref<Firebox::Shader> Firebox::Renderer3D::BindLitUniforms()
 	SetPointLightUniforms(shader, numberOfPointLights);
 	SetSpotLightUniforms(shader, numberOfSpotLights);
 
-	return shader;
-}
-
-Ref<Firebox::Shader> Firebox::Renderer3D::BindUnlitUniforms()
-{
-	Ref<Shader> shader = s_Data.UnlitShader;
-	shader->UseShader();
+	s_Data.SSAO->BindSSAOBlurTexture();
+	
 	return shader;
 }
 
@@ -333,7 +379,7 @@ Ref<Firebox::Shader> Firebox::Renderer3D::BindDepthUniforms()
 {
 	Ref<Shader> shader = s_Data.DepthShader;
 	shader->UseShader();
-	shader->SetMat4("u_ViewProjection", s_Data.ViewProjectionMatrix);
+	shader->SetMat4("u_Projection", s_Data.ProjectionMatrix);
 	shader->SetFloat("u_Near", s_Data.NearPlane);
 	shader->SetFloat("u_Far", s_Data.FarPlane);
 	return shader;
@@ -361,19 +407,27 @@ void Firebox::Renderer3D::Flush()
 		activeShader = BindLitUniforms();
 		break;
 
-	case ViewMode::Unlit:
-		activeShader = BindUnlitUniforms();
-		break;
-
 	case ViewMode::Depth:
 		activeShader = BindDepthUniforms();
 		break;
 
-	case ViewMode::DebugCascadeLevels:
-		activeShader = BindDebugCascadeUniforms();
+	case ViewMode::Albedo:
+		activeShader = s_Data.AlbedoVisShader;
+		activeShader->UseShader();
 		break;
 
-	case ViewMode::Shadow:
+	case ViewMode::Normal:
+		activeShader = s_Data.NormalVisShader;
+		activeShader->UseShader();
+		break;
+
+	case ViewMode::Position:
+		activeShader = s_Data.PositionVisShader;
+		activeShader->UseShader();
+		break;
+
+	case ViewMode::DebugCascadeLevels:
+		activeShader = BindDebugCascadeUniforms();
 		break;
 
 	default:
@@ -416,6 +470,43 @@ void Firebox::Renderer3D::GeometryPass()
 
 	s_Data.gBuffer->UnbindGBuffer();
 	s_Data.RendererAPI->Clear(APIEnum::API_COLOR_BUFFER_BIT | APIEnum::API_DEPTH_BUFFER_BIT | APIEnum::API_STENCIL_BUFFER_BIT);
+}
+
+void Firebox::Renderer3D::SSAOPass()
+{
+	s_Data.SSAO->BindSSAOBuffer();
+	s_Data.RendererAPI->Clear(APIEnum::API_COLOR_BUFFER_BIT);
+	s_Data.SSAOShader->UseShader();
+	
+	for (uint i = 0; i < 64; i++)
+		s_Data.SSAOShader->SetVector3("u_Samples[" + std::to_string(i) + "]", s_Data.SSAO->GetKernel()[i]);
+
+	s_Data.SSAOShader->SetInt("u_KernelSize", s_Data.PostProcessing.AmbientOcclusionKernelSize);
+	s_Data.SSAOShader->SetFloat("u_Radius", s_Data.PostProcessing.AmbientOcclusionRadius);
+	s_Data.SSAOShader->SetFloat("u_Bias", s_Data.PostProcessing.AmbientOcclusionBias);
+	s_Data.SSAOShader->SetFloat("u_Intensity", s_Data.PostProcessing.AmbientOcclusionIntensity);
+	s_Data.SSAOShader->SetMat4("u_Projection", s_Data.ProjectionMatrix);
+
+	s_Data.gBuffer->BindGBufferPositionNormal();
+	s_Data.SSAO->BindNoiseTexture();
+
+	s_Data.RendererAPI->Disable(APIEnum::API_DEPTH_TEST);
+	s_Data.RendererAPI->DrawIndexed(s_ViewportQuad->GetVertexArray());
+	s_Data.RendererAPI->Enable(APIEnum::API_DEPTH_TEST);
+
+	s_Data.SSAO->UnbindSSAOBuffer();
+
+	s_Data.SSAO->BindSSAOBlurBuffer();
+	s_Data.RendererAPI->Clear(APIEnum::API_COLOR_BUFFER_BIT);
+	s_Data.SSAOBlurShader->UseShader();
+	
+	s_Data.SSAO->BindSSAOTexture();
+
+	s_Data.RendererAPI->Disable(APIEnum::API_DEPTH_TEST);
+	s_Data.RendererAPI->DrawIndexed(s_ViewportQuad->GetVertexArray());
+	s_Data.RendererAPI->Enable(APIEnum::API_DEPTH_TEST);
+
+	s_Data.SSAO->UnbindSSAOBlurBuffer();
 }
 
 
@@ -497,4 +588,5 @@ void Firebox::Renderer3D::OnViewportResize(uint width, uint height)
 	s_Data.MainFramebuffer->ResizeFramebuffer(width, height);
 	s_Data.gBuffer->ResizeGBuffer(width, height);
 	s_Data.ShadowMask->ResizeShadowMask(width, height);
+	s_Data.SSAO->ResizeSSAOBuffer(width, height);
 }

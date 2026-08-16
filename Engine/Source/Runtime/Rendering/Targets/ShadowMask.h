@@ -4,6 +4,14 @@
 
 namespace Firebox {
 
+	struct ShadowMaskInfo
+	{
+		uint Width;
+		uint Height;
+		uint ShadowMaskTexture;
+		uint ShadowMaskFBO;
+	};
+
 	class FIREBOX_API ShadowMask
 	{
 	public:

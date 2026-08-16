@@ -72,7 +72,7 @@ struct PostProcessComponent
 	// Lens
 	float BloomIntensity = 0.75f;
 	float Exposure = 1.0f;
-	float VignetterIntensity = 0.4f;
+	float VignetteIntensity = 0.4f;
 	float Sharpen = 0.0f;
 	float ChromaticAbberrationIntensity = 0.0f;
 
@@ -81,13 +81,24 @@ struct PostProcessComponent
 	float Toe = 0.5f;
 
 	// Rendering Features
-	float AmbientOcculusionIntensity = 0.5f;
-	float AmbientOcculusionRadius = 200.0f;
+	int AmbientOcclusionKernelSize = 64;
+	float AmbientOcclusionIntensity = 0.5f;
+	float AmbientOcclusionRadius = 0.5f;
+	float AmbientOcclusionBias = 0.025f;
 	float MotionBlurIntensity = 0.5f;
 
 	bool InfiniteExtent = true;
 
 	PostProcessComponent() = default;
 	PostProcessComponent(const PostProcessComponent&) = default;
-	PostProcessComponent(float gamma) : Gamma(gamma) {};
+	PostProcessComponent(float gamma, float contrast, float saturation, float gain, float temperature, float tint, float bloomIntensity,
+		float exposure, float vignetteIntensity, float sharpen, float chromaticAbberrationIntensity, float slope, float toe,
+		int ambientOcclusionKernelSize, float ambientOcclusionIntensity, float ambientOcclusionRadius, float ambientOcclusionBias,
+		float motionBlurIntensity) : Gamma(gamma), Contrast(contrast), Saturation(saturation), Gain(gain), Temperature(temperature), Tint(tint),
+		BloomIntensity(bloomIntensity), Exposure(exposure), VignetteIntensity(vignetteIntensity), Sharpen(sharpen),
+		ChromaticAbberrationIntensity(chromaticAbberrationIntensity), Slope(slope), Toe(toe), AmbientOcclusionKernelSize(ambientOcclusionKernelSize),
+		AmbientOcclusionIntensity(ambientOcclusionIntensity), AmbientOcclusionRadius(ambientOcclusionRadius), AmbientOcclusionBias(ambientOcclusionBias),
+		MotionBlurIntensity(motionBlurIntensity)
+	{
+	};
 };

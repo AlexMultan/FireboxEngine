@@ -5,6 +5,7 @@
 #include "Components/RenderComponents.h"
 #include "Rendering/Geometry/PrimitiveShapes.h"
 #include "Rendering/Renderer3D.h"
+#include "Editor/EditorPaths.h"
 
 #include <imgui.h>
 
@@ -70,12 +71,56 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 				m_Context.SetSelectedEntity(emptyEntity);
 			}
 
-			if (ImGui::MenuItem("Cube"))
+			if (ImGui::BeginMenu("3D Objects"))
 			{
-				Firebox::Entity cubeEntity = scene->CreateEntity("Cube");
-				m_Context.SetSelectedEntity(cubeEntity);
-				cubeEntity.AddComponent<MeshComponent>(Firebox::PrimitiveShapes::Box().vertices, Firebox::PrimitiveShapes::Box().indices);
-				cubeEntity.AddComponent<MaterialComponent>(Firebox::Renderer3D::GetDefaultMaterial());
+				if (ImGui::MenuItem("Plane"))
+				{
+					Firebox::Entity planeEntity = scene->CreateEntity("Plane");
+					m_Context.SetSelectedEntity(planeEntity);
+					Ref<Firebox::StaticMesh> planeMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Plane.glb").string());
+					planeEntity.AddComponent<StaticMeshComponent>(planeMesh);
+				}
+
+				if (ImGui::MenuItem("Cube"))
+				{
+					Firebox::Entity cubeEntity = scene->CreateEntity("Cube");
+					m_Context.SetSelectedEntity(cubeEntity);
+					Ref<Firebox::StaticMesh> cubeMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Cube.glb").string());
+					cubeEntity.AddComponent<StaticMeshComponent>(cubeMesh);
+				}
+
+				if (ImGui::MenuItem("Sphere"))
+				{
+					Firebox::Entity sphereEntity = scene->CreateEntity("Sphere");
+					m_Context.SetSelectedEntity(sphereEntity);
+					Ref<Firebox::StaticMesh> sphereMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Sphere.glb").string());
+					sphereEntity.AddComponent<StaticMeshComponent>(sphereMesh);
+				}
+
+				if (ImGui::MenuItem("Cylinder"))
+				{
+					Firebox::Entity cylinderEntity = scene->CreateEntity("Cylinder");
+					m_Context.SetSelectedEntity(cylinderEntity);
+					Ref<Firebox::StaticMesh> cylinderMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Cylinder.glb").string());
+					cylinderEntity.AddComponent<StaticMeshComponent>(cylinderMesh);
+				}
+
+				if (ImGui::MenuItem("Cone"))
+				{
+					Firebox::Entity coneEntity = scene->CreateEntity("Cone");
+					m_Context.SetSelectedEntity(coneEntity);
+					Ref<Firebox::StaticMesh> coneMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Cone.glb").string());
+					coneEntity.AddComponent<StaticMeshComponent>(coneMesh);
+				}
+
+				if (ImGui::MenuItem("Monkey"))
+				{
+					Firebox::Entity monkeyEntity = scene->CreateEntity("Monkey");
+					m_Context.SetSelectedEntity(monkeyEntity);
+					Ref<Firebox::StaticMesh> monkeyMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Monkey.glb").string());
+					monkeyEntity.AddComponent<StaticMeshComponent>(monkeyMesh);
+				}
+				ImGui::EndMenu();
 			}
 
 			if (ImGui::MenuItem("Directional Light"))

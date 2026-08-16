@@ -3,14 +3,6 @@
 #include "Rendering/Targets/ShadowMask.h"
 
 namespace Firebox::OpenGL {
-
-	struct ShadowMaskInfo
-	{
-		uint Width;
-		uint Height;
-		uint ShadowMaskTexture;
-		uint ShadowMaskFBO;
-	};
 	
 	class FIREBOX_API OpenGLShadowMask : public ShadowMask
 	{

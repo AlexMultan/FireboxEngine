@@ -1,8 +1,8 @@
 #version 460 core
 
-layout(location = 0) out vec3 u_gPosition;
-layout(location = 1) out vec3 u_gNormal;
-layout(location = 2) out vec4 u_gAlbedoSpec;
+layout(location = 0) out vec3 gPosition;
+layout(location = 1) out vec3 gNormal;
+layout(location = 2) out vec4 gAlbedoSpec;
 
 struct Material {
     vec3 ambient;
@@ -20,12 +20,12 @@ uniform Material u_Material;
 
 void main()
 {
-	u_gPosition = FragPos;
+	gPosition = FragPos;
     vec3 normal;
     vec3 sampledNormal = texture(u_Material.normal, TexCoords).rgb;
     normal = normalize(sampledNormal * 2.0 - 1.0);
     vec3 worldNormal = normalize(TBN * normal);
-	u_gNormal = worldNormal;
-	u_gAlbedoSpec.rgb = texture(u_Material.diffuse, TexCoords).rgb;
-	u_gAlbedoSpec.a = texture(u_Material.specular, TexCoords).r;
+	gNormal = worldNormal;
+	gAlbedoSpec.rgb = texture(u_Material.diffuse, TexCoords).rgb;
+	gAlbedoSpec.a = texture(u_Material.specular, TexCoords).r;
 }

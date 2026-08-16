@@ -177,6 +177,16 @@ void Firebox::OpenGLShader::UseShader()
 	glUseProgram(ID);
 }
 
+void Firebox::OpenGLShader::SetBool(const String& name, bool value)
+{
+	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+	if (glGetUniformLocation(ID, name.c_str()) == -1)
+	{
+		String msg = "[Shader] Warning: uniform '" + name + "' not found";
+		FB_CORE_WARN(msg);
+	}
+}
+
 void Firebox::OpenGLShader::SetFloat(const String& name, float value)
 {
 	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);

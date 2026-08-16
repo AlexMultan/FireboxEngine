@@ -13,6 +13,7 @@
 #include "Rendering/Camera/Camera.h"
 #include "Buffers/GBuffer.h"
 #include "Targets/ShadowMask.h"
+#include "PostProcess/SSAO.h"
 #include "Animation/Animator.h"
 #include "Rendering/Geometry/Quad.h"
 
@@ -24,10 +25,11 @@ namespace Firebox {
 	enum ViewMode
 	{
 		Lit = 0,
-		Unlit = 1,
-		Depth = 2,
-		Shadow = 3,
-		DebugCascadeLevels = 4
+		Depth = 1,
+		Albedo = 2,
+		Normal = 3,
+		Position = 4,
+		DebugCascadeLevels = 5
 	};
 
 	struct PostProcessingSettings
@@ -45,15 +47,17 @@ namespace Firebox {
 		float Exposure = 1.0f;
 		float VignetteIntensity = 0.4f;
 		float Sharpen = 0.0f;
-		float ChromaticAberrationIntensity = 0.0f;
+		float ChromaticAbberrationIntensity = 0.0f;
 
 		// Film
 		float Slope = 0.9f;
 		float Toe = 0.5f;
 
 		// Rendering Features
+		int AmbientOcclusionKernelSize = 64;
 		float AmbientOcclusionIntensity = 0.5f;
-		float AmbientOcclusionRadius = 200.0f;
+		float AmbientOcclusionRadius = 0.5f;
+		float AmbientOcclusionBias = 0.025f;
 		float MotionBlurIntensity = 0.5f;
 
 		bool InfiniteExtent = true;
@@ -89,7 +93,11 @@ namespace Firebox {
 		static Ref<Shader> GetLitShader();
 		static Ref<Shader> GetGBufferShader();
 		static Ref<Shader> GetShadowMaskShader();
-		static Ref<Shader> GetUnlitShader();
+		static Ref<Shader> GetAlbedoVisShader();
+		static Ref<Shader> GetNormalVisShader();
+		static Ref<Shader> GetPositionVisShader();
+		static Ref<Shader> GetSSAOShader();
+		static Ref<Shader> GetSSAOBlurShader();
 		static Ref<Shader> GetDepthShader();
 		static Ref<Shader> GetShadowShader();
 		static Ref<Shader> GetDebugCascadeLevelsShader();
@@ -115,12 +123,12 @@ namespace Firebox {
 
 		static void Flush();
 		static void GeometryPass();
+		static void SSAOPass();
 		static void ShadowMaskPass();
 		static void ShadowMapPass();
 		static void RenderSkybox();
 
 		static Ref<Shader> BindLitUniforms();
-		static Ref<Shader> BindUnlitUniforms();
 		static Ref<Shader> BindDepthUniforms();
 		static Ref<Shader> BindDebugCascadeUniforms();
 		static void SetCascadeUniforms(const Ref<Shader>& shader);
@@ -136,7 +144,11 @@ namespace Firebox {
 			Ref<Shader> LitShader;
 			Ref<Shader> GBufferShader;
 			Ref<Shader> ShadowMaskShader;
-			Ref<Shader> UnlitShader;
+			Ref<Shader> AlbedoVisShader;
+			Ref<Shader> NormalVisShader;
+			Ref<Shader> PositionVisShader;
+			Ref<Shader> SSAOShader;
+			Ref<Shader> SSAOBlurShader;
 			Ref<Shader> DepthShader;
 			Ref<Shader> ShadowDepthShader;
 			Ref<Shader> DebugCascadeLevelsShader;
@@ -162,6 +174,7 @@ namespace Firebox {
 			PostProcessingSettings PostProcessing{};
 			Ref<GBuffer> gBuffer;
 			Ref<ShadowMask> ShadowMask;
+			Ref<SSAO> SSAO;
 		};
 
 		static Renderer3DData s_Data;
