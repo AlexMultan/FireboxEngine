@@ -58,9 +58,13 @@ namespace Firebox {
 		}
 
 		inline const entt::entity GetHandle() const { return m_Handle; }
+		inline const Ref<Entity>& GetParentEntity() const { return m_ParentEntity; }
+
+		inline void SetParentEntity(const Ref<Entity> parent) { m_ParentEntity = parent; }
 
 	private:
 		entt::entity m_Handle{ entt::null };
+		Ref<Entity> m_ParentEntity;
 		Scene* m_Scene = nullptr;
 	};
 }

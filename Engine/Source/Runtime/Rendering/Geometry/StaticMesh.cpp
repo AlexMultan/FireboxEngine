@@ -139,17 +139,24 @@ namespace Firebox {
 			material->SetDiffuseTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
 		}
 
-		if (mat->GetTextureCount(aiTextureType_SPECULAR) > 0)
+		if (mat->GetTextureCount(aiTextureType_DIFFUSE_ROUGHNESS) > 0)
 		{
 			aiString path;
-			mat->GetTexture(aiTextureType_SPECULAR, 0, &path);
-			material->SetSpecularTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
+			mat->GetTexture(aiTextureType_DIFFUSE_ROUGHNESS, 0, &path);
+			material->SetRoughnessTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
 		}
 
 		if (mat->GetTextureCount(aiTextureType_NORMALS) > 0)
 		{
 			aiString path;
 			mat->GetTexture(aiTextureType_NORMALS, 0, &path);
+			material->SetNormalTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
+		}
+
+		if (mat->GetTextureCount(aiTextureType_METALNESS) > 0)
+		{
+			aiString path;
+			mat->GetTexture(aiTextureType_METALNESS, 0, &path);
 			material->SetNormalTexture(LoadMaterialTexture(m_Directory + "/" + path.C_Str()));
 		}
 
@@ -169,6 +176,7 @@ namespace Firebox {
 		m_LoadedTextures.Textures.push_back(texture);
 		return texture;
 	}
+
 	void StaticMesh::SetVertexBoneDataDefault(Vertex& vertex)
 	{
 		for (int i = 0; i < MAX_BONE_INFLUENCE; i++)

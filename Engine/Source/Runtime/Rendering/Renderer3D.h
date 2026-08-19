@@ -29,7 +29,10 @@ namespace Firebox {
 		Albedo = 2,
 		Normal = 3,
 		Position = 4,
-		DebugCascadeLevels = 5
+		Roughness = 5,
+		Metallic = 6,
+		AmbientOcclusion = 7,
+		DebugCascadeLevels = 8
 	};
 
 	struct PostProcessingSettings
@@ -58,6 +61,7 @@ namespace Firebox {
 		float AmbientOcclusionIntensity = 0.5f;
 		float AmbientOcclusionRadius = 0.5f;
 		float AmbientOcclusionBias = 0.025f;
+		bool EnableSSAO = true;
 		float MotionBlurIntensity = 0.5f;
 
 		bool InfiniteExtent = true;
@@ -96,6 +100,9 @@ namespace Firebox {
 		static Ref<Shader> GetAlbedoVisShader();
 		static Ref<Shader> GetNormalVisShader();
 		static Ref<Shader> GetPositionVisShader();
+		static Ref<Shader> GetRoughnessVisShader();
+		static Ref<Shader> GetMetallicVisShader();
+		static Ref<Shader> GetAmbientOcclusionVisShader();
 		static Ref<Shader> GetSSAOShader();
 		static Ref<Shader> GetSSAOBlurShader();
 		static Ref<Shader> GetDepthShader();
@@ -147,6 +154,9 @@ namespace Firebox {
 			Ref<Shader> AlbedoVisShader;
 			Ref<Shader> NormalVisShader;
 			Ref<Shader> PositionVisShader;
+			Ref<Shader> RoughnessVisShader;
+			Ref<Shader> MetallicVisShader;
+			Ref<Shader> AmbientOcclusionVisShader;
 			Ref<Shader> SSAOShader;
 			Ref<Shader> SSAOBlurShader;
 			Ref<Shader> DepthShader;
@@ -192,6 +202,6 @@ namespace Firebox {
 		static constexpr uint32_t k_DefaultFramebufferWidth = 800;
 		static constexpr uint32_t k_DefaultFramebufferHeight = 600;
 
-		static Scope<Quad> s_ViewportQuad;
+		static Scope<Quad> s_ScreenQuad;
 	};
 }

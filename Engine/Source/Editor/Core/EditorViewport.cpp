@@ -82,7 +82,8 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_JerrycanMaterial = CreateRef<Firebox::Material>();
     m_JerrycanMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_BC.png").string()));
     m_JerrycanMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_N.png").string()));
-    m_JerrycanMaterial->SetSpecularTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_BC.png").string()));
+    m_JerrycanMaterial->SetRoughnessTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_R.png").string()));
+    m_JerrycanMaterial->SetMetallicTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_M.png").string()));
     m_JerrycanMesh->SetMaterial(0, m_JerrycanMaterial);
     m_JerrycanEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Jerrycan");
     m_JerrycanEntity.AddComponent<StaticMeshComponent>(m_JerrycanMesh);

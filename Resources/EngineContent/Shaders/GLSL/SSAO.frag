@@ -3,13 +3,13 @@
 out float FragColor;
 
 uniform sampler2D u_gPosition;
-uniform sampler2D u_gNormal;
+uniform sampler2D u_gNormalMetallic;
 uniform sampler2D u_NoiseTexture;
 uniform vec3 u_Samples[64];
-uniform int u_KernelSize = 64;
-uniform float u_Radius = 0.5;
-uniform float u_Bias = 0.025;
-uniform float u_Intensity = 0.5f;
+uniform int u_KernelSize;
+uniform float u_Radius;
+uniform float u_Bias;
+uniform float u_Intensity;
 uniform vec2 u_ScreenDimensions;
 uniform mat4 u_Projection;
 
@@ -19,7 +19,7 @@ void main()
 {
     vec2 noiseScale = vec2(u_ScreenDimensions.x / 4.0, u_ScreenDimensions.y / 4.0);
     vec3 fragPos = texture(u_gPosition, TexCoords).rgb;
-    vec3 normal = normalize(texture(u_gNormal, TexCoords * noiseScale).rgb);
+    vec3 normal = normalize(texture(u_gNormalMetallic, TexCoords * noiseScale).rgb);
     vec3 randomVector = normalize(texture(u_NoiseTexture, TexCoords * noiseScale).rgb);
     vec3 tangent = normalize(randomVector - normal * dot(randomVector, normal));
     vec3 bitangent = cross(normal, tangent);

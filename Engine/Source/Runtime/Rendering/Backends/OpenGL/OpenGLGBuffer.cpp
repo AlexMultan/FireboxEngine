@@ -24,13 +24,19 @@ void Firebox::OpenGL::OpenGLGBuffer::BindGBufferPositionNormal()
     glBindTexture(GL_TEXTURE_2D, m_GBufferInfo.Position);
 
     glActiveTexture(GL_TEXTURE28);
-    glBindTexture(GL_TEXTURE_2D, m_GBufferInfo.Normal);
+    glBindTexture(GL_TEXTURE_2D, m_GBufferInfo.NormalMetallic);
+}
+
+void Firebox::OpenGL::OpenGLGBuffer::BindGBufferAO()
+{
+    glActiveTexture(GL_TEXTURE23);
+    glBindTexture(GL_TEXTURE_2D, m_GBufferInfo.AmbientOcclusion);
 }
 
 void Firebox::OpenGL::OpenGLGBuffer::BindGBufferAlbedo()
 {
     glActiveTexture(GL_TEXTURE29);
-    glBindTexture(GL_TEXTURE_2D, m_GBufferInfo.AlbedoSpec);
+    glBindTexture(GL_TEXTURE_2D, m_GBufferInfo.AlbedoRough);
 }
 
 void Firebox::OpenGL::OpenGLGBuffer::UnbindGBuffer()
@@ -81,8 +87,9 @@ void Firebox::OpenGL::OpenGLGBuffer::Invalidate()
     {
         glDeleteFramebuffers(1, &m_GBufferInfo.Buffer);
         glDeleteTextures(1, &m_GBufferInfo.Position);
-        glDeleteTextures(1, &m_GBufferInfo.Normal);
-        glDeleteTextures(1, &m_GBufferInfo.AlbedoSpec);
+        glDeleteTextures(1, &m_GBufferInfo.NormalMetallic);
+        glDeleteTextures(1, &m_GBufferInfo.AlbedoRough);
+        glDeleteTextures(1, &m_GBufferInfo.AmbientOcclusion);
         glDeleteRenderbuffers(1, &m_GBufferInfo.RenderBuffer);
     }
 
@@ -98,24 +105,31 @@ void Firebox::OpenGL::OpenGLGBuffer::Invalidate()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_GBufferInfo.Position, 0);
 
-    glGenTextures(1, &m_GBufferInfo.Normal);
-    glBindTexture(GL_TEXTURE_2D, m_GBufferInfo.Normal);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, m_GBufferInfo.Width, m_GBufferInfo.Height, 0, GL_RGBA, GL_FLOAT, NULL);
+    glGenTextures(1, &m_GBufferInfo.NormalMetallic);
+    glBindTexture(GL_TEXTURE_2D, m_GBufferInfo.NormalMetallic);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_GBufferInfo.Width, m_GBufferInfo.Height, 0, GL_RGBA, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_GBufferInfo.NormalMetallic, 0);
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_GBufferInfo.Normal, 0);
-
-    glGenTextures(1, &m_GBufferInfo.AlbedoSpec);
-    glBindTexture(GL_TEXTURE_2D, m_GBufferInfo.AlbedoSpec);
+    glGenTextures(1, &m_GBufferInfo.AlbedoRough);
+    glBindTexture(GL_TEXTURE_2D, m_GBufferInfo.AlbedoRough);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_GBufferInfo.Width, m_GBufferInfo.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, m_GBufferInfo.AlbedoSpec, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, m_GBufferInfo.AlbedoRough, 0);
+
+    glGenTextures(1, &m_GBufferInfo.AmbientOcclusion);
+    glBindTexture(GL_TEXTURE_2D, m_GBufferInfo.AmbientOcclusion);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_GBufferInfo.Width, m_GBufferInfo.Height, 0, GL_RED, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, m_GBufferInfo.AmbientOcclusion, 0);
 
     m_GBufferInfo.GBufferAttachments[0] = GL_COLOR_ATTACHMENT0;
     m_GBufferInfo.GBufferAttachments[1] = GL_COLOR_ATTACHMENT1;
     m_GBufferInfo.GBufferAttachments[2] = GL_COLOR_ATTACHMENT2;
+    m_GBufferInfo.GBufferAttachments[3] = GL_COLOR_ATTACHMENT3;
     glDrawBuffers(3, m_GBufferInfo.GBufferAttachments);
 
     glGenRenderbuffers(1, &m_GBufferInfo.RenderBuffer);

@@ -206,6 +206,16 @@ void Firebox::OpenGLShader::SetInt(const String& name, int value)
 		FB_CORE_WARN(msg);
 	}
 }
+void Firebox::OpenGLShader::SetVector2(const String& name, Vector2 vector2)
+{
+	glUniform2f(glGetUniformLocation(ID, name.c_str()), vector2.x, vector2.y);
+	if (glGetUniformLocation(ID, name.c_str()) == -1)
+	{
+		String msg = "[Shader] Warning: uniform '" + name + "' not found";
+		FB_CORE_WARN(msg);
+	}
+}
+
 
 void Firebox::OpenGLShader::SetVector3(const String& name, Vector3 vector3)
 {

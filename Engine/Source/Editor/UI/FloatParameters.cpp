@@ -5,6 +5,25 @@
 
 #include "imgui_internal.h"
 
+void EditorUI::FloatParameters::Checkbox(bool* otherBool, const char* label)
+{
+	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0.0f, 0.0f));
+	ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
+
+	if (ImGui::BeginTable("Parameters Row", 2))
+	{
+		ImGui::TableNextColumn();
+		ImGui::Text(label);
+		ImGui::SameLine();
+
+		ImGui::TableNextColumn();
+		DrawCheckbox("##", label, Vector4(0.611f, 0.0f, 0.0f, 1.0f), otherBool);
+		ImGui::EndTable();
+	}
+
+	ImGui::PopStyleVar(2);
+}
+
 // TODO: Move int parameters to other class or just leave it here and rename the file and the class.
 void EditorUI::FloatParameters::Int1(int* otherInt, const char* label)
 {
@@ -142,4 +161,13 @@ void EditorUI::FloatParameters::DrawIntParameter(const char* text, const char* g
 	ImGui::DragInt(id, parameter, 0.05f, -99999999, 99999999);
 	ImGui::PopStyleColor();
 	ImGui::PopFont();
+}
+
+void EditorUI::FloatParameters::DrawCheckbox(const char* text, const char* groupLabel, Vector4 color, bool* parameter)
+{
+	char id[64];
+	snprintf(id, sizeof(id), "##%s_%s", groupLabel, text);
+	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.86f, 0.86f, 0.86f, 1.0f));
+	ImGui::Checkbox(id, parameter);
+	ImGui::PopStyleColor();
 }

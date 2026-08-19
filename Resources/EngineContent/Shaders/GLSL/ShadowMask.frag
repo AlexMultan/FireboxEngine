@@ -5,7 +5,7 @@ layout(location = 0) out float aShadowMask;
 in vec2 TexCoords;
 
 uniform sampler2D u_gPosition;
-uniform sampler2D u_gNormal;
+uniform sampler2D u_gNormalMetallic;
 uniform mat4 u_View;
 
 layout (std140, binding = 0) uniform ShadowUniformBlock
@@ -38,7 +38,7 @@ float randomAngle(vec3 seed)
 void main()
 {
     vec3 fragPosWorldSpace = texture(u_gPosition, TexCoords).rgb;
-    vec3 normal = texture(u_gNormal, TexCoords).rgb;
+    vec3 normal = texture(u_gNormalMetallic, TexCoords).rgb;
 
     if (length(fragPosWorldSpace) < 0.0001)
     {

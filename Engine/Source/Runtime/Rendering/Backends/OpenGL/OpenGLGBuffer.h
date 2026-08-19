@@ -12,6 +12,7 @@ namespace Firebox::OpenGL {
 
 		virtual void BindGBuffer() override;
 		virtual void BindGBufferPositionNormal() override;
+		virtual void BindGBufferAO() override;
 		virtual void BindGBufferAlbedo() override;
 		virtual void UnbindGBuffer() override;
 		virtual void BlitGBuffer() override;

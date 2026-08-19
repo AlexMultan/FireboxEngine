@@ -10,10 +10,11 @@ namespace Firebox {
 		uint Height;
 		uint Buffer;
 		uint Position;
-		uint Normal;
-		uint AlbedoSpec;
+		uint NormalMetallic;
+		uint AlbedoRough;
+		uint AmbientOcclusion;
 		uint RenderBuffer;
-		uint GBufferAttachments[3];
+		uint GBufferAttachments[4];
 	};
 
 	class FIREBOX_API GBuffer
@@ -23,6 +24,7 @@ namespace Firebox {
 
 		virtual void BindGBuffer() = 0;
 		virtual void BindGBufferPositionNormal() = 0;
+		virtual void BindGBufferAO() = 0;
 		virtual void BindGBufferAlbedo() = 0;
 		virtual void UnbindGBuffer() = 0;
 		virtual void BlitGBuffer() = 0;

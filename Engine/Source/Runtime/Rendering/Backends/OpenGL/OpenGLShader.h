@@ -16,6 +16,7 @@ namespace Firebox {
 		virtual void SetBool(const String& name, bool value) override;
 		virtual void SetFloat(const String& name, float value) override;
 		virtual void SetInt(const String& name, int value) override;
+		virtual void SetVector2(const String& name, Vector2 vector2) override;
 		virtual void SetVector3(const String& name, Vector3 vector3) override;
 		virtual void SetVector4(const String& name, Vector4 vector4) override;
 		virtual void SetMat3(const String& name, const Mat3& matrix) override;

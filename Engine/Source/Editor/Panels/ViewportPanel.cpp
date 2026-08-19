@@ -153,7 +153,7 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Mat4& viewMatrix, const 
 	if (ImGui::BeginPopup("RenderingSettingsPopup", popupFlags))
 	{
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
-		static const char* viewModes[]{ "Lit", "Depth", "Albedo", "Normal", "Position", "Cascade Levels"};
+		static const char* viewModes[]{ "Lit", "Depth", "Albedo", "Normal", "Position", "Roughness", "Metallic", "AO", "Cascade Levels"};
 		static int selectedMode = 0;
 		if (ImGui::Combo("View Mode", &selectedMode, viewModes, IM_ARRAYSIZE(viewModes)))
 		{

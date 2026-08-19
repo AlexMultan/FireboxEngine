@@ -101,7 +101,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 				{
 					Firebox::Entity cylinderEntity = scene->CreateEntity("Cylinder");
 					m_Context.SetSelectedEntity(cylinderEntity);
-					Ref<Firebox::StaticMesh> cylinderMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Cylinder.glb").string());
+					Ref<Firebox::StaticMesh> cylinderMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Cylinder.obj").string());
 					cylinderEntity.AddComponent<StaticMeshComponent>(cylinderMesh);
 				}
 

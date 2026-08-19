@@ -226,6 +226,7 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 				if (ImGui::TreeNodeEx("Ambient Occlusion", ImGuiTreeNodeFlags_Framed))
 				{
+					EditorUI::FloatParameters::Checkbox(&m_SelectedEntity.GetComponent<PostProcessComponent>().EnableSSAO, "Enable SSAO (Screen-Space Ambient Occlusion");
 					EditorUI::FloatParameters::Int1(&m_SelectedEntity.GetComponent<PostProcessComponent>().AmbientOcclusionKernelSize, "Kernel Size");
 					EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PostProcessComponent>().AmbientOcclusionIntensity, "Intensity");
 					EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PostProcessComponent>().AmbientOcclusionRadius, "Radius");
@@ -234,7 +235,7 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 				}
 				ImGui::TreePop();
 			}
-			Firebox::Renderer3D::SetPostProcessSettings(m_Context.GetSelectedEntity().GetComponent<PostProcessComponent>());
+			Firebox::Renderer3D::SetPostProcessSettings(m_SelectedEntity.GetComponent<PostProcessComponent>());
 		}
 	}
 	else
