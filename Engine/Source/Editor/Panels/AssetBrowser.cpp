@@ -32,17 +32,6 @@ void FireboxEditor::AssetBrowser::RenderPanel()
 {
     ImGui::Begin(m_Name.c_str());
 
-#if 0
-    if (m_CurrentDirectory != std::filesystem::path(m_EditorDirectory) && m_CurrentDirectory != std::filesystem::path(m_EngineDirectory))
-    {
-        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-        if (ImGui::Button("<-"))
-        {
-            m_CurrentDirectory = m_CurrentDirectory.parent_path();
-        }
-        ImGui::PopStyleColor();
-    }
-#endif
     static float leftWidth = 250.0f;
     float paneHeight = ImGui::GetContentRegionAvail().y;
 

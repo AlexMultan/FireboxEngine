@@ -127,10 +127,10 @@ void EditorUI::FloatParameters::DrawFloatParameter(const char* text, const char*
 	char id[64];
 	snprintf(id, sizeof(id), "##%s_%s", groupLabel, text);
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.86f, 0.86f, 0.86f, 1.0f));
-	ImGui::PushFont(FireboxEditor::EditorUtils::GetTransformValuesFont());
+	//ImGui::PushFont(FireboxEditor::EditorUtils::GetTransformValuesFont());
 	ImGui::DragFloat(id, parameter, 0.05f, -99999999.0f, 99999999.0f);
 	ImGui::PopStyleColor();
-	ImGui::PopFont();
+	//ImGui::PopFont();
 }
 
 void EditorUI::FloatParameters::DrawIntParameter(const char* text, const char* groupLabel, Vector4 color, int* parameter, bool labelBox)
@@ -157,10 +157,10 @@ void EditorUI::FloatParameters::DrawIntParameter(const char* text, const char* g
 	char id[64];
 	snprintf(id, sizeof(id), "##%s_%s", groupLabel, text);
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.86f, 0.86f, 0.86f, 1.0f));
-	ImGui::PushFont(FireboxEditor::EditorUtils::GetTransformValuesFont());
+	//ImGui::PushFont(FireboxEditor::EditorUtils::GetTransformValuesFont());
 	ImGui::DragInt(id, parameter, 0.05f, -99999999, 99999999);
 	ImGui::PopStyleColor();
-	ImGui::PopFont();
+	//ImGui::PopFont();
 }
 
 void EditorUI::FloatParameters::DrawCheckbox(const char* text, const char* groupLabel, Vector4 color, bool* parameter)

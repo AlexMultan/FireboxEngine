@@ -75,6 +75,10 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<TransformComponent>().Scale, "Scale");
 				ImGui::TreePop();
 			}
+
+			if (m_SelectedEntity.HasComponent<PointLightComponent>())
+				Firebox::Renderer3D::GetPointLights()[0].Position = m_SelectedEntity.GetComponent<TransformComponent>().Position;
+
 		}
 
 		if (m_SelectedEntity.HasComponent<StaticMeshComponent>())
@@ -105,8 +109,8 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 				size_t matIndex = 0;
 				for (size_t i = 0; i < smc.StaticMesh->GetMaterials().size(); i++)
 				{
-					ImGui::ImageButton(std::to_string(i).c_str(), (ImTextureID)(uintptr_t)smc.StaticMesh->GetMaterials()[i]->GetDiffuse()->GetTextureID(),
-						{ 64.0f, 64.0f }, ImVec2(0, 1), ImVec2(1, 0));
+					ImGui::ImageButton(std::to_string(i).c_str(), (ImTextureID)(uintptr_t)FireboxEditor::EditorUtils::GetFileIcon(),
+						{ 64.0f, 64.0f }, { 1, 0 }, { 0, 1 });
 
 					if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 					{
@@ -130,8 +134,8 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 			if (materialTree)
 			{
 				auto& mat = m_SelectedEntity.GetComponent<MaterialComponent>();
-				ImGui::Image((ImTextureID)(uintptr_t)mat.Material->GetDiffuse()->GetTextureID(),
-					{ 64.0f, 64.0f }, ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::Image((ImTextureID)(uintptr_t)FireboxEditor::EditorUtils::GetFileIcon(),
+					{ 64.0f, 64.0f }, { 1, 0 }, { 0, 1 });
 				ImGui::TreePop();
 			}
 		}
@@ -146,28 +150,28 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 			if (dirLightTree)
 			{
-				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<DirectionalLightComponent>().Direction, "Direction");
-				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<DirectionalLightComponent>().Color, "Color");
+				EditorUI::FloatParameters::Float3(&Firebox::Renderer3D::GetDirectionalLight().Direction, "Direction");
+				EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetDirectionalLight().Intensity, "Intensity");
+				ImGui::ColorPicker3("Color", &Firebox::Renderer3D::GetDirectionalLight().Color.r);
 				ImGui::TreePop();
 			}
-			Firebox::Renderer3D::SetDirectionalLight(m_SelectedEntity.GetComponent<DirectionalLightComponent>());
 		}
 
 		if (m_SelectedEntity.HasComponent<PointLightComponent>())
 		{
 			PushTreeNodeStyle();
-
+			 
 			bool pointLightTree = ImGui::TreeNodeEx("Point Light Settings", defaultFlags);
 
 			PopTreeNodeStyle();
 
 			if (pointLightTree)
 			{
-				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<PointLightComponent>().Position, "Position");
-				EditorUI::FloatParameters::Float3(&m_SelectedEntity.GetComponent<PointLightComponent>().Color, "Color");
-				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PointLightComponent>().Constant, "Constant");
-				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PointLightComponent>().Linear, "Linear");
-				EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PointLightComponent>().Quadratic, "Quadratic");
+				// Temporary solution!
+				ImGui::ColorPicker3("Color", &Firebox::Renderer3D::GetPointLights()[0].Color.r);
+				EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPointLights()[0].Constant, "Constant");
+				EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPointLights()[0].Linear, "Linear");
+				EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPointLights()[0].Quadratic, "Quadratic");
 				ImGui::TreePop();
 			}
 		}
@@ -220,22 +224,21 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 			{
 				if (ImGui::TreeNodeEx("Color Grading", ImGuiTreeNodeFlags_Framed))
 				{
-					EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PostProcessComponent>().Gamma, "Gamma");
+					EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPostProcessSettings().Gamma, "Gamma");
 					ImGui::TreePop();
 				}
 
 				if (ImGui::TreeNodeEx("Ambient Occlusion", ImGuiTreeNodeFlags_Framed))
 				{
-					EditorUI::FloatParameters::Checkbox(&m_SelectedEntity.GetComponent<PostProcessComponent>().EnableSSAO, "Enable SSAO (Screen-Space Ambient Occlusion");
-					EditorUI::FloatParameters::Int1(&m_SelectedEntity.GetComponent<PostProcessComponent>().AmbientOcclusionKernelSize, "Kernel Size");
-					EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PostProcessComponent>().AmbientOcclusionIntensity, "Intensity");
-					EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PostProcessComponent>().AmbientOcclusionRadius, "Radius");
-					EditorUI::FloatParameters::Float1(&m_SelectedEntity.GetComponent<PostProcessComponent>().AmbientOcclusionBias, "Bias");
+					EditorUI::FloatParameters::Checkbox(&Firebox::Renderer3D::GetPostProcessSettings().EnableSSAO, "Enable SSAO (Screen-Space Ambient Occlusion");
+					EditorUI::FloatParameters::Int1(&Firebox::Renderer3D::GetPostProcessSettings().AmbientOcclusionKernelSize, "Kernel Size");
+					EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPostProcessSettings().AmbientOcclusionIntensity, "Intensity");
+					EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPostProcessSettings().AmbientOcclusionRadius, "Radius");
+					EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPostProcessSettings().AmbientOcclusionBias, "Bias");
 					ImGui::TreePop();
 				}
 				ImGui::TreePop();
 			}
-			Firebox::Renderer3D::SetPostProcessSettings(m_SelectedEntity.GetComponent<PostProcessComponent>());
 		}
 	}
 	else

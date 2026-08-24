@@ -4,7 +4,7 @@
 
 #include <deque>
 
-#define FB_CONSOLE_PRINT(message) ::Firebox::Console::AddDebugMessage(message)
+#define FB_CONSOLE_PRINT(msg) ::Firebox::Console::AddDebugMessage(msg)
 #define FB_COUNT_DRAW_CALL ::Firebox::Console::AddDrawCall()
 		
 namespace Firebox {

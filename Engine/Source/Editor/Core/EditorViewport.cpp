@@ -36,7 +36,7 @@ void FireboxEditor::EditorViewport::OnAttach()
     io->ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
     io->ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
-	io->FontDefault = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/Geist/static/Geist-Medium.ttf").string().c_str(), 17.0f);
+    io->FontDefault = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/SourceCodePro/static/SourceCodePro-Regular.ttf").string().c_str(), 16.0f);
 
     ImGui::FireboxEditorStyleClassic();
 
@@ -89,28 +89,15 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_JerrycanEntity.AddComponent<StaticMeshComponent>(m_JerrycanMesh);
     m_JerrycanEntity.GetComponent<TransformComponent>().Position.y = 0.5f;
 
-#if 0
-    m_CharacterModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/Ch15_nonPBR.dae").string());
-    m_CharacterMaterial1 = CreateRef<Firebox::Material>();
-    m_CharacterMaterial1->SetDiffuseTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/Ch15_1001_Diffuse.png").string()));
-    m_CharacterMaterial1->SetNormalTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/Ch15_1001_Normal.png").string()));
-    m_CharacterMaterial1->SetSpecularTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/Ch15_1001_Specular.png").string()));
-    m_CharacterModel->SetMaterial(0, m_CharacterMaterial1);
-
-    m_CharacterEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Soldier");
-    m_CharacterEntity.AddComponent<StaticMeshComponent>(m_CharacterModel);
-    m_CharacterEntity.GetComponent<TransformComponent>().Position.x = 2.0f;
-    m_CharacterEntity.GetComponent<TransformComponent>().Position.y = 0.5f;
-    m_CharacterEntity.GetComponent<TransformComponent>().Scale = { 0.01f, 0.01f, 0.01f };
-
-    m_RunningAnim = Firebox::Animation(FireboxEditor::EditorContent::Get("Animations/Running.dae").string(), m_CharacterModel);
-    m_CharacterAnimator = CreateRef<Firebox::Animator>(&m_RunningAnim);
-    m_CharacterEntity.AddComponent<AnimatorComponent>(m_CharacterAnimator);
-    m_CharacterEntity.GetComponent<AnimatorComponent>().Animator->PlayAnimation(&m_RunningAnim);
-#endif
-
-    m_LightEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Light");
-    m_LightEntity.AddComponent<DirectionalLightComponent>();
+    m_GunMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/GLOCK19.glb").string());
+    m_GunMaterial = CreateRef<Firebox::Material>();
+    m_GunMaterial->SetDiffuseTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/glock_4K_BaseColor.png").string()));
+    m_GunMaterial->SetNormalTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/glock_4K_Normal.png").string()));
+    m_GunMaterial->SetRoughnessTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/glock_4K_Roughness.png").string()));
+    m_GunMaterial->SetMetallicTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/glock_4K_Metallic.png").string()));
+    m_GunMesh->SetMaterial(0, m_GunMaterial);
+    m_GunEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Gun");
+    m_GunEntity.AddComponent<StaticMeshComponent>(m_GunMesh);
 }
 
 void FireboxEditor::EditorViewport::OnDetach()
@@ -140,11 +127,14 @@ void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
 
     if (m_EditorContext.GetSelectedEntity() && Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_DELETE))
         m_EditorContext.GetCurrentScene()->DestroyEntity(m_EditorContext.GetSelectedEntity());
+
+    if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_P))
+        FB_CONSOLE_PRINT("Number of point lights: " + std::to_string(Firebox::Renderer3D::GetPointLights().size()));
 }
 
 void FireboxEditor::EditorViewport::OnRender(float deltaTime)
 {
-    Firebox::Renderer3D::BeginScene(*m_EditorCamera, m_LightEntity.GetComponent<DirectionalLightComponent>());
+    Firebox::Renderer3D::BeginScene(*m_EditorCamera);
     m_EditorContext.GetCurrentScene()->OnUpdate(deltaTime);
     Firebox::Renderer3D::EndScene();
     Firebox::Renderer3D::SetGridSize(m_ViewportPanel.GetGridSize());

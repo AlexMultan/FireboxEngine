@@ -4,9 +4,8 @@ out vec4 FragColor;
 
 struct DirectionalLight {
     vec3 direction;
-    vec3 diffuse;
-    vec3 ambient;
-    vec3 specular;
+    vec3 color;
+    float intensity;
 }; 
 
 struct PointLight {
@@ -93,17 +92,41 @@ vec3 FresnelSchlick(float cosTheta, vec3 F0)
     return F0 + (1.0 - F0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0);
 }
 
+vec3 CookTorranceDirectional(vec3 N, vec3 V, vec3 lightDir, vec3 radiance, vec3 albedo, float metallic, float roughness)
+{
+    vec3 L = normalize(lightDir);
+    vec3 H = normalize(V + L);
+
+    vec3 F0 = mix(vec3(0.04), albedo, metallic);
+
+    float NDF = DistributionGGX(N, H, roughness);
+    float G = GeometrySmith(N, V, L, roughness);
+    vec3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
+
+    vec3 nom = NDF * G * F;
+    float denom = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
+    vec3 specular = nom / denom;
+
+    vec3 kS = F;
+    vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
+
+    float NdotL = max(dot(N, L), 0.0);
+
+    vec3 Lo = (kD * albedo / PI + specular) * radiance * NdotL;
+    return Lo;
+}
+
 vec3 CalculateDirectionalLight(DirectionalLight directionalLight, vec3 viewDir, vec3 normal, float shadow, 
-    vec3 _albedo, float _roughness, float ssao)
+    vec3 _albedo, float _roughness, float _metallic, float ssao)
 {
     vec3 directionalLightDir = normalize(-directionalLight.direction);
-    float diff = max(dot(normal, directionalLightDir), 0.0);
-    vec3 halfwayDir = normalize(directionalLightDir + viewDir);
-    float spec = pow(max(dot(viewDir, halfwayDir), 0.0), 256.0);
-    vec3 ambient = vec3(directionalLight.ambient * _albedo * ssao);
-    vec3 diffuse = directionalLight.diffuse * diff * _albedo;
-    vec3 specular = directionalLight.specular * spec * _roughness;
-    return (ambient + (1.0 - shadow) * (diffuse + specular));
+    vec3 N = normalize(normal);
+    vec3 radiance =  directionalLight.color * directionalLight.intensity;
+
+    vec3 Lo = CookTorranceDirectional(N, viewDir, directionalLightDir, radiance, _albedo, _metallic, _roughness);
+    vec3 ambient = vec3(0.03) * _albedo * ssao;
+    vec3 color = ambient + Lo;
+    return color;
 }
 
 vec3 CalculatePointLight(PointLight pointLight, vec3 normal, vec3 fragPos, vec3 viewDir, 
@@ -151,7 +174,7 @@ void main()
     if (length(FragPos) < 0.0001)
         discard;
 
-    vec3 Normal = texture(u_gNormalMetallic, TexCoords).rgb;
+    vec3 Normal = texture(u_gNormalMetallic, TexCoords).rgb * 2.0 - 1.0;
     float Metallic = texture(u_gNormalMetallic, TexCoords).a;
     vec3 Albedo = pow(texture(u_gAlbedoRough, TexCoords).rgb, vec3(2.2));
     float Roughness = texture(u_gAlbedoRough, TexCoords).a;
@@ -162,7 +185,7 @@ void main()
     float shadow = texture(u_ShadowMask, TexCoords).r;
 
     vec3 result = CalculateDirectionalLight(u_DirectionalLight, viewDir, Normal, shadow, Albedo, 
-        Roughness, u_PostProcessSettings.enableSSAO ? AmbientOcclusion : 1.0);
+        Roughness, Metallic, u_PostProcessSettings.enableSSAO ? AmbientOcclusion : 1.0);
 
     if (u_NumberOfPointLights > 0)
     {

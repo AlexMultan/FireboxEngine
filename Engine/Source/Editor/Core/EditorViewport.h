@@ -57,16 +57,8 @@ namespace FireboxEditor {
 		Ref<Firebox::Material> m_JerrycanMaterial;
 		Ref<Firebox::StaticMesh> m_JerrycanMesh;
 
-		Firebox::Entity m_LightEntity{};
-
-
-#if 0
-		Firebox::Entity m_CharacterEntity{};
-		Ref<Firebox::StaticMesh> m_CharacterModel;
-		Ref<Firebox::Material> m_CharacterMaterial1;
-		Ref<Firebox::Material> m_CharacterMaterial2;
-		Firebox::Animation m_RunningAnim;
-		Ref<Firebox::Animator> m_CharacterAnimator;
-#endif
+		Firebox::Entity m_GunEntity{};
+		Ref<Firebox::Material> m_GunMaterial;
+		Ref<Firebox::StaticMesh> m_GunMesh;
 	};
 }

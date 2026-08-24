@@ -1,5 +1,4 @@
 #include "MenuBar.h"
-#include "Build/GameRunner.h"
 #include "Input/Input.h"
 #include "Editor/EditorPaths.h"
 #include "Scene/Entity.h"
@@ -106,16 +105,6 @@ void FireboxEditor::MenuBar::RenderMenuBar()
             ImGui::EndMenu();
         }
 
-        if (ImGui::BeginMenu("Game"))
-        {
-            if (ImGui::MenuItem("Run"))
-            {
-                FireboxEditor::GameRunner gameRunner("Editor/Editor", "SampleGame/SampleGame", FireboxEditor::Extension::EXE);
-                gameRunner.RunGame();
-            }
-
-            ImGui::EndMenu();
-        }
         ImGui::EndMainMenuBar();
     }
 }

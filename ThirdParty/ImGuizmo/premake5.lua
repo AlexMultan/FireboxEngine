@@ -31,4 +31,4 @@ project "ImGuizmo"
         systemversion "latest"
 
         filter {"system:windows", "configurations:Release"}
-            buildoptions "/MT"
+            buildoptions "/MD"

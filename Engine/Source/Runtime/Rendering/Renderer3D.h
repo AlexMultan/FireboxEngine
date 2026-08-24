@@ -35,7 +35,7 @@ namespace Firebox {
 		DebugCascadeLevels = 8
 	};
 
-	struct PostProcessingSettings
+/*	struct PostProcessingSettings
 	{
 		// Color Grading
 		float Gamma = 1.5f;
@@ -65,7 +65,7 @@ namespace Firebox {
 		float MotionBlurIntensity = 0.5f;
 
 		bool InfiniteExtent = true;
-	};
+	};*/
 
 	class FIREBOX_API Renderer3D
 	{
@@ -86,12 +86,14 @@ namespace Firebox {
 		static void DrawSkybox(const Ref<Skybox>& skybox);
 
 		// Scene state
+		static DirectionalLightComponent& GetDirectionalLight();
 		static void SetDirectionalLight(const DirectionalLightComponent& directionalLight);
-		static void SetPostProcessSettings(const PostProcessComponent& postProcess);
+		static PostProcessComponent& GetPostProcessSettings();
 		static std::vector<PointLightComponent>& GetPointLights();
 		static std::vector<SpotLightComponent>& GetSpotLights();
 		static void SetGridSize(const float& gridSize);
 		static void SetActiveViewMode(const ViewMode& viewMode);
+		static void DestroyPointLight(const PointLightComponent& pointLight);
 
 		// Shader / resource access
 		static Ref<Shader> GetLitShader();
@@ -174,14 +176,14 @@ namespace Firebox {
 			float NearPlane;
 			float FOV;
 			float AspectRatio;
-			DirectionalLightComponent DirectionalLight{ {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f} };
+			DirectionalLightComponent DirectionalLight{ {-0.2f, -1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 1.0f };
 			std::vector<PointLightComponent> PointLights;
 			std::vector<SpotLightComponent> SpotLights;
 			SpotLightComponent SpotLight;
 			Ref<ShadowMap> ShadowMap;
 			Ref<Framebuffer> MainFramebuffer;
 			Ref<Skybox> ActiveSkybox = nullptr;
-			PostProcessingSettings PostProcessing{};
+			PostProcessComponent PostProcessing;
 			Ref<GBuffer> gBuffer;
 			Ref<ShadowMask> ShadowMask;
 			Ref<SSAO> SSAO;

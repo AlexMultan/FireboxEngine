@@ -130,7 +130,7 @@ void Firebox::OpenGL::OpenGLGBuffer::Invalidate()
     m_GBufferInfo.GBufferAttachments[1] = GL_COLOR_ATTACHMENT1;
     m_GBufferInfo.GBufferAttachments[2] = GL_COLOR_ATTACHMENT2;
     m_GBufferInfo.GBufferAttachments[3] = GL_COLOR_ATTACHMENT3;
-    glDrawBuffers(3, m_GBufferInfo.GBufferAttachments);
+    glDrawBuffers(4, m_GBufferInfo.GBufferAttachments);
 
     glGenRenderbuffers(1, &m_GBufferInfo.RenderBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, m_GBufferInfo.RenderBuffer);

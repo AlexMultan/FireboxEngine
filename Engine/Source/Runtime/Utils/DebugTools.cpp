@@ -21,7 +21,7 @@ void Firebox::Console::AddDebugMessage(const String& message)
 
 void Firebox::Console::AddDrawCall()
 {
-	s_DrawCalls += 1;
+	s_DrawCalls++;
 }
 
 void Firebox::Console::SetDrawCalls(uint count)

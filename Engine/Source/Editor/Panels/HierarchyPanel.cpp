@@ -31,8 +31,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 	ImGui::Begin(m_Name.c_str());
 
 	ImGuiTreeNodeFlags hierarchyNodeFlags = ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
-	const char* sceneName = scene->GetSceneName().c_str();
-	if (ImGui::TreeNodeEx(sceneName, hierarchyNodeFlags))
+	if (ImGui::TreeNodeEx(scene->GetSceneName().c_str(), hierarchyNodeFlags))
 	{
 		auto& registry = scene->GetRegistry();
 		for (auto e : registry.view<IdComponent>())

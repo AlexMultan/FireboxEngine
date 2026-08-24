@@ -54,12 +54,12 @@ void main()
 
 	TexCoords = aTexCoords;
 	vec3 N = normalize(u_InverseNormal * totalNormal);
-    vec3 T = u_InverseNormal * aTangent;
-    if (dot(T, T) < 1e-8) T = vec3(1,0,0);
-        T = normalize(T - dot(T, N) * N);
+    vec3 T = normalize(u_InverseNormal * aTangent);
+    T = normalize(T - dot(T, N) * N);
     vec3 B = cross(N, T);
     if(dot(cross(N, T), normalize(u_InverseNormal * aBitangent)) < 0.0){
-        B = -B;
+        T = T * -1.0;
+        B = cross(N, T);
     }
     TBN = mat3(T, B, N);
     TexCoords = aTexCoords;

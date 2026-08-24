@@ -45,7 +45,17 @@ namespace Firebox {
 	void Scene::DestroyEntity(Entity entity)
 	{
 		if (entity)
+		{
+			if (entity.HasComponent<PointLightComponent>()) [[unlikely]]
+			{
+				Firebox::Renderer3D::DestroyPointLight(entity.GetComponent<PointLightComponent>());
+				std::cout << "Destoyed!\n";
+			}
+			else
+				std::cout << "Not Destroyed!\n";
+
 			m_Registry.destroy(entity.GetHandle());
+		}
 	}
 
 	void Scene::OnUpdate(float deltaTime)

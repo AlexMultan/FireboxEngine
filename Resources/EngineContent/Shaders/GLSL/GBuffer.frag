@@ -36,7 +36,7 @@ void main()
     vec3 sampledNormal = texture(u_Material.normal, TexCoords).rgb;
     normal = normalize(sampledNormal * 2.0 - 1.0);
     vec3 worldNormal = normalize(TBN * normal);
-	gNormalMetallic.rgb = worldNormal;
+	gNormalMetallic.rgb = worldNormal * 0.5 + 0.5;
     gNormalMetallic.a = u_Material.hasMetallic ? texture(u_Material.metallic, TexCoords).r : u_Material.metallicValue;
 	gAlbedoRough.rgb = u_Material.hasDiffuse ? texture(u_Material.diffuse, TexCoords).rgb : u_Material.diffuseColor.rgb;
 	gAlbedoRough.a = u_Material.hasRoughness ? texture(u_Material.roughness, TexCoords).r : u_Material.roughnessValue;

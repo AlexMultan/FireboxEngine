@@ -36,8 +36,8 @@ namespace Firebox {
 		inline const Ref<Texture>& GetNormal() const { return m_NormalTexture; }
 		inline const Ref<Texture>& GetMetallic() const { return m_MetallicTexture; }
 		inline const Ref<Texture>& GetCubemap() const { return m_CubemapTexture; }
-		inline const Vector3& GetDiffuseColor() const { return m_DiffuseColor; }
-		inline const float GetRougnessValue() const { return m_RougnessValue; }
+		inline Vector4& GetDiffuseColor() { return m_DiffuseColor; }
+		inline float& GetRougnessValue() { return m_RougnessValue; }
 		inline const float GetMetallicValue() const { return m_MetallicValue; }
 
 	private:

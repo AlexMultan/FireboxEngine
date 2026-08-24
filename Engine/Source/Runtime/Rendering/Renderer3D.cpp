@@ -4,6 +4,7 @@
 #include "Utils/Assert.h"
 #include "Components/RenderComponents.h"
 #include "Geometry/PrimitiveShapes.h"
+#include "Utils/String.h"
 
 #include <algorithm>
 #include <cfloat>
@@ -41,6 +42,19 @@ Ref<Firebox::Shader> Firebox::Renderer3D::GetGridShader() { return s_Data.GridSh
 void Firebox::Renderer3D::SetGridSize(const float& gridSize) { s_GridSize = gridSize; }
 void Firebox::Renderer3D::SetActiveViewMode(const ViewMode& viewMode) { s_ViewMode = viewMode; }
 
+void Firebox::Renderer3D::DestroyPointLight(const PointLightComponent& pointLight)
+{
+	auto it = std::find(s_Data.PointLights.begin(), s_Data.PointLights.end(), pointLight);
+	if (it != s_Data.PointLights.end())
+	{
+		*it = s_Data.PointLights.back();
+		s_Data.PointLights.pop_back();
+	}
+	for (auto& light : s_Data.PointLights)
+	{
+		std::cout << Utils::ToString(light.Position) << "\n";
+	}
+}
 
 void Firebox::Renderer3D::Init()
 {
@@ -271,33 +285,19 @@ void Firebox::Renderer3D::DrawSkybox(const Ref<Skybox>& skybox)
 	s_Data.ActiveSkybox = skybox;
 }
 
+DirectionalLightComponent& Firebox::Renderer3D::GetDirectionalLight()
+{
+	return s_Data.DirectionalLight;
+}
+
 void Firebox::Renderer3D::SetDirectionalLight(const DirectionalLightComponent& directionalLight)
 {
 	s_Data.DirectionalLight = directionalLight;
 }
 
-void Firebox::Renderer3D::SetPostProcessSettings(const PostProcessComponent& postProcess)
+PostProcessComponent& Firebox::Renderer3D::GetPostProcessSettings()
 {
-	s_Data.PostProcessing.Gamma = postProcess.Gamma;
-	s_Data.PostProcessing.Contrast = postProcess.Contrast;
-	s_Data.PostProcessing.Saturation = postProcess.Saturation;
-	s_Data.PostProcessing.Gain = postProcess.Gain;
-	s_Data.PostProcessing.Temperature = postProcess.Temperature;
-	s_Data.PostProcessing.Tint = postProcess.Tint;
-	s_Data.PostProcessing.BloomIntensity = postProcess.BloomIntensity;
-	s_Data.PostProcessing.Exposure = postProcess.Exposure;
-	s_Data.PostProcessing.VignetteIntensity = postProcess.VignetteIntensity;
-	s_Data.PostProcessing.Sharpen = postProcess.Sharpen;
-	s_Data.PostProcessing.ChromaticAbberrationIntensity = postProcess.ChromaticAbberrationIntensity;
-	s_Data.PostProcessing.Slope = postProcess.Slope;
-	s_Data.PostProcessing.Toe = postProcess.Toe;
-	s_Data.PostProcessing.AmbientOcclusionKernelSize = postProcess.AmbientOcclusionKernelSize;
-	s_Data.PostProcessing.AmbientOcclusionIntensity = postProcess.AmbientOcclusionIntensity;
-	s_Data.PostProcessing.AmbientOcclusionRadius = postProcess.AmbientOcclusionRadius;
-	s_Data.PostProcessing.AmbientOcclusionBias = postProcess.AmbientOcclusionBias;
-	s_Data.PostProcessing.EnableSSAO = postProcess.EnableSSAO;
-	s_Data.PostProcessing.MotionBlurIntensity = postProcess.MotionBlurIntensity;
-	s_Data.PostProcessing.InfiniteExtent = postProcess.InfiniteExtent;
+	return s_Data.PostProcessing;
 }
 
 std::vector<PointLightComponent>& Firebox::Renderer3D::GetPointLights()
@@ -390,9 +390,8 @@ Ref<Firebox::Shader> Firebox::Renderer3D::BindLitUniforms()
 	shader->SetFloat("u_PostProcessSettings.enableSSAO", s_Data.PostProcessing.EnableSSAO);
 
 	shader->SetVector3("u_DirectionalLight.direction", s_Data.DirectionalLight.Direction);
-	shader->SetVector3("u_DirectionalLight.ambient", s_Data.DirectionalLight.Color * 0.2f);
-	shader->SetVector3("u_DirectionalLight.diffuse", s_Data.DirectionalLight.Color);
-	shader->SetVector3("u_DirectionalLight.specular", s_Data.DirectionalLight.Color);
+	shader->SetVector3("u_DirectionalLight.color", s_Data.DirectionalLight.Color);
+	shader->SetFloat("u_DirectionalLight.intensity", s_Data.DirectionalLight.Intensity);
 
 	const int numberOfPointLights = std::min(static_cast<int>(s_Data.PointLights.size()), k_MaxPointLights);
 	const int numberOfSpotLights = std::min(static_cast<int>(s_Data.SpotLights.size()), k_MaxSpotLights);

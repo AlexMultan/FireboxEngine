@@ -6,10 +6,13 @@ struct DirectionalLightComponent
 {
 	Vector3 Color{ 1.0f, 0.89f, 0.96f };
 	Vector3 Direction{ -0.2f, -1.0f, -0.3f };
+	float Intensity = 5.0f;
 
 	DirectionalLightComponent() = default;
 	DirectionalLightComponent(const DirectionalLightComponent&) = default;
-	DirectionalLightComponent(const Vector3& color, const Vector3& direction) : Color(color), Direction(direction) {}
+	DirectionalLightComponent(const Vector3& color, const Vector3& direction, float intensity) : Color(color), Direction(direction), Intensity(intensity)
+	{
+	}
 };
 
 struct PointLightComponent
@@ -25,6 +28,18 @@ struct PointLightComponent
 	PointLightComponent(const Vector3& position, const Vector3& color, const float constant, const float quadratic)
 		: Position(position), Color(color), Constant(constant), Quadratic(quadratic)
 	{
+	}
+
+	bool operator==(const PointLightComponent& other) const
+	{
+		std::cout << "True\n";
+		return this == &other;
+	}
+
+	bool operator!=(const PointLightComponent& other) const
+	{
+		std::cout << "False\n";
+		return this != &other;
 	}
 };
 
