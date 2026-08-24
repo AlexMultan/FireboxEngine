@@ -116,6 +116,17 @@ project "assimp"
       "contrib/zlib/contrib/minizip"
   }
 
+  filter "action:vs2022"
+        toolset "msc"
+
+    filter "action:gmake"
+        toolset "clang"
+        buildoptions {
+            "-Wall",
+            "-Wextra"
+        }
+
+
    filter "system:windows"
       systemversion "latest"
 

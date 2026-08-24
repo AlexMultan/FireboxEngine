@@ -16,8 +16,19 @@ project "ImGuizmo"
 		"../ImGui"
 	}
 
+	filter "action:vs2022"
+        toolset "msc"
+
+    filter "action:gmake2"
+        toolset "clang"
+        buildoptions {
+            "-Wall",
+            "-Wextra"
+        }
+
+
     filter "system:windows"
         systemversion "latest"
 
         filter {"system:windows", "configurations:Release"}
-            buildoptions "/MT"
+            buildoptions "/MD"

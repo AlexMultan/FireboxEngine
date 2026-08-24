@@ -4010,7 +4010,7 @@ void ImGui::RenderTextEllipsis(ImDrawList* draw_list, const ImVec2& pos_min, con
 // Render a rectangle shaped with optional rounding and borders
 void ImGui::RenderFrame(ImVec2 p_min, ImVec2 p_max, ImU32 fill_col, bool borders, float rounding)
 {
-#if 0
+
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
     window->DrawList->AddRectFilled(p_min, p_max, fill_col, rounding);
@@ -4020,8 +4020,9 @@ void ImGui::RenderFrame(ImVec2 p_min, ImVec2 p_max, ImU32 fill_col, bool borders
         window->DrawList->AddRect(p_min + ImVec2(1, 1), p_max + ImVec2(1, 1), GetColorU32(ImGuiCol_BorderShadow), rounding, 0, border_size);
         window->DrawList->AddRect(p_min, p_max, GetColorU32(ImGuiCol_Border), rounding, 0, border_size);
     }
-#endif
 
+
+#if 0
     ImGuiContext& g = *GImGui;
     ImVec4 base = ImGui::ColorConvertU32ToFloat4(fill_col);
     ImVec4 top = base * ImVec4(1.5f, 1.5f, 1.5f, 1.0f);
@@ -4034,6 +4035,7 @@ void ImGui::RenderFrame(ImVec2 p_min, ImVec2 p_max, ImU32 fill_col, bool borders
     g.CurrentWindow->DrawList->AddRectFilledMultiColor(p_min, p_max, col_top, col_top, col_bot, col_bot);
     if (borders && g.Style.FrameBorderSize > 0.0f)
         ImGui::RenderFrameBorder(p_min, p_max, rounding);
+#endif
 }
 
 void ImGui::RenderFrameBorder(ImVec2 p_min, ImVec2 p_max, float rounding)

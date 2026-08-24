@@ -1,0 +1,70 @@
+#pragma once
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <memory>
+#include <concepts>
+#include <map>
+#include <list>
+#include <cmath>
+
+typedef uint8_t uint8;
+typedef uint16_t uint16;
+typedef uint32_t uint;
+typedef uint64_t uint64;
+
+using String = std::string;
+
+template<typename T>
+using Ref = std::shared_ptr<T>;
+
+template<typename T>
+using Scope = std::unique_ptr<T>;
+
+template<typename T>
+using WeakRef = std::weak_ptr<T>;
+
+template<typename T, typename... Args>
+constexpr Ref<T> CreateRef(Args&&... args)
+{
+	return std::make_shared<T>(std::forward<Args>(args)...);
+}
+
+template<typename T, typename... Args>
+constexpr Scope<T> CreateScope(Args&&... args)
+{
+	return std::make_unique<T>(std::forward<Args>(args)...);
+}
+
+using Vector2 = glm::vec2;
+using Vector3 = glm::vec3;
+using Vector4 = glm::vec4;
+using Mat2 = glm::mat2;
+using Mat3 = glm::mat3;
+using Mat4 = glm::mat4;
+using Quat = glm::quat;
+
+namespace Utils {
+
+	static inline bool InRange(float value, float min, float max)
+	{
+		return value >= min && value <= max;
+	}
+
+	static inline bool InRange(int value, int min, int max)
+	{
+		return value >= min && value <= max;
+	}
+
+	static inline bool InRange(double value, double min, double max)
+	{
+		return value >= min && value <= max;
+	}
+}
