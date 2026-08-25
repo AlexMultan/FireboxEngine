@@ -122,7 +122,7 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Mat4& viewMatrix, const 
 		ImGui::TextDisabled("Camera Settings");
 		ImGui::Separator();
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));
-		ImGui::SliderFloat("Camera Speed", &m_CameraSpeed, 2.0f, 50.0f, "%.1f");
+		ImGui::SliderFloat("Camera Speed", &m_CameraSpeed, 0.1f, 50.0f, "%.1f");
 		ImGui::Separator();
 		ImGui::Checkbox("Snap", &m_Snap);
 		ImGui::Separator();

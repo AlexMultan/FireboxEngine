@@ -67,7 +67,7 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_StatsPanel = FireboxEditor::StatsPanel("Stats");
 
     m_EditorCamera = CreateRef<Firebox::PerspectiveCamera>(60.0f, 16.0f / 9.0f,
-        0.1f, 1000.0f);
+        0.01f, 1000.0f);
     m_EditorCamera->SetInputEnabled(false);
     m_EditorCamera->SetPosition({ 0.0f, 2.0f, 1.0f });
 
@@ -98,6 +98,25 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_GunMesh->SetMaterial(0, m_GunMaterial);
     m_GunEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Gun");
     m_GunEntity.AddComponent<StaticMeshComponent>(m_GunMesh);
+
+    m_RifleMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_AKM.glb").string());
+
+    m_RifleMaterial = CreateRef<Firebox::Material>();
+    m_RifleMaterial->SetDiffuseTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/akm_Base_Color.tga").string()));
+    m_RifleMaterial->SetNormalTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/akm_Normal_OpenGL.tga").string()));
+    m_RifleMaterial->SetRoughnessTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/akm_Roughness.tga").string()));
+    m_RifleMaterial->SetMetallicTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/akm_Metallic.tga").string()));
+      
+    m_RifleMaterialMag = CreateRef<Firebox::Material>();
+    m_RifleMaterialMag->SetDiffuseTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/magazine_Base_Color.tga").string()));
+    m_RifleMaterialMag->SetNormalTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/magazine_Normal_OpenGL.tga").string()));
+    m_RifleMaterialMag->SetRoughnessTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/magazine_Roughness.tga").string()));
+    m_RifleMaterialMag->SetMetallicTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/magazine_Metallic.tga").string()));
+
+    m_RifleMesh->SetMaterial(0, m_RifleMaterial);
+    m_RifleMesh->SetMaterial(1, m_RifleMaterialMag);
+    m_RifleEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Rifle");
+    m_RifleEntity.AddComponent<StaticMeshComponent>(m_RifleMesh);
 }
 
 void FireboxEditor::EditorViewport::OnDetach()

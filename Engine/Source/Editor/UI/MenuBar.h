@@ -18,8 +18,5 @@ namespace FireboxEditor {
 	private:
 		EditorContext& m_Context;
 		Ref<Firebox::Scene> m_Scene;
-
-	private:
-		static void SDLCALL Callback(void* userdata, const char* const* filelist, int filter);
 	};
 }

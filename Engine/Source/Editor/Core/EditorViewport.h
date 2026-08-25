@@ -60,5 +60,10 @@ namespace FireboxEditor {
 		Firebox::Entity m_GunEntity{};
 		Ref<Firebox::Material> m_GunMaterial;
 		Ref<Firebox::StaticMesh> m_GunMesh;
+
+		Firebox::Entity m_RifleEntity{};
+		Ref<Firebox::Material> m_RifleMaterial;
+		Ref<Firebox::Material> m_RifleMaterialMag;
+		Ref<Firebox::StaticMesh> m_RifleMesh;
 	};
 }

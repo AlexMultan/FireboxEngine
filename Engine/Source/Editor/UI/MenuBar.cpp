@@ -4,6 +4,8 @@
 #include "Scene/Entity.h"
 
 #include <imgui.h>
+#include <windows.h>
+#include <commdlg.h>
 
 FireboxEditor::MenuBar::MenuBar(FireboxEditor::EditorContext& context) : m_Context(context), m_Scene(nullptr)
 {
@@ -42,29 +44,41 @@ void FireboxEditor::MenuBar::RenderMenuBar()
             }
             if (ImGui::MenuItem("Open", "Ctrl+O"))
             {
-                
+                OPENFILENAMEW ofn;
+                wchar_t szFile[260] = L"";
+
+                ZeroMemory(&ofn, sizeof(ofn));
+                ofn.lStructSize = sizeof(ofn);
+                ofn.hwndOwner = NULL;
+                ofn.lpstrFile = szFile;
+                ofn.nMaxFile = sizeof(szFile) / sizeof(wchar_t);
+                ofn.lpstrFilter =
+                    L"Scene (*.fbscene)\0*.fbscene\0"
+                    L"All Files (*.*)\0*.*\0\0";
+                ofn.nFilterIndex = 1;
+                ofn.lpstrFileTitle = NULL;
+                ofn.nMaxFileTitle = 0;
+                ofn.lpstrInitialDir = NULL;
+                ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+                if (GetOpenFileNameW(&ofn))
+                {
+                    std::wstring selectedFile = ofn.lpstrFile;
+                    size_t len = wcstombs(nullptr, selectedFile.c_str(), 0) + 1;
+                    char* buffer = new char[len];
+                    wcstombs(buffer, selectedFile.c_str(), len);
+
+                    Ref<Firebox::Scene> loadedScene = Firebox::Scene::LoadScene(buffer);
+                    m_Context.SetCurrentScene(loadedScene);
+
+                    delete[] buffer;
+                }
             }
 
             if (ImGui::MenuItem("Save", "Ctrl+S"))
             {
-
-            }
-
-            if (ImGui::BeginMenu("Scene"))
-            {
-                if (ImGui::MenuItem("Save", "Ctrl+Shift+S"))
-                {
-                    m_Context.GetCurrentScene()->SetSceneName("Untitled");
-                    m_Context.GetCurrentScene()->SaveScene(FireboxEditor::EditorContent::Get("Levels/Untitled.fbscene").string());
-                }
-
-                if (ImGui::MenuItem("Load", "Ctrl+Shift+L"))
-                {
-                    SDL_ShowOpenFileDialog(Callback, NULL, nullptr, nullptr, 0,
-                        FireboxEditor::EditorContent::GetRootPath().string().c_str(), true);
-                    
-                }
-                ImGui::EndMenu();
+                m_Context.GetCurrentScene()->SetSceneName("Sandbox");
+                m_Context.GetCurrentScene()->SaveScene(FireboxEditor::EditorContent::Get("Levels/Sandbox.fbscene").string());
             }
 
             if (ImGui::MenuItem("Exit"))
@@ -108,26 +122,3 @@ void FireboxEditor::MenuBar::RenderMenuBar()
         ImGui::EndMainMenuBar();
     }
 }
-
-void SDLCALL FireboxEditor::MenuBar::Callback(void* userdata, const char* const* filelist, int filter)
-{
-    if (!filelist)
-    {
-        SDL_Log("An error occured: %s", SDL_GetError());
-        return;
-    }
-    else if (!*filelist)
-    {
-        SDL_Log("The user did not select any file.");
-        SDL_Log("Most likely, the dialog was canceled.");
-        return;
-    }
-
-    while (*filelist)
-    {
-        SDL_Log("Full path to selected file: '%s'", *filelist);
-        filelist++;
-    }
-}
-
-

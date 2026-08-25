@@ -27,8 +27,8 @@ namespace Firebox {
 		inline void SetMetallicTexture(const Ref<Texture>& texture) { m_MetallicTexture = texture; }
 		inline void SetCubemapTexture(const Ref<Texture>& cubemap) { m_CubemapTexture = cubemap; }
 		inline void SetDiffuseColor(const Vector4& color) { m_DiffuseColor = color; }
-		inline void SetRogunessColor(const float value) { m_RougnessValue = value; }
-		inline void SetMetallicColor(const float value) { m_MetallicValue = value; }
+		inline void SetRoughnessValue(const float value) { m_RougnessValue = value; }
+		inline void SetMetallicValue(const float value) { m_MetallicValue = value; }
 
 		inline const Ref<Shader>& GetShader() const { return m_Shader; }
 		inline const Ref<Texture>& GetDiffuse() const { return m_DiffuseTexture; }
@@ -37,7 +37,7 @@ namespace Firebox {
 		inline const Ref<Texture>& GetMetallic() const { return m_MetallicTexture; }
 		inline const Ref<Texture>& GetCubemap() const { return m_CubemapTexture; }
 		inline Vector4& GetDiffuseColor() { return m_DiffuseColor; }
-		inline float& GetRougnessValue() { return m_RougnessValue; }
+		inline float& GetRoughnessValue() { return m_RougnessValue; }
 		inline const float GetMetallicValue() const { return m_MetallicValue; }
 
 	private:

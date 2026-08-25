@@ -35,11 +35,7 @@ project "FireboxRuntime"
     
     files{
         "Engine/Source/Runtime/**.h",
-        "Engine/Source/Runtime/**.cpp",
-        "Engine/Shaders/GLSL/**.vert",
-        "Engine/Shaders/GLSL/**.frag",
-        "Engine/Shaders/GLSL/**.geom",
-        "Engine/Shaders/GLSL/**.comp"
+        "Engine/Source/Runtime/**.cpp"
     }
 
     includedirs{

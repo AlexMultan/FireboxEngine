@@ -66,73 +66,73 @@ void Firebox::Renderer3D::Init()
 	s_Data.RendererAPI->Init();
 
 	FB_CORE_TRACE("Creating LitShader...");
-	s_Data.LitShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/Lit.frag").string().c_str(), nullptr);
+	s_Data.LitShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/Lit.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating GBufferShader...");
-	s_Data.GBufferShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/GBuffer.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/GBuffer.frag").string().c_str(), nullptr);
+	s_Data.GBufferShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/GBuffer.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/GBuffer.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating ShadowMaskShader...");
-	s_Data.ShadowMaskShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/ShadowMask.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/ShadowMask.frag").string().c_str(), nullptr);
+	s_Data.ShadowMaskShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/ShadowMask.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/ShadowMask.frag").string().c_str(), nullptr);
 
 #pragma region Visualization Shaders
 
 	// --- Visualization Shaders ---
 	FB_CORE_TRACE("Creating AlbedoVisShader...");
-	s_Data.AlbedoVisShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/AlbedoVis.frag").string().c_str(), nullptr);
+	s_Data.AlbedoVisShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/AlbedoVis.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating NormalVisShader...");
-	s_Data.NormalVisShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/NormalVis.frag").string().c_str(), nullptr);
+	s_Data.NormalVisShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/NormalVis.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating PositionVisShader...");
-	s_Data.PositionVisShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/PositionVis.frag").string().c_str(), nullptr);
+	s_Data.PositionVisShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/PositionVis.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating RoughnessVisShader...");
-	s_Data.RoughnessVisShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/RoughnessVis.frag").string().c_str(), nullptr);
+	s_Data.RoughnessVisShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/RoughnessVis.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating MetallicVisShader...");
-	s_Data.MetallicVisShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/MetallicVis.frag").string().c_str(), nullptr);
+	s_Data.MetallicVisShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/MetallicVis.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating AmbientOcclusionVisShader...");
-	s_Data.AmbientOcclusionVisShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/AmbientOcclusionVis.frag").string().c_str(), nullptr);
+	s_Data.AmbientOcclusionVisShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/AmbientOcclusionVis.frag").string().c_str(), nullptr);
 
-	s_Data.DebugCascadeLevelsShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/DebugCascadeLevels.frag").string().c_str(), nullptr);
+	s_Data.DebugCascadeLevelsShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/DebugCascadeLevels.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating DepthShader...");
-	s_Data.DepthShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/DepthVis.frag").string().c_str(), nullptr);
+	s_Data.DepthShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/DepthVis.frag").string().c_str(), nullptr);
 
 #pragma endregion
 
 	FB_CORE_TRACE("Creating SSAOShader...");
-	s_Data.SSAOShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/SSAO.frag").string().c_str(), nullptr);
+	s_Data.SSAOShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/SSAO.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating SSAOBlurShader...");
-	s_Data.SSAOBlurShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Base.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/SSAO_Blur.frag").string().c_str(), nullptr);
+	s_Data.SSAOBlurShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/SSAO_Blur.frag").string().c_str(), nullptr);
 
 	FB_CORE_TRACE("Creating ShadowMapShader...");
-	s_Data.ShadowDepthShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/ShadowMap.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/ShadowMap.frag").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/ShadowMap.geom").string().c_str());
+	s_Data.ShadowDepthShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/ShadowMap.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/ShadowMap.frag").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/ShadowMap.geom").string().c_str());
 	s_Data.ShadowMap = Firebox::ShadowMap::Create(k_ShadowMapResolution);
 
 	s_ShadowUniformBuffer = Firebox::UniformBuffer::Create();
 
-	s_Data.LightShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Light.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/Light.frag").string().c_str(), nullptr);
-	s_Data.GridShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Grid.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/Grid.frag").string().c_str(), nullptr);
+	s_Data.LightShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Light.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/Light.frag").string().c_str(), nullptr);
+	s_Data.GridShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Grid.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/Grid.frag").string().c_str(), nullptr);
 
 	s_Data.DefaultMaterial = CreateRef<Material>(s_Data.GBufferShader);
 	s_Data.DefaultMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_FlatNormal.png").string()));

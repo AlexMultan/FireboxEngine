@@ -32,7 +32,7 @@ void FireboxEditor::MaterialEditor::DrawMaterialEditor(bool& open, const Ref<Fir
 			}
 			else
 			{
-				EditorUI::FloatParameters::Float1(&mat->GetRougnessValue(), "Roughness");
+				EditorUI::FloatParameters::Float1(&mat->GetRoughnessValue(), "Roughness");
 			}
 		}
 #if 0
