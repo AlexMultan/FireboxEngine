@@ -93,6 +93,7 @@ namespace Firebox {
 		static std::vector<SpotLightComponent>& GetSpotLights();
 		static void SetGridSize(const float& gridSize);
 		static void SetActiveViewMode(const ViewMode& viewMode);
+		static void SetPostProcessComponent(const PostProcessComponent& postProcess);
 		static void DestroyPointLight(const PointLightComponent& pointLight);
 
 		// Shader / resource access

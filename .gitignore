@@ -4,10 +4,6 @@ Intermediate/
 bin/
 bin-int/
 
-Editor/Resources/Models/SM_Fireaxe.obj
-Engine/EngineAssets/Textures/T_Fireaxe_BC.tga
-Engine/EngineAssets/Textures/T_Fireaxe_N.tga
-
 imgui.ini
 imgui*.ini
 

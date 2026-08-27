@@ -2,6 +2,7 @@
 
 #include "Components/Components.h"
 #include "JsonAlias.h"
+#include "Editor/EnginePaths.h"
 
 namespace nlohmann {
 
@@ -254,11 +255,11 @@ namespace nlohmann {
 			if (!mesh.StaticMesh) { j = nullptr; return; }
 
 			j = JSON{
-				{"Model Path", mesh.StaticMesh->GetDirectory()},
+				{"Model Path", mesh.StaticMesh->GetRelativePath()},
 				{"Materials", mesh.StaticMesh->GetMaterials()}
 			};
 		}
-
+		
 		static void from_json(const JSON& j, StaticMeshComponent& mesh)
 		{
 			if (j.is_null()) { mesh.StaticMesh = nullptr; return; }
@@ -277,6 +278,61 @@ namespace nlohmann {
 					}
 				}
 			}
+		}
+	};
+
+	template<>
+	struct adl_serializer<PostProcessComponent>
+	{
+		static void to_json(JSON& j, const PostProcessComponent& ppc)
+		{
+			j = JSON{
+				{"Gamma", ppc.Gamma},
+				{"Contrast", ppc.Contrast},
+				{"Saturation", ppc.Saturation},
+				{"Gain", ppc.Gain},
+				{"Temperature", ppc.Temperature},
+				{"Tint", ppc.Tint},
+				{"BloomIntensity", ppc.BloomIntensity},
+				{"Exposure", ppc.Exposure},
+				{"VignetteIntensity", ppc.VignetteIntensity},
+				{"Sharpen", ppc.Sharpen},
+				{"ChromaticAbberrationIntensity", ppc.ChromaticAbberrationIntensity},
+				{"Slope", ppc.Slope},
+				{"Toe", ppc.Toe},
+				{"AmbientOcclusionKernelSize", ppc.AmbientOcclusionKernelSize},
+				{"AmbientOcclusionIntensity", ppc.AmbientOcclusionIntensity},
+				{"AmbientOcclusionRadius", ppc.AmbientOcclusionRadius},
+				{"AmbientOcclusionBias", ppc.AmbientOcclusionBias},
+				{"EnableSSAO", ppc.EnableSSAO},
+				{"MotionBlurIntensity", ppc.MotionBlurIntensity},
+				{"InfiniteExtent", ppc.InfiniteExtent}
+			};
+		}
+
+		static void from_json(const JSON& j, PostProcessComponent& ppc)
+		{
+			j.at("Gamma").get_to(ppc.Gamma);
+			j.at("Contrast").get_to(ppc.Contrast);
+			j.at("Saturation").get_to(ppc.Saturation);
+			j.at("Gain").get_to(ppc.Gain);
+			j.at("Temperature").get_to(ppc.Temperature);
+			j.at("Tint").get_to(ppc.Tint);
+			j.at("BloomIntensity").get_to(ppc.BloomIntensity);
+			j.at("Exposure").get_to(ppc.Exposure);
+			j.at("VignetteIntensity").get_to(ppc.VignetteIntensity);
+			j.at("Sharpen").get_to(ppc.Sharpen);
+			j.at("ChromaticAbberrationIntensity").get_to(ppc.ChromaticAbberrationIntensity);
+			j.at("Slope").get_to(ppc.Slope);
+			j.at("Toe").get_to(ppc.Toe);
+			j.at("AmbientOcclusionKernelSize").get_to(ppc.AmbientOcclusionKernelSize);
+			j.at("AmbientOcclusionIntensity").get_to(ppc.AmbientOcclusionIntensity);
+			j.at("AmbientOcclusionRadius").get_to(ppc.AmbientOcclusionRadius);
+			j.at("AmbientOcclusionBias").get_to(ppc.AmbientOcclusionBias);
+			j.at("EnableSSAO").get_to(ppc.EnableSSAO);
+			j.at("MotionBlurIntensity").get_to(ppc.MotionBlurIntensity);
+			j.at("InfiniteExtent").get_to(ppc.InfiniteExtent);
+			Firebox::Renderer3D::SetPostProcessComponent(ppc);
 		}
 	};
 }

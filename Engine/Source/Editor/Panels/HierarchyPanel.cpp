@@ -76,7 +76,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 				{
 					Firebox::Entity planeEntity = scene->CreateEntity("Plane");
 					m_Context.SetSelectedEntity(planeEntity);
-					Ref<Firebox::StaticMesh> planeMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Plane.glb").string());
+					Ref<Firebox::StaticMesh> planeMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Plane.glb");
 					planeEntity.AddComponent<StaticMeshComponent>(planeMesh);
 				}
 
@@ -84,7 +84,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 				{
 					Firebox::Entity cubeEntity = scene->CreateEntity("Cube");
 					m_Context.SetSelectedEntity(cubeEntity);
-					Ref<Firebox::StaticMesh> cubeMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Cube.glb").string());
+					Ref<Firebox::StaticMesh> cubeMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Cube.glb");
 					cubeEntity.AddComponent<StaticMeshComponent>(cubeMesh);
 				}
 
@@ -92,7 +92,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 				{
 					Firebox::Entity sphereEntity = scene->CreateEntity("Sphere");
 					m_Context.SetSelectedEntity(sphereEntity);
-					Ref<Firebox::StaticMesh> sphereMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Sphere.glb").string());
+					Ref<Firebox::StaticMesh> sphereMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Sphere.glb");
 					sphereEntity.AddComponent<StaticMeshComponent>(sphereMesh);
 				}
 
@@ -100,7 +100,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 				{
 					Firebox::Entity cylinderEntity = scene->CreateEntity("Cylinder");
 					m_Context.SetSelectedEntity(cylinderEntity);
-					Ref<Firebox::StaticMesh> cylinderMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Cylinder.obj").string());
+					Ref<Firebox::StaticMesh> cylinderMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Cylinder.obj");
 					cylinderEntity.AddComponent<StaticMeshComponent>(cylinderMesh);
 				}
 
@@ -108,7 +108,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 				{
 					Firebox::Entity coneEntity = scene->CreateEntity("Cone");
 					m_Context.SetSelectedEntity(coneEntity);
-					Ref<Firebox::StaticMesh> coneMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Cone.glb").string());
+					Ref<Firebox::StaticMesh> coneMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Cone.glb");
 					coneEntity.AddComponent<StaticMeshComponent>(coneMesh);
 				}
 
@@ -116,7 +116,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 				{
 					Firebox::Entity monkeyEntity = scene->CreateEntity("Monkey");
 					m_Context.SetSelectedEntity(monkeyEntity);
-					Ref<Firebox::StaticMesh> monkeyMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Monkey.glb").string());
+					Ref<Firebox::StaticMesh> monkeyMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Monkey.glb");
 					monkeyEntity.AddComponent<StaticMeshComponent>(monkeyMesh);
 				}
 				ImGui::EndMenu();

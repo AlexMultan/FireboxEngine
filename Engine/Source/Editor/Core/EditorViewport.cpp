@@ -71,47 +71,47 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_EditorCamera->SetInputEnabled(false);
     m_EditorCamera->SetPosition({ 0.0f, 2.0f, 1.0f });
 
-    m_BunnyModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_StanfordBunny.obj").string());
+    m_BunnyModel = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_StanfordBunny.obj");
     m_BunnyEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Bunny");
     m_BunnyEntity.AddComponent<StaticMeshComponent>(m_BunnyModel);
     m_BunnyEntity.GetComponent<TransformComponent>().Position.y = 1.0f;
     m_BunnyEntity.GetComponent<TransformComponent>().Position.z = -1.0f;
     m_BunnyEntity.GetComponent<TransformComponent>().Scale = { 3.0f, 3.0f, 3.0f };
 
-    m_JerrycanMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Jerrycan.gltf").string());
+    m_JerrycanMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Jerrycan.gltf");
     m_JerrycanMaterial = CreateRef<Firebox::Material>();
-    m_JerrycanMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_BC.png").string()));
-    m_JerrycanMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_N.png").string()));
-    m_JerrycanMaterial->SetRoughnessTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_R.png").string()));
-    m_JerrycanMaterial->SetMetallicTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_M.png").string()));
+    m_JerrycanMaterial->SetDiffuseTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/T_Jerrycan_BC.png"));
+    m_JerrycanMaterial->SetNormalTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/T_Jerrycan_N.png"));
+    m_JerrycanMaterial->SetRoughnessTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/T_Jerrycan_R.png"));
+    m_JerrycanMaterial->SetMetallicTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/T_Jerrycan_M.png"));
     m_JerrycanMesh->SetMaterial(0, m_JerrycanMaterial);
     m_JerrycanEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Jerrycan");
     m_JerrycanEntity.AddComponent<StaticMeshComponent>(m_JerrycanMesh);
     m_JerrycanEntity.GetComponent<TransformComponent>().Position.y = 0.5f;
 
-    m_GunMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/GLOCK19.glb").string());
+    m_GunMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/GLOCK19.glb");
     m_GunMaterial = CreateRef<Firebox::Material>();
-    m_GunMaterial->SetDiffuseTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/glock_4K_BaseColor.png").string()));
-    m_GunMaterial->SetNormalTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/glock_4K_Normal.png").string()));
-    m_GunMaterial->SetRoughnessTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/glock_4K_Roughness.png").string()));
-    m_GunMaterial->SetMetallicTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/glock_4K_Metallic.png").string()));
+    m_GunMaterial->SetDiffuseTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/glock_4K_BaseColor.png"));
+    m_GunMaterial->SetNormalTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/glock_4K_Normal.png"));
+    m_GunMaterial->SetRoughnessTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/glock_4K_Roughness.png"));
+    m_GunMaterial->SetMetallicTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/glock_4K_Metallic.png"));
     m_GunMesh->SetMaterial(0, m_GunMaterial);
     m_GunEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Gun");
     m_GunEntity.AddComponent<StaticMeshComponent>(m_GunMesh);
 
-    m_RifleMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_AKM.glb").string());
+    m_RifleMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_AKM.glb");
 
     m_RifleMaterial = CreateRef<Firebox::Material>();
-    m_RifleMaterial->SetDiffuseTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/akm_Base_Color.tga").string()));
-    m_RifleMaterial->SetNormalTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/akm_Normal_OpenGL.tga").string()));
-    m_RifleMaterial->SetRoughnessTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/akm_Roughness.tga").string()));
-    m_RifleMaterial->SetMetallicTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/akm_Metallic.tga").string()));
+    m_RifleMaterial->SetDiffuseTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/akm_Base_Color.tga"));
+    m_RifleMaterial->SetNormalTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/akm_Normal_OpenGL.tga"));
+    m_RifleMaterial->SetRoughnessTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/akm_Roughness.tga"));
+    m_RifleMaterial->SetMetallicTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/akm_Metallic.tga"));
       
     m_RifleMaterialMag = CreateRef<Firebox::Material>();
-    m_RifleMaterialMag->SetDiffuseTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/magazine_Base_Color.tga").string()));
-    m_RifleMaterialMag->SetNormalTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/magazine_Normal_OpenGL.tga").string()));
-    m_RifleMaterialMag->SetRoughnessTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/magazine_Roughness.tga").string()));
-    m_RifleMaterialMag->SetMetallicTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/magazine_Metallic.tga").string()));
+    m_RifleMaterialMag->SetDiffuseTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/magazine_Base_Color.tga"));
+    m_RifleMaterialMag->SetNormalTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/magazine_Normal_OpenGL.tga"));
+    m_RifleMaterialMag->SetRoughnessTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/magazine_Roughness.tga"));
+    m_RifleMaterialMag->SetMetallicTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/magazine_Metallic.tga"));
 
     m_RifleMesh->SetMaterial(0, m_RifleMaterial);
     m_RifleMesh->SetMaterial(1, m_RifleMaterialMag);

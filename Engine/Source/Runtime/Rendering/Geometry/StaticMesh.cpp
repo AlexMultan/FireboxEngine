@@ -2,12 +2,14 @@
 #include "Rendering/Renderer3D.h"
 #include "Utils/AssimpHelpers.h"
 #include "Utils/Assert.h"
+#include "Editor/EnginePaths.h"
 
 namespace Firebox {
 
 	StaticMesh::StaticMesh(const String& path)
 	{
-		LoadModel(path);
+		m_RelativePath = path;
+		LoadModel(EngineContent::GetRoot(path).string());
 	}
 
 	void StaticMesh::SetMaterial(size_t slotIndex, const Ref<Material>& material)

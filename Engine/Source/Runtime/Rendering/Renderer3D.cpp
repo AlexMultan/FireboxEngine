@@ -42,6 +42,8 @@ Ref<Firebox::Shader> Firebox::Renderer3D::GetGridShader() { return s_Data.GridSh
 void Firebox::Renderer3D::SetGridSize(const float& gridSize) { s_GridSize = gridSize; }
 void Firebox::Renderer3D::SetActiveViewMode(const ViewMode& viewMode) { s_ViewMode = viewMode; }
 
+void Firebox::Renderer3D::SetPostProcessComponent(const PostProcessComponent& postProcess) { s_Data.PostProcessing = postProcess; }
+
 void Firebox::Renderer3D::DestroyPointLight(const PointLightComponent& pointLight)
 {
 	auto it = std::find(s_Data.PointLights.begin(), s_Data.PointLights.end(), pointLight);
@@ -135,7 +137,7 @@ void Firebox::Renderer3D::Init()
 		Firebox::EngineContent::Shaders("GLSL/Grid.frag").string().c_str(), nullptr);
 
 	s_Data.DefaultMaterial = CreateRef<Material>(s_Data.GBufferShader);
-	s_Data.DefaultMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_FlatNormal.png").string()));
+	s_Data.DefaultMaterial->SetNormalTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/T_FlatNormal.png"));
 
 	s_Data.MainFramebuffer = Firebox::Framebuffer::Create({ k_DefaultFramebufferWidth, k_DefaultFramebufferHeight });
 

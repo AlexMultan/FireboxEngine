@@ -30,24 +30,19 @@ namespace nlohmann {
 				}
 #endif
 				if (registry.any_of<DirectionalLightComponent>(handle))
-				{
 					entityJson["Directional Light"] = registry.get<DirectionalLightComponent>(handle);
-				}
 
 				if (registry.any_of<PointLightComponent>(handle))
-				{
 					entityJson["Point Light"] = registry.get<PointLightComponent>(handle);
-				}
 
 				if (registry.any_of<SpotLightComponent>(handle))
-				{
 					entityJson["Spot Light"] = registry.get<SpotLightComponent>(handle);
-				}
 
 				if (registry.any_of<StaticMeshComponent>(handle))
-				{
 					entityJson["Static Mesh"] = registry.get<StaticMeshComponent>(handle);
-				}
+
+				if (registry.any_of<PostProcessComponent>(handle))
+					entityJson["Post Processing"] = registry.get<PostProcessComponent>(handle);
 
 				entitiesJson.push_back(entityJson);
 			}
@@ -71,24 +66,19 @@ namespace nlohmann {
 				}
 #endif
 				if (entityJson.contains("Directional Light"))
-				{
 					e.AddComponent<DirectionalLightComponent>(entityJson.at("Directional Light").get<DirectionalLightComponent>());
-				}
 
 				if (entityJson.contains("Point Light"))
-				{
 					e.AddComponent<PointLightComponent>(entityJson.at("Point Light").get<PointLightComponent>());
-				}
 
 				if (entityJson.contains("Spot Light"))
-				{
 					e.AddComponent<SpotLightComponent>(entityJson.at("Spot Light").get<SpotLightComponent>());
-				}
 
 				if (entityJson.contains("Static Mesh"))
-				{
 					e.AddComponent<StaticMeshComponent>(entityJson.at("Static Mesh").get<StaticMeshComponent>());
-				}
+
+				if (entityJson.contains("Post Processing"))
+					e.AddComponent<PostProcessComponent>(entityJson.at("Post Processing").get<PostProcessComponent>());
 			}
 		}
 	};

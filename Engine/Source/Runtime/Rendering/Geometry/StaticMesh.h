@@ -33,6 +33,7 @@ namespace Firebox {
 		inline const std::vector<Ref<Material>>& GetMaterials() const { return m_Materials; }
 		inline void SetMaterials(const std::vector<Ref<Material>>& materials) { m_Materials = materials; }
 		inline const String& GetDirectory() const { return m_Directory; }
+		inline const String& GetRelativePath() const { return m_RelativePath; }
 		inline auto& GetBoneInfoMap() { return m_BoneInfoMap; }
 		inline int& GetBoneCount() { return m_BoneCounter; }
 
@@ -49,6 +50,7 @@ namespace Firebox {
 		std::vector<Ref<Mesh>> m_Meshes;
 		std::vector<Ref<Material>> m_Materials;
 		String m_Directory;
+		String m_RelativePath;
 		LoadedTextures m_LoadedTextures;
 		std::map<String, BoneInfo> m_BoneInfoMap;
 		int m_BoneCounter;

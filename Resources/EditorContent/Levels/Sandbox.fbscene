@@ -2,7 +2,92 @@
     "Scene": "Sandbox",
     "Entities": [
         {
-            "Entity": 16809426843921011561,
+            "Entity": 17224787024434977360,
+            "Tag": "Plane",
+            "Transform": {
+                "Position": {
+                    "X": 0.0,
+                    "Y": 0.0,
+                    "Z": 0.0
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 3.0999999046325684,
+                    "Y": 3.0999999046325684,
+                    "Z": 3.0999999046325684
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "Resources/EditorContent/Models/SM_Plane.glb",
+                "Materials": [
+                    {
+                        "Diffuse": null,
+                        "Roughness": null,
+                        "Metallic": null,
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
+                        },
+                        "Diffuse Color": {
+                            "R": 0.699999988079071,
+                            "G": 0.699999988079071,
+                            "B": 0.699999988079071,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.30000001192092896,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        },
+        {
+            "Entity": 8899713187314751498,
+            "Tag": "Post Process Volume",
+            "Transform": {
+                "Position": {
+                    "X": 0.0,
+                    "Y": 0.0,
+                    "Z": 0.0
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 1.0,
+                    "Y": 1.0,
+                    "Z": 1.0
+                }
+            },
+            "Post Processing": {
+                "Gamma": 1.5,
+                "Contrast": 1.0,
+                "Saturation": 1.0,
+                "Gain": 1.0,
+                "Temperature": 6500.0,
+                "Tint": 0.0,
+                "BloomIntensity": 0.75,
+                "Exposure": 1.0,
+                "VignetteIntensity": 0.4000000059604645,
+                "Sharpen": 0.0,
+                "ChromaticAbberrationIntensity": 0.0,
+                "Slope": 0.8999999761581421,
+                "Toe": 0.5,
+                "AmbientOcclusionKernelSize": 64,
+                "AmbientOcclusionIntensity": 0.5,
+                "AmbientOcclusionRadius": 0.5,
+                "AmbientOcclusionBias": 0.02500000037252903,
+                "EnableSSAO": true,
+                "MotionBlurIntensity": 0.5,
+                "InfiniteExtent": true
+            }
+        },
+        {
+            "Entity": 14968893214841038690,
             "Tag": "Directional Light",
             "Transform": {
                 "Position": {
@@ -36,40 +121,40 @@
             }
         },
         {
-            "Entity": 1427093882388317281,
+            "Entity": 16834480986861742121,
             "Tag": "Rifle",
             "Transform": {
                 "Position": {
-                    "X": -1.100000023841858,
-                    "Y": 1.399999976158142,
-                    "Z": -0.30000001192092896
+                    "X": 0.800000011920929,
+                    "Y": 1.3000000715255737,
+                    "Z": 0.0
                 },
                 "Rotation": {
-                    "X": -86.08094787597656,
-                    "Y": 88.29998779296875,
-                    "Z": 179.9996337890625
+                    "X": 0.0,
+                    "Y": 82.02775573730469,
+                    "Z": -88.79956817626953
                 },
                 "Scale": {
-                    "X": 0.9999974370002747,
-                    "Y": 0.9999966621398926,
-                    "Z": 0.999990701675415
+                    "X": 0.9999988675117493,
+                    "Y": 0.9999977350234985,
+                    "Z": 1.0
                 }
             },
             "Static Mesh": {
-                "Model Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Models\\SM_AKM.glb",
+                "Model Path": "Resources/EditorContent/Models/SM_AKM.glb",
                 "Materials": [
                     {
                         "Diffuse": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Textures\\akm_Base_Color.tga"
+                            "Path": "Resources/EditorContent/Textures/akm_Base_Color.tga"
                         },
                         "Roughness": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Textures\\akm_Roughness.tga"
+                            "Path": "Resources/EditorContent/Textures/akm_Roughness.tga"
                         },
                         "Metallic": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Textures\\akm_Metallic.tga"
+                            "Path": "Resources/EditorContent/Textures/akm_Metallic.tga"
                         },
                         "Normal": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Textures\\akm_Normal_OpenGL.tga"
+                            "Path": "Resources/EditorContent/Textures/akm_Normal_OpenGL.tga"
                         },
                         "Diffuse Color": {
                             "R": 0.699999988079071,
@@ -82,16 +167,16 @@
                     },
                     {
                         "Diffuse": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Textures\\magazine_Base_Color.tga"
+                            "Path": "Resources/EditorContent/Textures/magazine_Base_Color.tga"
                         },
                         "Roughness": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Textures\\magazine_Roughness.tga"
+                            "Path": "Resources/EditorContent/Textures/magazine_Roughness.tga"
                         },
                         "Metallic": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Textures\\magazine_Metallic.tga"
+                            "Path": "Resources/EditorContent/Textures/magazine_Metallic.tga"
                         },
                         "Normal": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Textures\\magazine_Normal_OpenGL.tga"
+                            "Path": "Resources/EditorContent/Textures/magazine_Normal_OpenGL.tga"
                         },
                         "Diffuse Color": {
                             "R": 0.699999988079071,
@@ -106,13 +191,13 @@
             }
         },
         {
-            "Entity": 2448028445768350393,
+            "Entity": 7271780492193338915,
             "Tag": "Gun",
             "Transform": {
                 "Position": {
-                    "X": -0.30000001192092896,
-                    "Y": 1.3000000715255737,
-                    "Z": -0.10000000149011612
+                    "X": -0.5,
+                    "Y": 1.4000000953674316,
+                    "Z": 0.0
                 },
                 "Rotation": {
                     "X": 0.0,
@@ -126,20 +211,20 @@
                 }
             },
             "Static Mesh": {
-                "Model Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Models\\GLOCK19.glb",
+                "Model Path": "Resources/EditorContent/Models/GLOCK19.glb",
                 "Materials": [
                     {
                         "Diffuse": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Textures\\glock_4K_BaseColor.png"
+                            "Path": "Resources/EditorContent/Textures/glock_4K_BaseColor.png"
                         },
                         "Roughness": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Textures\\glock_4K_Roughness.png"
+                            "Path": "Resources/EditorContent/Textures/glock_4K_Roughness.png"
                         },
                         "Metallic": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Textures\\glock_4K_Metallic.png"
+                            "Path": "Resources/EditorContent/Textures/glock_4K_Metallic.png"
                         },
                         "Normal": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Textures\\glock_4K_Normal.png"
+                            "Path": "Resources/EditorContent/Textures/glock_4K_Normal.png"
                         },
                         "Diffuse Color": {
                             "R": 0.699999988079071,
@@ -154,13 +239,13 @@
             }
         },
         {
-            "Entity": 14279554494970945050,
+            "Entity": 15120808216225267792,
             "Tag": "Jerrycan",
             "Transform": {
                 "Position": {
-                    "X": 0.0,
-                    "Y": 0.5,
-                    "Z": 0.0
+                    "X": 1.3000000715255737,
+                    "Y": 0.09999999403953552,
+                    "Z": -1.100000023841858
                 },
                 "Rotation": {
                     "X": 0.0,
@@ -174,20 +259,20 @@
                 }
             },
             "Static Mesh": {
-                "Model Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Models\\SM_Jerrycan.gltf",
+                "Model Path": "Resources/EditorContent/Models/SM_Jerrycan.gltf",
                 "Materials": [
                     {
                         "Diffuse": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EngineContent\\Textures\\T_Jerrycan_BC.png"
+                            "Path": "Resources/EditorContent/Textures/T_Jerrycan_BC.png"
                         },
                         "Roughness": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EngineContent\\Textures\\T_Jerrycan_R.png"
+                            "Path": "Resources/EditorContent/Textures/T_Jerrycan_R.png"
                         },
                         "Metallic": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EngineContent\\Textures\\T_Jerrycan_M.png"
+                            "Path": "Resources/EditorContent/Textures/T_Jerrycan_M.png"
                         },
                         "Normal": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EngineContent\\Textures\\T_Jerrycan_N.png"
+                            "Path": "Resources/EditorContent/Textures/T_Jerrycan_N.png"
                         },
                         "Diffuse Color": {
                             "R": 0.699999988079071,
@@ -202,12 +287,12 @@
             }
         },
         {
-            "Entity": 1806151151719497686,
+            "Entity": 11434276453724236518,
             "Tag": "Bunny",
             "Transform": {
                 "Position": {
                     "X": 0.0,
-                    "Y": 1.0,
+                    "Y": 0.3999999761581421,
                     "Z": -1.0
                 },
                 "Rotation": {
@@ -222,22 +307,22 @@
                 }
             },
             "Static Mesh": {
-                "Model Path": "D:\\dev\\FireboxEngine\\Resources\\EditorContent\\Models\\SM_StanfordBunny.obj",
+                "Model Path": "Resources/EditorContent/Models/SM_StanfordBunny.obj",
                 "Materials": [
                     {
                         "Diffuse": null,
                         "Roughness": null,
                         "Metallic": null,
                         "Normal": {
-                            "Path": "D:\\dev\\FireboxEngine\\Resources\\EngineContent\\Textures\\T_FlatNormal.png"
+                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
                         },
                         "Diffuse Color": {
-                            "R": 0.3,
-                            "G": 0.3,
-                            "B": 0.3,
+                            "R": 0.699999988079071,
+                            "G": 0.699999988079071,
+                            "B": 0.699999988079071,
                             "A": 1.0
                         },
-                        "Roughness Value": 0.15,
+                        "Roughness Value": 0.30000001192092896,
                         "Metallic Value": 0.0
                     }
                 ]

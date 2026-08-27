@@ -5,7 +5,7 @@
 #include "Editor/EnginePaths.h"
 
 FireboxEditor::AssetBrowser::AssetBrowser(EditorContext& context) : m_CurrentDirectory(FireboxEditor::EditorContent::GetRootPath()), 
-    m_EditorDirectory(FireboxEditor::EditorContent::GetRootPath()), m_EngineDirectory(Firebox::EngineContent::GetRootPath()), m_Context(context)
+    m_EditorDirectory(FireboxEditor::EditorContent::GetRootPath()), m_EngineDirectory(Firebox::EngineContent::GetEngineRootPath()), m_Context(context)
 {
     m_Context.AddDirectorySelectionListener([this](const fs::path& directory)
         {
@@ -15,7 +15,7 @@ FireboxEditor::AssetBrowser::AssetBrowser(EditorContext& context) : m_CurrentDir
 
 FireboxEditor::AssetBrowser::AssetBrowser(const char* name, EditorContext& context) : m_Name(name), 
     m_CurrentDirectory(FireboxEditor::EditorContent::GetRootPath()), m_EditorDirectory(FireboxEditor::EditorContent::GetRootPath()), 
-    m_EngineDirectory(Firebox::EngineContent::GetRootPath()), m_Context(context)
+    m_EngineDirectory(Firebox::EngineContent::GetEngineRootPath()), m_Context(context)
 {
     m_Context.AddDirectorySelectionListener([this](const fs::path& directory)
         {
