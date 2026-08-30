@@ -4,7 +4,7 @@
 
 namespace ImGui {
 
-    bool ButtonCenteredOnLine(const char* label, float alignment = 0.5f)
+    inline bool ButtonCenteredOnLine(const char* label, float alignment = 0.5f)
     {
         ImGuiStyle& style = ImGui::GetStyle();
 
@@ -18,7 +18,7 @@ namespace ImGui {
         return ImGui::Button(label);
     }
 
-    void TextDisabledCenteredOnLine(const char* text, float alignment = 0.5f, float textSize = 1.0f)
+    inline void TextDisabledCenteredOnLine(const char* text, float alignment = 0.5f, float textSize = 1.0f)
     {
         ImGuiStyle& style = ImGui::GetStyle();
 

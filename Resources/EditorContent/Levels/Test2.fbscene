@@ -1,87 +1,24 @@
 {
-    "Scene": "Sandbox",
+    "Scene": "Test2",
     "Entities": [
         {
-            "Entity": 1969929723509927782,
-            "Tag": "Skybox",
-            "Transform": {
-                "Position": {
-                    "X": 0.0,
-                    "Y": 0.0,
-                    "Z": 0.0
-                },
-                "Rotation": {
-                    "X": 0.0,
-                    "Y": -0.0,
-                    "Z": 0.0
-                },
-                "Scale": {
-                    "X": 1.0,
-                    "Y": 1.0,
-                    "Z": 1.0
-                }
-            }
-        },
-        {
-            "Entity": 11434276453724236518,
-            "Tag": "Bunny",
-            "Transform": {
-                "Position": {
-                    "X": 0.0,
-                    "Y": 0.3999999761581421,
-                    "Z": -1.0
-                },
-                "Rotation": {
-                    "X": 0.0,
-                    "Y": -0.0,
-                    "Z": 0.0
-                },
-                "Scale": {
-                    "X": 3.0,
-                    "Y": 3.0,
-                    "Z": 3.0
-                }
-            },
-            "Static Mesh": {
-                "Model Path": "Resources/EditorContent/Models/SM_StanfordBunny.obj",
-                "Materials": [
-                    {
-                        "Diffuse": null,
-                        "Roughness": null,
-                        "Metallic": null,
-                        "Normal": {
-                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
-                        },
-                        "Diffuse Color": {
-                            "R": 0.699999988079071,
-                            "G": 0.699999988079071,
-                            "B": 0.699999988079071,
-                            "A": 1.0
-                        },
-                        "Roughness Value": 0.30000001192092896,
-                        "Metallic Value": 0.0
-                    }
-                ]
-            }
-        },
-        {
-            "Entity": 15120808216225267792,
+            "Entity": 12029289342829080660,
             "Tag": "Jerrycan",
             "Transform": {
                 "Position": {
-                    "X": 1.3000000715255737,
-                    "Y": 0.09999999403953552,
-                    "Z": -1.100000023841858
+                    "X": -1.399999976158142,
+                    "Y": 0.5,
+                    "Z": -0.9000000357627869
                 },
                 "Rotation": {
                     "X": 0.0,
-                    "Y": -0.0,
+                    "Y": -34.90017318725586,
                     "Z": 0.0
                 },
                 "Scale": {
-                    "X": 1.0,
+                    "X": 0.9999972581863403,
                     "Y": 1.0,
-                    "Z": 1.0
+                    "Z": 0.9999972581863403
                 }
             },
             "Static Mesh": {
@@ -113,12 +50,12 @@
             }
         },
         {
-            "Entity": 7271780492193338915,
+            "Entity": 11260695710489276201,
             "Tag": "Gun",
             "Transform": {
                 "Position": {
-                    "X": -0.5,
-                    "Y": 1.4000000953674316,
+                    "X": 0.699999988079071,
+                    "Y": 1.600000023841858,
                     "Z": 0.0
                 },
                 "Rotation": {
@@ -127,9 +64,9 @@
                     "Z": 0.0
                 },
                 "Scale": {
-                    "X": 1.0,
-                    "Y": 1.0,
-                    "Z": 1.0
+                    "X": 1.7000000476837158,
+                    "Y": 1.7000000476837158,
+                    "Z": 1.7000000476837158
                 }
             },
             "Static Mesh": {
@@ -161,23 +98,23 @@
             }
         },
         {
-            "Entity": 16834480986861742121,
+            "Entity": 5147966754574694008,
             "Tag": "Rifle",
             "Transform": {
                 "Position": {
-                    "X": 1.0213572978973389,
-                    "Y": 1.0758558511734009,
-                    "Z": -7.062133227009326e-05
+                    "X": 0.40000009536743164,
+                    "Y": 1.5,
+                    "Z": -0.4000000059604645
                 },
                 "Rotation": {
-                    "X": 0.0,
-                    "Y": 82.02775573730469,
-                    "Z": -88.79956817626953
+                    "X": -179.99989318847656,
+                    "Y": 83.59999084472656,
+                    "Z": 92.2994384765625
                 },
                 "Scale": {
-                    "X": 0.9999988675117493,
-                    "Y": 0.9999977350234985,
-                    "Z": 1.0
+                    "X": 0.9999980330467224,
+                    "Y": 0.9999982118606567,
+                    "Z": 0.9999957084655762
                 }
             },
             "Static Mesh": {
@@ -231,7 +168,7 @@
             }
         },
         {
-            "Entity": 14968893214841038690,
+            "Entity": 11528784523671865542,
             "Tag": "Directional Light",
             "Transform": {
                 "Position": {
@@ -265,56 +202,13 @@
             }
         },
         {
-            "Entity": 8899713187314751498,
-            "Tag": "Post Process Volume",
+            "Entity": 10251738822040949125,
+            "Tag": "Bunny",
             "Transform": {
                 "Position": {
                     "X": 0.0,
-                    "Y": 0.0,
-                    "Z": 0.0
-                },
-                "Rotation": {
-                    "X": 0.0,
-                    "Y": -0.0,
-                    "Z": 0.0
-                },
-                "Scale": {
-                    "X": 1.0,
                     "Y": 1.0,
-                    "Z": 1.0
-                }
-            },
-            "Post Processing": {
-                "Gamma": 1.5,
-                "Contrast": 1.0,
-                "Saturation": 1.0,
-                "Gain": 1.0,
-                "Temperature": 6500.0,
-                "Tint": 0.0,
-                "BloomIntensity": 0.75,
-                "Exposure": 1.0,
-                "VignetteIntensity": 0.4000000059604645,
-                "Sharpen": 0.0,
-                "ChromaticAbberrationIntensity": 0.0,
-                "Slope": 0.8999999761581421,
-                "Toe": 0.5,
-                "AmbientOcclusionKernelSize": 64,
-                "AmbientOcclusionIntensity": 0.5,
-                "AmbientOcclusionRadius": 0.5,
-                "AmbientOcclusionBias": 0.02500000037252903,
-                "EnableSSAO": true,
-                "MotionBlurIntensity": 0.5,
-                "InfiniteExtent": true
-            }
-        },
-        {
-            "Entity": 17224787024434977360,
-            "Tag": "Plane",
-            "Transform": {
-                "Position": {
-                    "X": 0.0,
-                    "Y": 0.0,
-                    "Z": 0.0
+                    "Z": -1.0
                 },
                 "Rotation": {
                     "X": 0.0,
@@ -322,13 +216,13 @@
                     "Z": 0.0
                 },
                 "Scale": {
-                    "X": 3.0999999046325684,
-                    "Y": 3.0999999046325684,
-                    "Z": 3.0999999046325684
+                    "X": 3.0,
+                    "Y": 3.0,
+                    "Z": 3.0
                 }
             },
             "Static Mesh": {
-                "Model Path": "Resources/EditorContent/Models/SM_Plane.glb",
+                "Model Path": "Resources/EditorContent/Models/SM_StanfordBunny.obj",
                 "Materials": [
                     {
                         "Diffuse": null,
@@ -338,9 +232,9 @@
                             "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
                         },
                         "Diffuse Color": {
-                            "R": 0.699999988079071,
-                            "G": 0.699999988079071,
-                            "B": 0.699999988079071,
+                            "R": 0.4285714030265808,
+                            "G": 0.7551020383834839,
+                            "B": 1.0,
                             "A": 1.0
                         },
                         "Roughness Value": 0.30000001192092896,

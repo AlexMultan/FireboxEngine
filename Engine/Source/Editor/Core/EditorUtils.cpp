@@ -8,16 +8,22 @@ uint FireboxEditor::EditorUtils::s_MeshIcon = 0;
 uint FireboxEditor::EditorUtils::s_DirectoryIcon = 0;
 uint FireboxEditor::EditorUtils::s_FileIcon = 0;
 uint FireboxEditor::EditorUtils::s_ReturnIcon = 0;
+uint FireboxEditor::EditorUtils::s_EmptySceneThumbnail = 0;
+uint FireboxEditor::EditorUtils::s_BasicSceneThumbnail = 0;
 ImFont* FireboxEditor::EditorUtils::s_SelectedEntityNodeFont = nullptr;
 ImFont* FireboxEditor::EditorUtils::s_TransformAxesFont = nullptr;
 ImFont* FireboxEditor::EditorUtils::s_TransformValuesFont = nullptr;
+ImGuiIO* FireboxEditor::EditorUtils::s_ImGuiIO = nullptr;
 
-void FireboxEditor::EditorUtils::Init(const ImGuiIO* io)
+void FireboxEditor::EditorUtils::Init(ImGuiIO* io)
 {
+	s_ImGuiIO = io;
 	s_MeshIcon = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_MeshIcon.png").string())->GetTextureID();
 	s_DirectoryIcon = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_DirectoryIcon.png").string())->GetTextureID();
 	s_FileIcon = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_FileIcon.png").string())->GetTextureID();
 	s_ReturnIcon = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_ReturnIcon.png").string())->GetTextureID();
+	s_EmptySceneThumbnail = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_EmptySceneThumbnail.png").string())->GetTextureID();
+	s_BasicSceneThumbnail = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_BasicSceneThumbnail.png").string())->GetTextureID();
 	s_SelectedEntityNodeFont = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/Geist/static/Geist-Bold.ttf").string().c_str(), 17.0f);
 	s_TransformAxesFont = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/Geist_Mono/static/GeistMono-SemiBold.ttf").string().c_str(), 16.0f);
 	s_TransformValuesFont = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/Ubuntu_Sans/static/UbuntuSans_SemiCondensed-Medium.ttf").string().c_str(), 17.0f);
@@ -56,4 +62,19 @@ const uint FireboxEditor::EditorUtils::GetFileIcon()
 const uint FireboxEditor::EditorUtils::GetReturnIcon()
 {
 	return s_ReturnIcon;
+}
+
+const uint FireboxEditor::EditorUtils::GetEmptySceneThumbnail()
+{
+	return s_EmptySceneThumbnail;
+}
+
+const uint FireboxEditor::EditorUtils::GetBasicSceneThumbnail()
+{
+	return s_BasicSceneThumbnail;
+}
+
+const ImVec2& FireboxEditor::EditorUtils::GetScreenSize()
+{
+	return s_ImGuiIO->DisplaySize;
 }

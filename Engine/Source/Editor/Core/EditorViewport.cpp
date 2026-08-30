@@ -36,9 +36,9 @@ void FireboxEditor::EditorViewport::OnAttach()
     io->ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
     io->ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
-    io->FontDefault = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/SourceCodePro/static/SourceCodePro-Regular.ttf").string().c_str(), 16.0f);
+    io->FontDefault = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/RobotoMono/RobotoMono-Medium.ttf").string().c_str(), 16.0f);
 
-    ImGui::FireboxEditorStyleClassic();
+    ImGui::FireboxStyleColorDark();
 
     Firebox::Window& window = Firebox::Application::Get().GetWindow();
     SDL_Window* sdlWindow = window.GetSDLWindow();
@@ -47,17 +47,10 @@ void FireboxEditor::EditorViewport::OnAttach()
     ImGuiStyle& style = ImGui::GetStyle();
     style.ScaleAllSizes(window.GetMainScale());
     style.FontScaleDpi = window.GetMainScale();
-    style.TabRounding = 3.0f;
     io->ConfigDpiScaleFonts = true;
     io->ConfigDpiScaleViewports = true;
 	io->ConfigDockingAlwaysTabBar = true;
     style.AntiAliasedFill = true;
-
-    if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    {
-        style.WindowRounding = 9.0f;
-        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-    }
 
     ImGui_ImplSDL3_InitForOpenGL(sdlWindow, glContext);
     ImGui_ImplOpenGL3_Init();

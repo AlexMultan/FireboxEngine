@@ -1,0 +1,289 @@
+{
+    "Scene": "TestScene",
+    "Entities": [
+        {
+            "Entity": 17804978850413905935,
+            "Tag": "Monkey",
+            "Transform": {
+                "Position": {
+                    "X": 0.9000000357627869,
+                    "Y": 0.800000011920929,
+                    "Z": 0.0
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 0.30000001192092896,
+                    "Y": 0.30000001192092896,
+                    "Z": 0.30000001192092896
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "Resources/EditorContent/Models/SM_Monkey.glb",
+                "Materials": [
+                    {
+                        "Diffuse": null,
+                        "Roughness": null,
+                        "Metallic": null,
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
+                        },
+                        "Diffuse Color": {
+                            "R": 0.375,
+                            "G": 0.375,
+                            "B": 0.375,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.25,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        },
+        {
+            "Entity": 11528784523671865542,
+            "Tag": "Directional Light",
+            "Transform": {
+                "Position": {
+                    "X": 0.0,
+                    "Y": 0.0,
+                    "Z": 0.0
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 1.0,
+                    "Y": 1.0,
+                    "Z": 1.0
+                }
+            },
+            "Directional Light": {
+                "Direction": {
+                    "X": -0.20000000298023224,
+                    "Y": -1.0,
+                    "Z": -0.30000001192092896
+                },
+                "Color": {
+                    "X": 1.0,
+                    "Y": 0.8899999856948853,
+                    "Z": 0.9599999785423279
+                },
+                "Intensity": 5.0
+            }
+        },
+        {
+            "Entity": 5147966754574694008,
+            "Tag": "Rifle",
+            "Transform": {
+                "Position": {
+                    "X": -1.7000000476837158,
+                    "Y": 1.5,
+                    "Z": 0.0
+                },
+                "Rotation": {
+                    "X": -179.99989318847656,
+                    "Y": 83.59999084472656,
+                    "Z": 92.2994384765625
+                },
+                "Scale": {
+                    "X": 0.9999980330467224,
+                    "Y": 0.9999982118606567,
+                    "Z": 0.9999957084655762
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "Resources/EditorContent/Models/SM_AKM.glb",
+                "Materials": [
+                    {
+                        "Diffuse": {
+                            "Path": "Resources/EditorContent/Textures/akm_Base_Color.tga"
+                        },
+                        "Roughness": {
+                            "Path": "Resources/EditorContent/Textures/akm_Roughness.tga"
+                        },
+                        "Metallic": {
+                            "Path": "Resources/EditorContent/Textures/akm_Metallic.tga"
+                        },
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/akm_Normal_OpenGL.tga"
+                        },
+                        "Diffuse Color": {
+                            "R": 0.699999988079071,
+                            "G": 0.699999988079071,
+                            "B": 0.699999988079071,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.5,
+                        "Metallic Value": 0.0
+                    },
+                    {
+                        "Diffuse": {
+                            "Path": "Resources/EditorContent/Textures/magazine_Base_Color.tga"
+                        },
+                        "Roughness": {
+                            "Path": "Resources/EditorContent/Textures/magazine_Roughness.tga"
+                        },
+                        "Metallic": {
+                            "Path": "Resources/EditorContent/Textures/magazine_Metallic.tga"
+                        },
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/magazine_Normal_OpenGL.tga"
+                        },
+                        "Diffuse Color": {
+                            "R": 0.699999988079071,
+                            "G": 0.699999988079071,
+                            "B": 0.699999988079071,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.5,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        },
+        {
+            "Entity": 11260695710489276201,
+            "Tag": "Gun",
+            "Transform": {
+                "Position": {
+                    "X": 0.0,
+                    "Y": 1.600000023841858,
+                    "Z": 0.0
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 3.4000000953674316,
+                    "Y": 3.4000000953674316,
+                    "Z": 3.4000000953674316
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "Resources/EditorContent/Models/GLOCK19.glb",
+                "Materials": [
+                    {
+                        "Diffuse": {
+                            "Path": "Resources/EditorContent/Textures/glock_4K_BaseColor.png"
+                        },
+                        "Roughness": {
+                            "Path": "Resources/EditorContent/Textures/glock_4K_Roughness.png"
+                        },
+                        "Metallic": {
+                            "Path": "Resources/EditorContent/Textures/glock_4K_Metallic.png"
+                        },
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/glock_4K_Normal.png"
+                        },
+                        "Diffuse Color": {
+                            "R": 0.699999988079071,
+                            "G": 0.699999988079071,
+                            "B": 0.699999988079071,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.5,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        },
+        {
+            "Entity": 12029289342829080660,
+            "Tag": "Jerrycan",
+            "Transform": {
+                "Position": {
+                    "X": -1.399999976158142,
+                    "Y": 0.5,
+                    "Z": -0.9000000357627869
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -34.90017318725586,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 0.9999972581863403,
+                    "Y": 1.0,
+                    "Z": 0.9999972581863403
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "Resources/EditorContent/Models/SM_Jerrycan.gltf",
+                "Materials": [
+                    {
+                        "Diffuse": {
+                            "Path": "Resources/EditorContent/Textures/T_Jerrycan_BC.png"
+                        },
+                        "Roughness": {
+                            "Path": "Resources/EditorContent/Textures/T_Jerrycan_R.png"
+                        },
+                        "Metallic": {
+                            "Path": "Resources/EditorContent/Textures/T_Jerrycan_M.png"
+                        },
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/T_Jerrycan_N.png"
+                        },
+                        "Diffuse Color": {
+                            "R": 0.699999988079071,
+                            "G": 0.699999988079071,
+                            "B": 0.699999988079071,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.5,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        },
+        {
+            "Entity": 10251738822040949125,
+            "Tag": "Bunny",
+            "Transform": {
+                "Position": {
+                    "X": 0.0,
+                    "Y": 1.0,
+                    "Z": -1.0
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 3.0,
+                    "Y": 3.0,
+                    "Z": 3.0
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "Resources/EditorContent/Models/SM_StanfordBunny.obj",
+                "Materials": [
+                    {
+                        "Diffuse": null,
+                        "Roughness": null,
+                        "Metallic": null,
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
+                        },
+                        "Diffuse Color": {
+                            "R": 0.375,
+                            "G": 0.375,
+                            "B": 0.375,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.25,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        }
+    ]
+}
