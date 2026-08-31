@@ -20,11 +20,13 @@ IncludeDir["entt"] = "ThirdParty/entt/include"
 IncludeDir["assimp"] = "ThirdParty/assimp/include"
 IncludeDir["ImGuizmo"] = "ThirdParty/ImGuizmo/src"
 IncludeDir["json"] = "ThirdParty/json/include"
+IncludeDir["PhysX"] = "ThirdParty/PhysX"
 
 include "ThirdParty/Glad"
 include "ThirdParty/ImGui"
 include "ThirdParty/ImGuizmo"
 include "ThirdParty/assimp"
+include "ThirdParty/PhysX"
 
 project "FireboxRuntime"
     location "Engine/Source/Runtime"
@@ -49,6 +51,7 @@ project "FireboxRuntime"
         "%{IncludeDir.assimp}",
         "%{IncludeDir.ImGuizmo}",
         "%{IncludeDir.json}",
+        "%{IncludeDir.PhysX}",
         "Engine/Source/Runtime"
     }
 
@@ -63,6 +66,7 @@ project "FireboxRuntime"
         "imgui",
         "ImGuizmo",
         "assimp",
+        "PhysX"
         }
 
     defines{
@@ -160,6 +164,7 @@ project "SampleGame"
         "ThirdParty/ImGuizmo/src",
         "ThirdParty/assimp/include",
         "ThirdParty/json/include",
+        "ThirdParty/PhysX",
         "Engine/Source/Runtime"
     }
 
@@ -229,7 +234,8 @@ project "FireboxEditor"
         "opengl32.lib",
         "Glad",
         "imgui",
-        "ImGuizmo"
+        "ImGuizmo",
+        "PhysX"
     }
 
     dependson { "SampleGame" }
@@ -248,6 +254,7 @@ project "FireboxEditor"
         "ThirdParty/assimp/include",
         "ThirdParty/ImGuizmo/src",
         "ThirdParty/json/include",
+        "ThirdParty/PhysX",
         "Engine/Source/Runtime",
         "%{IncludeDir.Glad}",
         "Engine/Source/Editor"

@@ -34,7 +34,7 @@ void Firebox::ShadowMap::SetCascadeLevels()
 	m_ShadowCascadeLevels.emplace_back(m_ShadowMapProps.FarPlane / 10.0f);
 	m_ShadowCascadeLevels.emplace_back(m_ShadowMapProps.FarPlane / 2.0f);
 
-	FB_ASSERT(m_ShadowCascadeLevels[0] > m_ShadowMapProps.NearPlane, "m_ShadowCascadeLevels[0] is smaller than a near plane!");
+	FB_ASSERT(m_ShadowCascadeLevels[0] > m_ShadowMapProps.NearPlane, "Assertion Failed: m_ShadowCascadeLevels[0] is smaller than a near plane!");
 }
 
 void Firebox::ShadowMap::SetShadowMapProps(float fov, float nearPlane, float farPlane, float aspectRatio, const Mat4& viewMatrix, const Vector3& lightDir)

@@ -55,7 +55,7 @@ void Firebox::Animation::ReadMissingBones(const aiAnimation* animation, StaticMe
 
 void Firebox::Animation::ReadHierarchyData(AssimpNodeData& dest, const aiNode* src)
 {
-	FB_ASSERT(src, "");
+	FB_ASSERT(src, "Assertion Failed: aiNode src is null!");
 
 	dest.Name = src->mName.data;
 	dest.Transformation = Firebox::AssimpHelpers::ConvertMatrixToGlmFormat(src->mTransformation);

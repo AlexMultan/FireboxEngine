@@ -162,6 +162,6 @@ GLenum Firebox::OpenGL::OpenGLAPI::ToGLEnum(APIEnum value)
 		case APIEnum::API_SCISSOR_TEST: return GL_SCISSOR_TEST;
 	}
 
-	FB_ASSERT(false, "Unsupported APIEnum value in OpenGLAPI::ToGLEnum");
+	FB_ASSERT(false, "Assertion Failed: Unsupported APIEnum value in OpenGLAPI::ToGLEnum");
 	return 0;
 }

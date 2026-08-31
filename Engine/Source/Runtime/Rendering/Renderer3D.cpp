@@ -64,7 +64,7 @@ void Firebox::Renderer3D::Init()
 	FB_CORE_TRACE("Renderer3D::Init start");
 
 	s_Data.RendererAPI = RendererAPI::Create();
-	FB_ASSERT(s_Data.RendererAPI, "RendererAPI is null!");
+	FB_ASSERT(s_Data.RendererAPI, "Assertion Failed: RendererAPI is null!");
 	s_Data.RendererAPI->Init();
 
 	FB_CORE_TRACE("Creating LitShader...");
@@ -154,7 +154,7 @@ void Firebox::Renderer3D::Init()
 
 	s_ScreenQuad = CreateScope<Firebox::Quad>();
 
-	FB_ASSERT(s_Data.LitShader, "DefaultShader is null after creation!");
+	FB_ASSERT(s_Data.LitShader, "Assertion Failed: DefaultShader is null after creation!");
 	s_Grid = CreateRef<Firebox::Grid>();
 
 	s_Data.ShadowMaskShader->UseShader();
@@ -273,7 +273,7 @@ void Firebox::Renderer3D::DrawGrid()
 	s_Data.GridShader->SetVector3("u_CamPos", s_Data.CameraPosition);
 	s_Data.GridShader->SetFloat("u_CellSize", s_GridSize);
 
-	FB_ASSERT(s_Grid, "Grid is null, was Renderer3D::Init() called?");
+	FB_ASSERT(s_Grid, "Assertion Failed: Grid is null, was Renderer3D::Init() called?");
 	s_Data.RendererAPI->DrawIndexed(s_Grid->GetVertexArray());
 
 	s_Data.RendererAPI->SetDepthFunc(Firebox::APIEnum::API_GREATER);
@@ -283,7 +283,7 @@ void Firebox::Renderer3D::DrawGrid()
 
 void Firebox::Renderer3D::DrawSkybox(const Ref<Skybox>& skybox)
 {
-	FB_ASSERT(skybox, "Attempted to set a null skybox");
+	FB_ASSERT(skybox, "Assertion Failed: Attempted to set a null skybox");
 	s_Data.ActiveSkybox = skybox;
 }
 
@@ -358,6 +358,7 @@ void Firebox::Renderer3D::SetPointLightUniforms(const Ref<Shader>& shader, int c
 		shader->SetFloat(prefix + "linear", light.Linear);
 		shader->SetFloat(prefix + "quadratic", light.Quadratic);
 	}
+	
 }
 
 void Firebox::Renderer3D::SetSpotLightUniforms(const Ref<Shader>& shader, int count)
@@ -476,7 +477,7 @@ void Firebox::Renderer3D::Flush()
 		break;
 
 	default:
-		FB_ASSERT(false, "Unhandled ViewMode in Renderer3D::Flush()");
+		FB_ASSERT(false, "Assertion Failed: Unhandled ViewMode in Renderer3D::Flush()");
 		break;
 	}
 

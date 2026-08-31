@@ -216,7 +216,7 @@ namespace Firebox {
 			}
 			else
 				id = m_BoneInfoMap[boneName].Id;
-			FB_ASSERT(id != -1, "Failed to assign a valid bone ID for bone '%s'!", boneName.c_str());
+			FB_ASSERT(id != -1, "Assertion Failed: Failed to assign a valid bone ID for bone '%s'!", boneName.c_str());
 			auto weights = mesh->mBones[i]->mWeights;
 			int numWeights = mesh->mBones[i]->mNumWeights;
 
@@ -224,7 +224,7 @@ namespace Firebox {
 			{
 				int vertexId = weights[j].mVertexId;
 				float weight = weights[j].mWeight;
-				FB_ASSERT(vertexId < vertices.size(), "Vertex ID %d out of range (vertices size: %zu) for bone '%s'!", vertexId, vertices.size(), boneName.c_str());
+				FB_ASSERT(vertexId < vertices.size(), "Assertion Failed: Vertex ID %d out of range (vertices size: %zu) for bone '%s'!", vertexId, vertices.size(), boneName.c_str());
 				SetVertexBoneData(vertices[vertexId], id, weight);
 			}
 		}

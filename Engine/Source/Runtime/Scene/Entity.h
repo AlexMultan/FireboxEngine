@@ -34,21 +34,21 @@ namespace Firebox {
 		template<typename T>
 		T& GetComponent()
 		{
-			FB_ASSERT(HasComponent<T>(), "Entity doesn't have a component");
+			FB_ASSERT(HasComponent<T>(), "Assertion Failed: Entity doesn't have a component");
 			return m_Scene->m_Registry.get<T>(m_Handle);
 		}
 
 		template<typename T>
 		const T& GetComponent() const
 		{
-			FB_ASSERT(HasComponent<T>(), "Entity doesn't have a component");
+			FB_ASSERT(HasComponent<T>(), "Assertion Failed: Entity doesn't have a component");
 			return m_Scene->m_Registry.get<T>(m_Handle);
 		}
 
 		template<typename T>
 		T& RemoveComponent()
 		{
-			FB_ASSERT(!HasComponent<T>(), "Entity doesn't have a component");
+			FB_ASSERT(!HasComponent<T>(), "Assertion Failed: Entity doesn't have a component");
 			return m_Scene->m_Registry.remove<T>(m_Handle);
 		}
 

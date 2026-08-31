@@ -48,7 +48,7 @@ void Firebox::Animator::CalculateBoneTransform(const AssimpNodeData* node, Mat4 
 		Mat4 offset = boneInfo[nodeName].Offset;
 		if (id < 0 || id >= (int)m_FinalBoneMatrices.size())
 		{
-			FB_ASSERT(true, "Bone id {} out of range for node '{}' (matrices size = {})", id, nodeName, m_FinalBoneMatrices.size());
+			FB_ASSERT(true, "Assertion Failed: Bone id {} out of range for node '{}' (matrices size = {})", id, nodeName, m_FinalBoneMatrices.size());
 		}
 		else
 			m_FinalBoneMatrices[id] = globalTransform * offset;
