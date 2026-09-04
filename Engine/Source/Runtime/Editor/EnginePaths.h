@@ -4,6 +4,7 @@
 #include <string_view>
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 
 namespace Firebox::EngineContent {
 

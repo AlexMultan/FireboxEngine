@@ -5,65 +5,79 @@
 #include <physx/snippets/snippetcommon/SnippetPVD.h>
 #include <physx/snippets/snippetcommon/SnippetPrint.h>
 
-Vector3 Firebox::Physics3D::m_Gravity{ 0.0f, -9.81f, 0.0f };
-Vector3& Firebox::Physics3D::GetGravity() { return m_Gravity; }
-void Firebox::Physics3D::SetGravity(const Vector3& gravity) { m_Gravity = gravity; }
+PxDefaultAllocator		Firebox::Physics3D::s_Allocator;
+PxDefaultErrorCallback	Firebox::Physics3D::s_ErrorCallback;
+PxFoundation*			Firebox::Physics3D::s_Foundation = nullptr;
+PxPhysics*				Firebox::Physics3D::s_Physics = nullptr;
+PxDefaultCpuDispatcher* Firebox::Physics3D::s_Dispacher = nullptr;
+PxScene*				Firebox::Physics3D::s_Scene = nullptr;
+PxMaterial*				Firebox::Physics3D::s_Material = nullptr;
+PxPvd*					Firebox::Physics3D::s_Pvd = nullptr;
 
-Firebox::Physics3D::Physics3D()
-{
+Vector3		Firebox::Physics3D::s_Gravity{ 0.0f, -9.81f, 0.0f };
+Vector3&	Firebox::Physics3D::GetGravity()					   { return s_Gravity; }
+void		Firebox::Physics3D::SetGravity(const Vector3& gravity) { s_Gravity = gravity; }
 
-}
-
-Firebox::Physics3D::~Physics3D()
-{
-
-}
+PxPhysics*	Firebox::Physics3D::GetPhysics()	{ return s_Physics; }
+PxScene*	Firebox::Physics3D::GetScene()		{ return s_Scene; }
+PxMaterial*	Firebox::Physics3D::GetMaterial()	{ return s_Material; }
 
 void Firebox::Physics3D::Init()
 {
-	m_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, m_Allocator, m_ErrorCallback);
-	FB_ASSERT(m_Foundation, "Assertion Failed: Physics foundation is not valid!")
+	s_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, s_Allocator, s_ErrorCallback);
+	FB_ASSERT(s_Foundation, "Assertion Failed: Physics foundation is not valid!")
 
-	m_Pvd = PxCreatePvd(*m_Foundation);
+	s_Pvd = PxCreatePvd(*s_Foundation);
 	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);
-	m_Pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
+	s_Pvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
-	m_Physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_Foundation, PxTolerancesScale(), true, m_Pvd);
+	s_Physics = PxCreatePhysics(PX_PHYSICS_VERSION, *s_Foundation, PxTolerancesScale(), true, s_Pvd);
 
-	PxSceneDesc sceneDesc(m_Physics->getTolerancesScale());
-	sceneDesc.gravity = { m_Gravity.x, m_Gravity.y, m_Gravity.z };
-	m_Dispacher = PxDefaultCpuDispatcherCreate(2);
-	sceneDesc.cpuDispatcher = m_Dispacher;
+	PxSceneDesc sceneDesc(s_Physics->getTolerancesScale());
+	sceneDesc.gravity = { s_Gravity.x, s_Gravity.y, s_Gravity.z };
+	s_Dispacher = PxDefaultCpuDispatcherCreate(2);
+	sceneDesc.cpuDispatcher = s_Dispacher;
 	sceneDesc.filterShader = PxDefaultSimulationFilterShader;
-	m_Scene = m_Physics->createScene(sceneDesc);
+	s_Scene = s_Physics->createScene(sceneDesc);
 
-	PxPvdSceneClient* pvdClient = m_Scene->getScenePvdClient();
+	PxPvdSceneClient* pvdClient = s_Scene->getScenePvdClient();
 	if (pvdClient)
 	{
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 		pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 	}
-	m_Material = m_Physics->createMaterial(0.5f, 0.5f, 0.6f);
+	s_Material = s_Physics->createMaterial(0.5f, 0.5f, 0.6f);
 }
 
 void Firebox::Physics3D::Update(float deltaTime)
 {
-	m_Scene->simulate(deltaTime);
-	m_Scene->fetchResults(true);
+	s_Scene->simulate(deltaTime);
+	s_Scene->fetchResults(true);
 }
 
 void Firebox::Physics3D::Cleanup()
 {
-	PX_RELEASE(m_Scene);
-	PX_RELEASE(m_Dispacher);
-	PX_RELEASE(m_Physics);
+	PX_RELEASE(s_Scene);
+	PX_RELEASE(s_Dispacher);
+	PX_RELEASE(s_Physics);
 
-	if (m_Pvd)
+	if (s_Pvd)
 	{
-		PxPvdTransport* transport = m_Pvd->getTransport();
-		PX_RELEASE(m_Pvd);
+		PxPvdTransport* transport = s_Pvd->getTransport();
+		PX_RELEASE(s_Pvd);
 		PX_RELEASE(transport);
 	}
-	PX_RELEASE(m_Foundation);
+	PX_RELEASE(s_Foundation);
+}
+
+void Firebox::Physics3D::AddActor(PxActor& actor)
+{
+	s_Scene->addActor(actor);
+	FB_CORE_TRACE("Added actor to the physics scene");
+}
+
+void Firebox::Physics3D::RemoveActor(PxActor& actor)
+{
+	s_Scene->removeActor(actor);
 }

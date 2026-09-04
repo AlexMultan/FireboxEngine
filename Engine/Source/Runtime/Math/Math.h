@@ -7,7 +7,7 @@ namespace Mathf {
 
 #pragma region Constants
 
-	constexpr float PI = 3.14159;
+	constexpr float PI = 3.14159f;
 
 	static inline float Deg2Rad(float angle)
 	{
@@ -51,7 +51,7 @@ namespace Mathf {
 
 	static inline int CeilToInt(float a)
 	{
-		int trancated = int(a);
+		int trancated = static_cast<int>(a);
 
 		if (a == trancated)
 			return a;
@@ -64,7 +64,7 @@ namespace Mathf {
 
 	static inline float Floor(float a)
 	{
-		int trancated = int(a);
+		int trancated = static_cast<int>(a);
 
 		if (a == trancated)
 			return a;
@@ -156,22 +156,22 @@ namespace Mathf {
 
 	static inline float Magnitude(const Vector2& vec)
 	{
-		return abs(sqrt(pow(vec.x, 2) + pow(vec.y, 2)));
+		return static_cast<float>(abs(sqrt(pow(vec.x, 2) + pow(vec.y, 2))));
 	}
 
 	static inline float Magnitude(const Vector3& vec)
 	{
-		return abs(sqrt(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2)));
+		return static_cast<float>(abs(sqrt(pow(vec.x, 2) + pow(vec.y, 2) + pow(vec.z, 2))));
 	}
 
 	static inline float Distance(const Vector2& a, const Vector2& b)
 	{
-		return sqrt((pow((b.x - a.x), 2) + pow((b.y - a.y), 2)));
+		return static_cast<float>(sqrt((pow((b.x - a.x), 2) + pow((b.y - a.y), 2))));
 	}
 
 	static inline float Distance(const Vector3& a, const Vector3& b)
 	{
-		return sqrt((pow((b.x - a.x), 2) + pow((b.y - a.y), 2) + pow((b.z - a.z), 2)));
+		return static_cast<float>(sqrt((pow((b.x - a.x), 2) + pow((b.y - a.y), 2) + pow((b.z - a.z), 2))));
 	}
 
 #pragma endregion

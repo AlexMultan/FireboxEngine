@@ -30,7 +30,7 @@ FireboxEditor::ViewportPanel::~ViewportPanel()
 
 }
 
-void FireboxEditor::ViewportPanel::RenderViewport(const Mat4& viewMatrix, const Mat4& projectionMatrix)
+void FireboxEditor::ViewportPanel::RenderViewport(const Mat4x4& viewMatrix, const Mat4x4& projectionMatrix)
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 	ImGui::SetNextWindowBgAlpha(0.0f);
@@ -56,7 +56,7 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Mat4& viewMatrix, const 
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, m_ViewportSize.x, m_ViewportSize.y);
 
-		Mat4 transform = m_SelectedEntity.GetComponent<TransformComponent>().GetTransform();
+		Mat4x4 transform = m_SelectedEntity.GetComponent<TransformComponent>().GetTransform();
 
 		if (ImGui::IsWindowFocused() || m_IsFocused)
 		{

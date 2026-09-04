@@ -40,9 +40,9 @@ Firebox::Bone::Bone(const String& name, int id, const aiNodeAnim* channel) : m_N
 
 void Firebox::Bone::Update(float animTime)
 {
-	Mat4 translation = InterpolatePosition(animTime);
-	Mat4 rotation = InterpolateRotation(animTime);
-	Mat4 scale = InterpolateScaling(animTime);
+	Mat4x4 translation = InterpolatePosition(animTime);
+	Mat4x4 rotation = InterpolateRotation(animTime);
+	Mat4x4 scale = InterpolateScaling(animTime);
 	m_LocalTransform = translation * rotation * scale;
 }
 
@@ -74,19 +74,19 @@ float Firebox::Bone::GetScaleFactor(float lastTimeStamp, float nextTimeStamp, fl
 	return midWayLength / framesDiff;
 }
 
-Mat4 Firebox::Bone::InterpolatePosition(float animTime)
+Mat4x4 Firebox::Bone::InterpolatePosition(float animTime)
 {
 	if (1 == m_NumPositions)
-		return glm::translate(Mat4(1.0f), m_Positions[0].Position);
+		return glm::translate(Mat4x4(1.0f), m_Positions[0].Position);
 
 	int p0 = GetPositionIndex(animTime);
 	int p1 = p0 + 1;
 	Vector3 finalPos = glm::mix(m_Positions[p0].Position, m_Positions[p1].Position, 
 		GetScaleFactor(m_Positions[p0].TimeStamp, m_Positions[p1].TimeStamp, animTime));
-	return glm::translate(Mat4(1.0f), finalPos);
+	return glm::translate(Mat4x4(1.0f), finalPos);
 }
 
-Mat4 Firebox::Bone::InterpolateRotation(float animTime)
+Mat4x4 Firebox::Bone::InterpolateRotation(float animTime)
 {
 	if (1 == m_NumRotations)
 	{
@@ -103,14 +103,14 @@ Mat4 Firebox::Bone::InterpolateRotation(float animTime)
 	return glm::toMat4(finalRotation);
 }
 
-Mat4 Firebox::Bone::InterpolateScaling(float animTime)
+Mat4x4 Firebox::Bone::InterpolateScaling(float animTime)
 {
 	if (1 == m_NumScalings)
-		return glm::scale(Mat4(1.0f), m_Scales[0].Scale);
+		return glm::scale(Mat4x4(1.0f), m_Scales[0].Scale);
 
 	int s0 = GetScaleIndex(animTime);
 	int s1 = s0 + 1;
 	Vector3 finalScale = glm::mix(m_Scales[s0].Scale, m_Scales[s1].Scale,
 		GetScaleFactor(m_Scales[s0].TimeStamp, m_Scales[s1].TimeStamp, animTime));
-	return glm::scale(Mat4(1.0f), finalScale);
+	return glm::scale(Mat4x4(1.0f), finalScale);
 }

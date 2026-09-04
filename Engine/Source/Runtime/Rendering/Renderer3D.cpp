@@ -1,45 +1,43 @@
 #include "Renderer3D.h"
-#include "Core/Log.h"
 #include "Editor/EnginePaths.h"
-#include "Utils/Assert.h"
 #include "Components/RenderComponents.h"
 #include "Geometry/PrimitiveShapes.h"
-#include "Utils/String.h"
 
 #include <algorithm>
 #include <cfloat>
 #include <limits>
 
-Firebox::Renderer3D::Renderer3DData Firebox::Renderer3D::s_Data;
-Firebox::ViewMode Firebox::Renderer3D::s_ViewMode = Firebox::ViewMode::Lit;
-Ref<Firebox::Grid> Firebox::Renderer3D::s_Grid = nullptr;
-Ref<Firebox::UniformBuffer> Firebox::Renderer3D::s_ShadowUniformBuffer = nullptr;
+Firebox::Renderer3D::Renderer3DData		Firebox::Renderer3D::s_Data;
+Firebox::ViewMode						Firebox::Renderer3D::s_ViewMode = Firebox::ViewMode::Lit;
+Ref<Firebox::Grid>						Firebox::Renderer3D::s_Grid = nullptr;
+Ref<Firebox::UniformBuffer>				Firebox::Renderer3D::s_ShadowUniformBuffer = nullptr;
+Scope<Firebox::Quad>					Firebox::Renderer3D::s_ScreenQuad = nullptr;
+
+const Ref<Firebox::Framebuffer>&  Firebox::Renderer3D::GetMainFramebuffer() { return s_Data.MainFramebuffer; }
+const Ref<Firebox::Material>&	  Firebox::Renderer3D::GetDefaultMaterial() { return s_Data.DefaultMaterial; }
+const Ref<Firebox::GBuffer>&	  Firebox::Renderer3D::GetGBuffer()			{ return s_Data.gBuffer; }
+const Ref<Firebox::ShadowMask>&	  Firebox::Renderer3D::GetShadowMask()		{ return s_Data.ShadowMask; }
+
+Ref<Firebox::Shader> Firebox::Renderer3D::GetLitShader()					{ return s_Data.LitShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetGBufferShader()				{ return s_Data.GBufferShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetShadowMaskShader()				{ return s_Data.ShadowMaskShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetAlbedoVisShader()				{ return s_Data.AlbedoVisShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetNormalVisShader()				{ return s_Data.NormalVisShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetPositionVisShader()			{ return s_Data.PositionVisShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetRoughnessVisShader()			{ return s_Data.RoughnessVisShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetMetallicVisShader()			{ return s_Data.MetallicVisShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetAmbientOcclusionVisShader()	{ return s_Data.AmbientOcclusionVisShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetSSAOShader()					{ return s_Data.SSAOShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetSSAOBlurShader()				{ return s_Data.SSAOBlurShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetDepthShader()					{ return s_Data.DepthShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetShadowShader()					{ return s_Data.ShadowDepthShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetDebugCascadeLevelsShader()		{ return s_Data.DebugCascadeLevelsShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetLightShader()					{ return s_Data.LightShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetGridShader()					{ return s_Data.GridShader; }
+
 float Firebox::Renderer3D::s_GridSize = 10.0f;
-Scope<Firebox::Quad> Firebox::Renderer3D::s_ScreenQuad = nullptr;
-
-const Ref<Firebox::Framebuffer>& Firebox::Renderer3D::GetMainFramebuffer() { return s_Data.MainFramebuffer; }
-const Ref<Firebox::Material>& Firebox::Renderer3D::GetDefaultMaterial() { return s_Data.DefaultMaterial; }
-const Ref<Firebox::GBuffer>& Firebox::Renderer3D::GetGBuffer() { return s_Data.gBuffer; }
-const Ref<Firebox::ShadowMask>& Firebox::Renderer3D::GetShadowMask() { return s_Data.ShadowMask; }
-
-Ref<Firebox::Shader> Firebox::Renderer3D::GetLitShader() { return s_Data.LitShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetGBufferShader() { return s_Data.GBufferShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetShadowMaskShader() { return s_Data.ShadowMaskShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetAlbedoVisShader() { return s_Data.AlbedoVisShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetNormalVisShader() { return s_Data.NormalVisShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetPositionVisShader() { return s_Data.PositionVisShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetRoughnessVisShader() { return s_Data.RoughnessVisShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetMetallicVisShader() { return s_Data.MetallicVisShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetAmbientOcclusionVisShader() { return s_Data.AmbientOcclusionVisShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetSSAOShader() { return s_Data.SSAOShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetSSAOBlurShader() { return s_Data.SSAOBlurShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetDepthShader() { return s_Data.DepthShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetShadowShader() { return s_Data.ShadowDepthShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetDebugCascadeLevelsShader() { return s_Data.DebugCascadeLevelsShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetLightShader() { return s_Data.LightShader; }
-Ref<Firebox::Shader> Firebox::Renderer3D::GetGridShader() { return s_Data.GridShader; }
-
 void Firebox::Renderer3D::SetGridSize(const float& gridSize) { s_GridSize = gridSize; }
+
 void Firebox::Renderer3D::SetActiveViewMode(const ViewMode& viewMode) { s_ViewMode = viewMode; }
 
 void Firebox::Renderer3D::SetPostProcessComponent(const PostProcessComponent& postProcess) { s_Data.PostProcessing = postProcess; }
@@ -136,6 +134,9 @@ void Firebox::Renderer3D::Init()
 	s_Data.GridShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Grid.vert").string().c_str(),
 		Firebox::EngineContent::Shaders("GLSL/Grid.frag").string().c_str(), nullptr);
 
+	s_Data.DebugShapeShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/DebugShape.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/DebugShape.frag").string().c_str(), nullptr);
+
 	s_Data.DefaultMaterial = CreateRef<Material>(s_Data.GBufferShader);
 	s_Data.DefaultMaterial->SetNormalTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/T_FlatNormal.png"));
 
@@ -153,6 +154,8 @@ void Firebox::Renderer3D::Init()
 	s_Data.SSAO->GenerateNoiseTexture();
 
 	s_ScreenQuad = CreateScope<Firebox::Quad>();
+
+	s_Data.BoxMesh = CreateRef<Firebox::Mesh>(PrimitiveShapes::Box().vertices, PrimitiveShapes::Box().indices);
 
 	FB_ASSERT(s_Data.LitShader, "Assertion Failed: DefaultShader is null after creation!");
 	s_Grid = CreateRef<Firebox::Grid>();
@@ -232,6 +235,7 @@ void Firebox::Renderer3D::BeginScene(const Camera& camera, const DirectionalLigh
 	s_Data.ShadowMap->SetCascadeLevels();
 
 	s_Data.RenderQueue.clear();
+	s_Data.DebugShapesQueue.clear();
 }
 
 void Firebox::Renderer3D::EndScene()
@@ -246,18 +250,19 @@ void Firebox::Renderer3D::EndScene()
 	GeometryPass();
 	SSAOPass();
 	ShadowMaskPass();
-	RenderSkybox();
+	SkyboxPass();
 	DrawGrid();
 	Flush();
+	DebugShapesPass();
 	s_Data.MainFramebuffer->UnbindFramebuffer();
 }
 
-void Firebox::Renderer3D::DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform)
+void Firebox::Renderer3D::SubmitMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform)
 {
 	s_Data.RenderQueue.push_back({ mesh->GetVertexArray(), material, transform.GetTransform(), transform.GetInverseNormal(), nullptr });
 }
 
-void Firebox::Renderer3D::DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform, const Ref<Animator> animator)
+void Firebox::Renderer3D::SubmitMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform, const Ref<Animator> animator)
 {
 	s_Data.RenderQueue.push_back({ mesh->GetVertexArray(), material, transform.GetTransform(), transform.GetInverseNormal(), animator });
 }
@@ -269,7 +274,7 @@ void Firebox::Renderer3D::DrawGrid()
 
 	s_Data.GridShader->UseShader();
 	s_Data.GridShader->SetMat4("u_ViewProjection", s_Data.ViewProjectionMatrix);
-	s_Data.GridShader->SetMat4("u_Model", Mat4(1.0f));
+	s_Data.GridShader->SetMat4("u_Model", Mat4x4(1.0f));
 	s_Data.GridShader->SetVector3("u_CamPos", s_Data.CameraPosition);
 	s_Data.GridShader->SetFloat("u_CellSize", s_GridSize);
 
@@ -285,6 +290,11 @@ void Firebox::Renderer3D::DrawSkybox(const Ref<Skybox>& skybox)
 {
 	FB_ASSERT(skybox, "Assertion Failed: Attempted to set a null skybox");
 	s_Data.ActiveSkybox = skybox;
+}
+
+void Firebox::Renderer3D::SubmitDebugBox(const TransformComponent& transform)
+{
+	s_Data.DebugShapesQueue.push_back(transform.GetTransform());
 }
 
 DirectionalLightComponent& Firebox::Renderer3D::GetDirectionalLight()
@@ -336,7 +346,7 @@ void Firebox::Renderer3D::SetSkeletalAnimationUniforms(const Ref<Shader>& shader
 	{
 		lastBoundAnimator = nullptr;
 		for (int i = 0; i < k_MaxBoneMatrices; i++)
-			shader->SetMat4("u_FinalBoneMatrices[" + std::to_string(i) + "]", Mat4(1.0f));
+			shader->SetMat4("u_FinalBoneMatrices[" + std::to_string(i) + "]", Mat4x4(1.0f));
 	}
 }
 
@@ -583,13 +593,13 @@ void Firebox::Renderer3D::ShadowMaskPass()
 	s_Data.MainFramebuffer->BindFramebuffer();
 }
 
-void Firebox::Renderer3D::RenderSkybox()
+void Firebox::Renderer3D::SkyboxPass()
 {
 	if (!s_Data.ActiveSkybox)
 		return;
 
-	const Mat4 viewNoTranslation = Mat4(Mat3(s_Data.ViewMatrix));
-	const Mat4 skyboxViewProjection = s_Data.ProjectionMatrix * viewNoTranslation;
+	const Mat4x4 viewNoTranslation = Mat4x4(Mat3x3(s_Data.ViewMatrix));
+	const Mat4x4 skyboxViewProjection = s_Data.ProjectionMatrix * viewNoTranslation;
 
 	s_Data.RendererAPI->SetDepthFunc(Firebox::APIEnum::API_GEQUAL);
 	s_Data.ActiveSkybox->GetMaterial()->BindMaterial();
@@ -599,6 +609,34 @@ void Firebox::Renderer3D::RenderSkybox()
 	s_Data.RendererAPI->SetDepthFunc(Firebox::APIEnum::API_GREATER);
 
 	s_Data.ActiveSkybox = nullptr;
+}
+
+void Firebox::Renderer3D::DebugShapesPass()
+{
+	if (s_Data.DebugShapesQueue.empty())
+		return;
+
+	s_Data.RendererAPI->Enable(APIEnum::API_BLEND);
+	s_Data.RendererAPI->SetDepthFunc(Firebox::APIEnum::API_GEQUAL);
+
+	s_Data.DebugShapeShader->UseShader();
+	s_Data.DebugShapeShader->SetMat4("u_ViewProjection", s_Data.ViewProjectionMatrix);
+	s_Data.DebugShapeShader->SetVector4("u_WireColor", { 0.0f, 1.0f, 0.0f, 1.0f });
+	s_Data.DebugShapeShader->SetVector4("u_FaceColor", { 0.0f, 0.0f, 0.0f, 0.0f });
+	s_Data.DebugShapeShader->SetFloat("u_LineWidth", 1.5f);
+
+	FB_ASSERT(s_Data.BoxMesh, "Assertion Failed: BoxMesh is null, was Renderer3D::Init() called?");
+	
+	for (const auto& modelMatrix : s_Data.DebugShapesQueue)
+	{
+		s_Data.DebugShapeShader->SetMat4("u_Model", modelMatrix);
+		s_Data.RendererAPI->DrawIndexed(s_Data.BoxMesh->GetVertexArray());
+	}
+
+	s_Data.RendererAPI->SetDepthFunc(Firebox::APIEnum::API_GREATER);
+	s_Data.RendererAPI->Disable(APIEnum::API_BLEND);
+
+	s_Data.DebugShapesQueue.clear();
 }
 
 void Firebox::Renderer3D::ShadowMapPass()
@@ -611,7 +649,7 @@ void Firebox::Renderer3D::ShadowMapPass()
 
 	s_ShadowUniformBuffer->BindUniformBuffer();
 	for (size_t i = 0; i < lightMatrices.size(); i++)
-		s_Data.RendererAPI->BufferSubData(Firebox::APIEnum::API_UNIFORM_BUFFER, i * sizeof(Mat4), sizeof(Mat4), &lightMatrices[i]);
+		s_Data.RendererAPI->BufferSubData(Firebox::APIEnum::API_UNIFORM_BUFFER, i * sizeof(Mat4x4), sizeof(Mat4x4), &lightMatrices[i]);
 	s_ShadowUniformBuffer->UnbindUniformBuffer();
 
 	s_Data.RendererAPI->CullFace(Firebox::APIEnum::API_BACK);

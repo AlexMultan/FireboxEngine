@@ -35,38 +35,6 @@ namespace Firebox {
 		DebugCascadeLevels = 8
 	};
 
-/*	struct PostProcessingSettings
-	{
-		// Color Grading
-		float Gamma = 1.5f;
-		float Contrast = 1.0f;
-		float Saturation = 1.0f;
-		float Gain = 1.0f;
-		float Temperature = 6500.0f;
-		float Tint = 0.0f;
-
-		// Lens
-		float BloomIntensity = 0.75f;
-		float Exposure = 1.0f;
-		float VignetteIntensity = 0.4f;
-		float Sharpen = 0.0f;
-		float ChromaticAbberrationIntensity = 0.0f;
-
-		// Film
-		float Slope = 0.9f;
-		float Toe = 0.5f;
-
-		// Rendering Features
-		int AmbientOcclusionKernelSize = 64;
-		float AmbientOcclusionIntensity = 0.5f;
-		float AmbientOcclusionRadius = 0.5f;
-		float AmbientOcclusionBias = 0.025f;
-		bool EnableSSAO = true;
-		float MotionBlurIntensity = 0.5f;
-
-		bool InfiniteExtent = true;
-	};*/
-
 	class FIREBOX_API Renderer3D
 	{
 	public:
@@ -80,10 +48,11 @@ namespace Firebox {
 		static void EndScene();
 
 		// Submission
-		static void DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform);
-		static void DrawMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform, const Ref<Animator> animator);
+		static void SubmitMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform);
+		static void SubmitMesh(const Ref<Mesh>& mesh, const Ref<Material>& material, const TransformComponent& transform, const Ref<Animator> animator);
 		static void DrawGrid();
 		static void DrawSkybox(const Ref<Skybox>& skybox);
+		static void SubmitDebugBox(const TransformComponent& transform);
 
 		// Scene state
 		static DirectionalLightComponent& GetDirectionalLight();
@@ -126,8 +95,8 @@ namespace Firebox {
 		{
 			Ref<VertexArray> VAO;
 			Ref<Material> Material;
-			Mat4 Transform;
-			Mat4 InverseNormal;
+			Mat4x4 Transform;
+			Mat4x4 InverseNormal;
 			Ref<Animator> Animator;
 		};
 
@@ -136,7 +105,8 @@ namespace Firebox {
 		static void SSAOPass();
 		static void ShadowMaskPass();
 		static void ShadowMapPass();
-		static void RenderSkybox();
+		static void SkyboxPass();
+		static void DebugShapesPass();
 
 		static Ref<Shader> BindLitUniforms();
 		static Ref<Shader> BindDepthUniforms();
@@ -151,6 +121,7 @@ namespace Firebox {
 		{
 			Scope<RendererAPI> RendererAPI;
 			std::vector<RenderCommand> RenderQueue;
+			std::vector<Mat4x4> DebugShapesQueue;
 			Ref<Shader> LitShader;
 			Ref<Shader> GBufferShader;
 			Ref<Shader> ShadowMaskShader;
@@ -167,11 +138,12 @@ namespace Firebox {
 			Ref<Shader> DebugCascadeLevelsShader;
 			Ref<Shader> LightShader;
 			Ref<Shader> GridShader;
+			Ref<Shader> DebugShapeShader;
 			Ref<Material> DefaultMaterial;
-			Mat4 ViewProjectionMatrix;
-			Mat4 ViewMatrix;
-			Mat4 ProjectionMatrix;
-			Mat4 LightSpaceMatrix;
+			Mat4x4 ViewProjectionMatrix;
+			Mat4x4 ViewMatrix;
+			Mat4x4 ProjectionMatrix;
+			Mat4x4 LightSpaceMatrix;
 			Vector3 CameraPosition;
 			float FarPlane;
 			float NearPlane;
@@ -188,6 +160,7 @@ namespace Firebox {
 			Ref<GBuffer> gBuffer;
 			Ref<ShadowMask> ShadowMask;
 			Ref<SSAO> SSAO;
+			Ref<Mesh> BoxMesh;
 		};
 
 		static Renderer3DData s_Data;

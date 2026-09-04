@@ -60,9 +60,9 @@ namespace nlohmann {
 		static void to_json(JSON& j, const TransformComponent& transform)
 		{
 			j = JSON{
-				{"Position", transform.Position},
-				{"Rotation", transform.Rotation},
-				{"Scale", transform.Scale}
+					{"Position", transform.Position},
+					{"Rotation", transform.Rotation},
+					{"Scale", transform.Scale}
 			};
 		}
 

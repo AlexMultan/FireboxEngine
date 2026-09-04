@@ -7,7 +7,7 @@
 
 namespace Firebox {
 
-	class FIREBOX_API Grid
+	class FIREBOX_API Grid : public RefCounted
 	{
 	public:
 		Grid();

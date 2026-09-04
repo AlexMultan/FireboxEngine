@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Panels/IPanel.h"
-#include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 
 namespace FireboxEditor {
 

@@ -1,12 +1,11 @@
 #include "EditorViewport.h"
 #include "Core/Application.h"
-#include "Core/Log.h"
 #include "Input/Input.h"
 #include "Utils/DebugTools.h"
-#include "Utils/String.h"
 #include "Rendering/Geometry/PrimitiveShapes.h"
 #include "Core/EditorUtils.h"
 #include "Rendering/Targets/Framebuffer.h"
+#include "Rendering/Renderer3D.h"
 
 #include <imgui_impl_sdl3.h>
 #include <imgui_impl_opengl3.h>
@@ -16,7 +15,7 @@ FireboxEditor::EditorViewport::EditorViewport()
     : Layer("EditorLayer"), io(nullptr), m_HierarchyPanel("Hierarchy", m_EditorContext), m_PropertiesPanel("Details", m_EditorContext),
     m_ViewportPanel("Viewport", m_EditorContext), m_MenuBar(m_EditorContext), m_AssetBrowser("Content Browser", m_EditorContext)
 {
-   
+    m_EditorIni = Firebox::EngineContent::GetRoot("Engine/Source/Editor/FireboxEditor.ini").string();
 }
 
 FireboxEditor::EditorViewport::~EditorViewport()
@@ -29,6 +28,7 @@ void FireboxEditor::EditorViewport::OnAttach()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     io = &ImGui::GetIO();
+    io->IniFilename = m_EditorIni.c_str();
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
     io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -228,4 +228,3 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
         SDL_GL_MakeCurrent(backupSDLWindow, backupCurrentContext);
     }
 }
-

@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "Input/KeyCodes.h"
 #include "Input/MouseCodes.h"
 
-#include <glm/glm.hpp>
 #include <SDL3/SDL_mouse.h>
 #include <SDL3/SDL_video.h>
 

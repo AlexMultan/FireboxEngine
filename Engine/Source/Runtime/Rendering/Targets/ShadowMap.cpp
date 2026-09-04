@@ -37,7 +37,7 @@ void Firebox::ShadowMap::SetCascadeLevels()
 	FB_ASSERT(m_ShadowCascadeLevels[0] > m_ShadowMapProps.NearPlane, "Assertion Failed: m_ShadowCascadeLevels[0] is smaller than a near plane!");
 }
 
-void Firebox::ShadowMap::SetShadowMapProps(float fov, float nearPlane, float farPlane, float aspectRatio, const Mat4& viewMatrix, const Vector3& lightDir)
+void Firebox::ShadowMap::SetShadowMapProps(float fov, float nearPlane, float farPlane, float aspectRatio, const Mat4x4& viewMatrix, const Vector3& lightDir)
 {
 	m_ShadowMapProps.Fov = fov;
 	m_ShadowMapProps.NearPlane = nearPlane;
@@ -48,10 +48,10 @@ void Firebox::ShadowMap::SetShadowMapProps(float fov, float nearPlane, float far
 }
 
 
-std::vector<Mat4> Firebox::ShadowMap::GetLightSpaceMatrices()
+std::vector<Mat4x4> Firebox::ShadowMap::GetLightSpaceMatrices()
 {
 	size_t cascadeCount = m_ShadowCascadeLevels.size();
-	std::vector<Mat4> ret(cascadeCount);
+	std::vector<Mat4x4> ret(cascadeCount);
 	for (size_t i = 0; i < cascadeCount; i++)
 	{
 		float prevSplit = (i == 0) ? m_ShadowMapProps.NearPlane : m_ShadowCascadeLevels[i - 1];
@@ -62,9 +62,9 @@ std::vector<Mat4> Firebox::ShadowMap::GetLightSpaceMatrices()
 	return ret;
 }
 
-std::vector<Vector3> Firebox::ShadowMap::GetFrustumCornersWorldSpace(const Mat4& projection, const Mat4& view)
+std::vector<Vector3> Firebox::ShadowMap::GetFrustumCornersWorldSpace(const Mat4x4& projection, const Mat4x4& view)
 {
-	Mat4 inverse = glm::inverse(projection * view);
+	Mat4x4 inverse = glm::inverse(projection * view);
 
 	std::vector<Vector3> corners(8);
 	for (int x = 0; x < 2; x++)
@@ -86,7 +86,7 @@ std::vector<Vector3> Firebox::ShadowMap::GetFrustumCornersWorldSpace(const Mat4&
 	return corners;
 }
 
-Mat4 Firebox::ShadowMap::GetLightSpaceMatrix(const float nearPlane, const float farPlane)
+Mat4x4 Firebox::ShadowMap::GetLightSpaceMatrix(const float nearPlane, const float farPlane)
 {
 	const auto proj = glm::perspective(glm::radians(m_ShadowMapProps.Fov), m_ShadowMapProps.AspectRatio, nearPlane, farPlane);
 	auto frustumCorners = GetFrustumCornersWorldSpace(proj, m_ShadowMapProps.ViewMatrix);
@@ -97,7 +97,7 @@ Mat4 Firebox::ShadowMap::GetLightSpaceMatrix(const float nearPlane, const float 
 	center /= frustumCorners.size();
 
 	Vector3 lightDir = glm::normalize(-m_ShadowMapProps.LightDir);
-	Mat4 lightView = glm::lookAt(center + lightDir * 50.0f, center, Vector3(0.0f, 1.0f, 0.0f));
+	Mat4x4 lightView = glm::lookAt(center + lightDir * 50.0f, center, Vector3(0.0f, 1.0f, 0.0f));
 
 	float minX = std::numeric_limits<float>::max();
 	float maxX = std::numeric_limits<float>::lowest();
@@ -124,7 +124,7 @@ Mat4 Firebox::ShadowMap::GetLightSpaceMatrix(const float nearPlane, const float 
 	if (maxZ < 0) maxZ += zOffset; else maxZ += zOffset;
 
 #ifdef GLM_FORCE_DEPTH_ZERO_TO_ONE
-	Mat4 lightProjection = glm::orthoZO(minX, maxX, minY, maxY, minZ, maxZ);
+	Mat4x4 lightProjection = glm::orthoZO(minX, maxX, minY, maxY, minZ, maxZ);
 #else
 	Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
 #endif

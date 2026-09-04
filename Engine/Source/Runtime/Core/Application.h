@@ -1,11 +1,9 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "Layers/LayerStack.h"
 #include "Core/Window.h"
-#include "Rendering/Renderer3D.h"
-#include "Editor/EditorPaths.h"
-#include "Editor/EnginePaths.h"
 
 #include <memory>
 

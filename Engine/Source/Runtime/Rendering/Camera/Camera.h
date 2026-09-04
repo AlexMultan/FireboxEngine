@@ -1,14 +1,12 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "Components/Components.h"
-
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 namespace Firebox {
 
-	class FIREBOX_API Camera
+	class FIREBOX_API Camera : public RefCounted
 	{
 		enum CameraMovement
 		{
@@ -31,9 +29,9 @@ namespace Firebox {
 
 		const Vector3& GetPosition() const { return m_Position; }
 		const Vector3& GetFront() const { return m_Front; }
-		const Mat4& GetViewMatrix() const { return m_ViewMatrix; }
-		virtual Mat4 GetPerspective() const { return Mat4(1.0f); }
-		virtual Mat4 GetPerspectiveInfinite() const { return Mat4(1.0f); }
+		const Mat4x4& GetViewMatrix() const { return m_ViewMatrix; }
+		virtual Mat4x4 GetPerspective() const { return Mat4x4(1.0f); }
+		virtual Mat4x4 GetPerspectiveInfinite() const { return Mat4x4(1.0f); }
 		virtual const float GetNearPlane() const = 0;
 		virtual const float GetFarPlane() const = 0;
 		virtual const float GetFOV() const = 0;
@@ -55,7 +53,7 @@ namespace Firebox {
 		Vector3 m_Up = Vector3(0.0f, 1.0f, 0.0f);
 		Vector3 m_Right = Vector3(1.0f, 0.0f, 0.0f);
 		Vector3 m_WorldUp = Vector3(0.0f, 1.0f, 0.0f);
-		Mat4 m_ViewMatrix = Mat4(1.0f);
+		Mat4x4 m_ViewMatrix = Mat4x4(1.0f);
 
 		inline void RecalculateViewMatrix()
 		{

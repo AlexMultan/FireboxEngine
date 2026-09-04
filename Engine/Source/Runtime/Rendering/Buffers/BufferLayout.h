@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
-#include "Core/Log.h"
-
-#include <vector>
+#include "Core/CoreMinimal.h"
 
 namespace Firebox {
 

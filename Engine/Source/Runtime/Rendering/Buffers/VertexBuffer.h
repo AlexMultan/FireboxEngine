@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "BufferLayout.h"
 
 namespace Firebox {
 
-	class FIREBOX_API VertexBuffer
+	class FIREBOX_API VertexBuffer : public RefCounted
 	{
 	public:
 		virtual ~VertexBuffer() = default;

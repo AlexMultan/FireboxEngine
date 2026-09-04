@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 
 namespace Firebox {
 
-	class FIREBOX_API Texture
+	class FIREBOX_API Texture : public RefCounted
 	{
 	public:
 		virtual ~Texture() = default;

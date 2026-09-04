@@ -39,8 +39,8 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 	if (m_SelectedEntity)
 	{
 		ImGui::Dummy(ImVec2(0.0f, 3.0f));
-		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(50.0f, 4.0f));
-		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(70.0f, 7.0f));
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
 		if (ImGui::ButtonCenteredOnLine("Add Component", 0.5f))
 		{
@@ -53,10 +53,12 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 		if (ImGui::BeginPopup("AddComponentPopup", popupFlags))
 		{
-			if (ImGui::Button("Material"))
+			if (ImGui::Button("Box Collider"))
 			{
-				
+				Ref<Firebox::BoxCollider> collider = CreateRef<Firebox::BoxCollider>();
+				m_SelectedEntity.AddComponent<BoxColliderComponent>(collider);
 			}
+
 			ImGui::EndPopup();
 		}
 
@@ -237,6 +239,21 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 					EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPostProcessSettings().AmbientOcclusionBias, "Bias");
 					ImGui::TreePop();
 				}
+				ImGui::TreePop();
+			}
+		}
+
+		if (m_SelectedEntity.HasComponent<BoxColliderComponent>())
+		{
+			PushTreeNodeStyle();
+
+			bool boxColliderTree = ImGui::TreeNodeEx("Box Collider", defaultFlags);
+
+			PopTreeNodeStyle();
+
+			if (boxColliderTree)
+			{
+				ImGui::Text("This is a box collider component :)");
 				ImGui::TreePop();
 			}
 		}

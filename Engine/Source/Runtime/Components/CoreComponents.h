@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "Core/UUID.h"
 
 struct IdComponent
@@ -24,14 +24,14 @@ struct TransformComponent
 
 	TransformComponent() = default;
 	TransformComponent(const TransformComponent&) = default;
-	TransformComponent(const Vector3& position, const Vector3& rotation, const Vector3& scale) : Position(position),
-		Rotation(rotation), Scale(scale)
+	TransformComponent(const Vector3& position, const Vector3& rotation, const Vector3& scale) 
+		: Position(position), Rotation(rotation), Scale(scale)
 	{
 	}
 
-	Mat4 GetTransform() const
+	Mat4x4 GetTransform() const
 	{
-		Mat4 model = Mat4(1.0f);
+		Mat4x4 model = Mat4x4(1.0f);
 		model = glm::translate(model, Position);
 		model = glm::rotate(model, glm::radians(Rotation.z), { 0.0f, 0.0f, 1.0f });
 		model = glm::rotate(model, glm::radians(Rotation.y), { 0.0f, 1.0f, 0.0f });
@@ -40,9 +40,9 @@ struct TransformComponent
 		return model;
 	}
 
-	Mat3 GetInverseNormal() const
+	Mat3x3 GetInverseNormal() const
 	{
-		return glm::transpose(glm::inverse(Mat3(GetTransform())));
+		return glm::transpose(glm::inverse(Mat3x3(GetTransform())));
 	}
 };
 

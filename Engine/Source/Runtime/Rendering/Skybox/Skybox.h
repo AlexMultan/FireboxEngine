@@ -8,7 +8,7 @@
 
 namespace Firebox {
 
-	class FIREBOX_API Skybox
+	class FIREBOX_API Skybox : public RefCounted
 	{
 	public:
 		Skybox();

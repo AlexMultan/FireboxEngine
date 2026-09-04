@@ -2,6 +2,7 @@
 
 #include <string>
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "Events/Event.h"
 
 namespace Firebox {

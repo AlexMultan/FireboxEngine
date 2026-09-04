@@ -4,6 +4,8 @@
 #include "Utils/DebugTools.h"
 #include "Utils/Timer.h"
 #include "Utils/String.h"
+#include "Rendering/Renderer3D.h"
+#include "Physics/Physics3D.h"
 
 Firebox::Application* Firebox::Application::s_Instance = nullptr;
 
@@ -33,10 +35,13 @@ void Firebox::Application::PushOverlay(Layer* layer)
 void Firebox::Application::Run()
 {
     m_Window->SetMaxFPS(144.0f);
-    Firebox::Renderer3D::Init();
+
+    Renderer3D::Init();
+    Physics3D::Init();
+
     for (Layer* layer : m_LayerStack)
     {
-        FB_CORE_TRACE("DefaultShader in OnAttach: {0}", (uint64_t)Firebox::Renderer3D::GetLitShader().get());
+        FB_CORE_TRACE("DefaultShader in OnAttach: {0}", (uint64_t)Firebox::Renderer3D::GetLitShader().Get());
         layer->OnAttach();
     }
 	Timer timer;
@@ -52,7 +57,7 @@ void Firebox::Application::Run()
 
     while (m_Window->IsRunning())
     {
-        Firebox::Console::SetDrawCalls(0);
+        Console::SetDrawCalls(0);
         m_Window->PerformanceCounterStart();
         m_Window->PollEvents();
 
@@ -73,7 +78,7 @@ void Firebox::Application::Run()
             layer->OnEditorUIRender();
         }
 
-        Firebox::Input::OnInputUpdate();
+        Input::OnInputUpdate();
 
         m_Window->SwapBuffers();
 
@@ -83,5 +88,6 @@ void Firebox::Application::Run()
     {
         layer->OnDetach();
     }
-    Firebox::Renderer3D::Shutdown();
+    Physics3D::Cleanup();
+    Renderer3D::Shutdown();
 }

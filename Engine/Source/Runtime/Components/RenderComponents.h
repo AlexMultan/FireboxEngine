@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "Rendering/Geometry/Mesh.h"
 #include "Rendering/Materials/Material.h"
 #include "Rendering/Geometry/StaticMesh.h"

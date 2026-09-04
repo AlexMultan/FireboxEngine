@@ -79,9 +79,6 @@ project "PhysX"
         physxdir .. "/**/mac/**"
     }
 
-		filter {"system:windows", "configurations:Release"}
-			buildoptions "/MT"
-
 	filter "system:linux"
 		removefiles{
             physxdir .. "/**/windows/**",

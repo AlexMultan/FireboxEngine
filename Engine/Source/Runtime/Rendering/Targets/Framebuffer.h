@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 
 namespace Firebox {
 
@@ -9,7 +10,7 @@ namespace Firebox {
 		uint Width, Height;
 	};
 
-	class FIREBOX_API Framebuffer
+	class FIREBOX_API Framebuffer : public RefCounted
 	{
 	public:
 		virtual void BindFramebuffer() = 0;

@@ -9,7 +9,6 @@
 #include "Panels/HierarchyPanel.h"
 #include "Panels/StatsPanel.h"
 #include "Rendering/Camera/PerspectiveCamera.h"
-#include "Scene/Scene.h"
 #include "Scene/Entity.h"
 #include "EditorContext.h"
 #include "Components/CoreComponents.h"
@@ -40,6 +39,7 @@ namespace FireboxEditor {
 		EditorContext m_EditorContext;
 		ImGuiWindowFlags m_WindowFlags;
 		ImGuiDockNodeFlags m_DockNodeFlags;
+		String m_EditorIni;
 
 		AssetBrowser m_AssetBrowser;
 		PropertiesPanel m_PropertiesPanel;

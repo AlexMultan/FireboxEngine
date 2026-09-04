@@ -7,7 +7,7 @@
 
 namespace Firebox {
 
-	class FIREBOX_API Entity
+	class FIREBOX_API Entity : public RefCounted
 	{
 	public:
 		Entity();
@@ -57,11 +57,15 @@ namespace Firebox {
 			return m_Scene != nullptr && m_Handle != entt::null && m_Scene->m_Registry.valid(m_Handle);
 		}
 
+		bool operator==(const Entity& other) const
+		{
+			return m_Handle == other.m_Handle && m_Scene == other.m_Scene;
+		}
+
 		inline const entt::entity GetHandle() const { return m_Handle; }
 
 	private:
 		entt::entity m_Handle{ entt::null };
-		Ref<Entity> m_ParentEntity;
 		Scene* m_Scene = nullptr;
 	};
 }

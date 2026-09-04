@@ -29,7 +29,7 @@
 #ifndef PHYSX_SNIPPET_PRINT_H
 #define PHYSX_SNIPPET_PRINT_H
 
-#include "foundation/PxPreprocessor.h"
+#include "../../include/foundation/PxPreprocessor.h"
 
 #if PX_SWITCH
 #include "../SnippetCommon/Switch/SwitchSnippetPrint.h"

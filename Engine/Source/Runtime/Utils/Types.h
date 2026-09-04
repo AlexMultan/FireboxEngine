@@ -23,19 +23,10 @@ typedef uint64_t uint64;
 using String = std::string;
 
 template<typename T>
-using Ref = std::shared_ptr<T>;
-
-template<typename T>
 using Scope = std::unique_ptr<T>;
 
 template<typename T>
 using WeakRef = std::weak_ptr<T>;
-
-template<typename T, typename... Args>
-constexpr Ref<T> CreateRef(Args&&... args)
-{
-	return std::make_shared<T>(std::forward<Args>(args)...);
-}
 
 template<typename T, typename... Args>
 constexpr Scope<T> CreateScope(Args&&... args)
@@ -46,9 +37,9 @@ constexpr Scope<T> CreateScope(Args&&... args)
 using Vector2 = glm::vec2;
 using Vector3 = glm::vec3;
 using Vector4 = glm::vec4;
-using Mat2 = glm::mat2;
-using Mat3 = glm::mat3;
-using Mat4 = glm::mat4;
+using Mat2x2 = glm::mat2;
+using Mat3x3 = glm::mat3;
+using Mat4x4 = glm::mat4;
 using Quat = glm::quat;
 
 namespace Utils {

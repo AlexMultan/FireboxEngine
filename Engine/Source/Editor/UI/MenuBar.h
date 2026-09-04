@@ -16,6 +16,9 @@ namespace FireboxEditor {
 		void RenderMenuBar();
 
 	private:
+		void AddStaticMeshEntity(const String& name, const String& path);
+
+	private:
 		EditorContext& m_Context;
 		Ref<Firebox::Scene> m_Scene;
 	};

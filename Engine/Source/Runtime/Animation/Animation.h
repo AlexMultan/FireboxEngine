@@ -7,7 +7,7 @@ namespace Firebox {
 
 	struct AssimpNodeData
 	{
-		Mat4 Transformation;
+		Mat4x4 Transformation;
 		String Name;
 		int ChildrenCount;
 		std::vector<AssimpNodeData> Children;
