@@ -31,10 +31,9 @@ A custom 3D game engine built from scratch in C++, featuring a standalone editor
 - **SSAO** (Screen Space Ambient Occlusion)
 - **Skybox** rendering via dedicated render pass
 - **Post processing** pipeline with configurable settings
-- Debug visualization shaders: cascade levels, depth, unlit, metallic, roughness
+- Debug visualization shaders: cascade levels, depth, albedo, metallic, roughness, normal, position
 - Gamma correction
 - Editor grid
-- Built in primitive models: cube, sphere, plane and other basic shapes
 ### Material System
 - Slot based material system for static meshes (Unreal style material slots)
 - PBR material properties: albedo, normal, metallic, roughness, AO
@@ -59,11 +58,17 @@ A custom 3D game engine built from scratch in C++, featuring a standalone editor
 - Layer system
 - `Mathf` namespace: `Lerp`, `Slerp`, `Magnitude` and other math utilities
 - Random number generator
-- Dedicated GPU forcing on Windows (NvOptimus/AMD PowerXpress) and Linux (NV_PRIME/DRI_PRIME)
+- Dedicated GPU forcing on Windows (NvOptimus/AMD PowerXpress) and Linux (NV_PRIME/DRI_PRIME), for OpenGL
+## Physics System (WIP)
+- Powered by Nvidia PhysX
+- Physics scene management with adding and removing physics actors at runtime
+- BoxCollider class and BoxColliderComponent for rigid body collision
+- BoxCollider debug visualization in the editor viewport (WIP, needs polishing)
 ## Dependencies
  
 - SDL3
-- ImGui
+- Nvidia PhysX
+- Dear ImGui
 - ImGuizmo
 - GLM
 - spdlog
@@ -119,22 +124,31 @@ git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
 - Fix cascaded shadow maps in deferred pipeline
 - Screen Space Reflections (SSR)
 - Screen Space Global Illumination (SSGI)
-- Subpixel Morphological Anti-Aliasing (SMAA) 
+- Subpixel Morphological Anti-Aliasing (SMAA)
+- Image-based lighting (IBL)
 - Bloom and other post processing effects
 - Point light and spot light shadows
-- LOD system
-- GPU instancing
+- GPU instancing and batching
 - Particle system
 ### Graphics API
 - Complete Vulkan backend via RHI layer (`VulkanSwapchain`, command buffers, render passes)
 - Full RHI abstraction so renderer is completely API agnostic
 - Eventually deprecate direct OpenGL calls in favor of RHI
+### Physics
+- SphereCollider, CapsuleCollider and ConvexCollider
+- RigidBody component with mass, drag and constraints
+- Static and dynamic physics actors
+- Physics material (friction, restitution)
+- Trigger volumes and collision callbacks
+- Raycasting
+- Character controller
 ### Engine
 - Full asset manager with UUID based asset registry and asset handles
-- Complete scene serialization for all component types once asset manager is in place
 - Hot reload for shaders and assets
 - Prefab system
-- C# scripting via .NET
+- Lua scripting
+- AngelScript scripting
+- Native C++ scripting for performance critical behaviors
 ### Editor
 - Content browser with asset drag and drop into viewport
 - Play In Editor with pause and stop
