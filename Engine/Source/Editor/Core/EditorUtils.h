@@ -19,6 +19,8 @@ namespace FireboxEditor {
 		static const uint GetEmptySceneThumbnail();
 		static const uint GetBasicSceneThumbnail();
 		static const ImVec2& GetScreenSize();
+		static const uint GetCameraSettingsIcon();
+		static const uint GetRenderingSettingsIcon();
 
 	private:
 		static ImGuiIO* s_ImGuiIO;
@@ -31,5 +33,7 @@ namespace FireboxEditor {
 		static uint s_ReturnIcon;
 		static uint s_EmptySceneThumbnail;
 		static uint s_BasicSceneThumbnail;
+		static uint s_CameraSettingsIcon;
+		static uint s_RenderingSettingsIcon;
 	};
 }

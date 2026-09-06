@@ -6,6 +6,7 @@
 #include "Utils/String.h"
 #include "Components/CoreComponents.h"
 #include "Rendering/Renderer3D.h"
+#include "Core/EditorUtils.h"
 
 #include <imgui.h>
 #include <ImGuizmo.h>
@@ -104,18 +105,18 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Mat4x4& viewMatrix, cons
 		}
 	}
 		
-	ImVec2 CameraSettingsPos{ m_ViewportSize.x - 70.0f, 30.0f };
+	ImVec2 cameraSettingsPos{ 10.0f, 30.0f };
 	ImGui::SetNextItemAllowOverlap();
-	ImGui::SetCursorPos(CameraSettingsPos);
-	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 4.0f);
+	ImGui::SetCursorPos(cameraSettingsPos);
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.6f, 0.6f, 0.6f, 0.4f));
-	if (ImGui::Button("Camera"))
+	uint cameraIcon = FireboxEditor::EditorUtils::GetCameraSettingsIcon();
+	if (ImGui::ImageButton("CameraSettingsIcon", (ImTextureID)(uintptr_t)cameraIcon, {20.0f, 20.0f}, {0, 1}, {1, 0}))
 	{
 		ImGui::OpenPopup("CameraSettingsPopup");
 	}
-	ImGui::PopStyleVar();
 	ImGui::PopStyleColor();
 
+	ImGui::SetNextWindowPos(ImVec2(cameraSettingsPos.x, cameraSettingsPos.y + 90.0f));
 	ImGuiWindowFlags popupFlags = ImGuiWindowFlags_NoMove;
 	if (ImGui::BeginPopup("CameraSettingsPopup", popupFlags))
 	{
@@ -137,19 +138,16 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Mat4x4& viewMatrix, cons
 		ImGui::PopStyleColor();
 		ImGui::EndPopup();
 	}
-
-	ImVec2 RenderingSettingsPos{ CameraSettingsPos.x - 80.0f, CameraSettingsPos.y };
+	ImGui::SameLine();
 	ImGui::SetNextItemAllowOverlap();
-	ImGui::SetCursorPos(RenderingSettingsPos);
-	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 4.0f);
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.6f, 0.6f, 0.6f, 0.4f));
-	if (ImGui::Button("Rendering"))
+	uint renderingIcon = FireboxEditor::EditorUtils::GetRenderingSettingsIcon();
+	if (ImGui::ImageButton("Rendering", (ImTextureID)(uintptr_t)renderingIcon, {20.0f, 20.0f}, {0, 1}, {1, 0}))
 	{
 		ImGui::OpenPopup("RenderingSettingsPopup");
 	}
-	ImGui::PopStyleVar();
 	ImGui::PopStyleColor();
-
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetWindowPos().x + cameraSettingsPos.x, cameraSettingsPos.y + 90.0f));
 	if (ImGui::BeginPopup("RenderingSettingsPopup", popupFlags))
 	{
 		ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.9f, 0.9f, 0.9f, 1.0f));

@@ -10,6 +10,8 @@ uint FireboxEditor::EditorUtils::s_FileIcon = 0;
 uint FireboxEditor::EditorUtils::s_ReturnIcon = 0;
 uint FireboxEditor::EditorUtils::s_EmptySceneThumbnail = 0;
 uint FireboxEditor::EditorUtils::s_BasicSceneThumbnail = 0;
+uint FireboxEditor::EditorUtils::s_CameraSettingsIcon = 0;
+uint FireboxEditor::EditorUtils::s_RenderingSettingsIcon = 0;
 ImFont* FireboxEditor::EditorUtils::s_SelectedEntityNodeFont = nullptr;
 ImFont* FireboxEditor::EditorUtils::s_TransformAxesFont = nullptr;
 ImFont* FireboxEditor::EditorUtils::s_TransformValuesFont = nullptr;
@@ -27,11 +29,23 @@ void FireboxEditor::EditorUtils::Init(ImGuiIO* io)
 	s_SelectedEntityNodeFont = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/Geist/static/Geist-Bold.ttf").string().c_str(), 17.0f);
 	s_TransformAxesFont = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/Geist_Mono/static/GeistMono-SemiBold.ttf").string().c_str(), 16.0f);
 	s_TransformValuesFont = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/Ubuntu_Sans/static/UbuntuSans_SemiCondensed-Medium.ttf").string().c_str(), 17.0f);
+	s_CameraSettingsIcon = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_CameraIcon.png").string())->GetTextureID();
+	s_RenderingSettingsIcon = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_RenderingIcon.png").string())->GetTextureID();
 }
 
 const uint FireboxEditor::EditorUtils::GetMeshIcon()
 {
 	return s_MeshIcon;
+}
+
+const uint FireboxEditor::EditorUtils::GetCameraSettingsIcon()
+{
+	return s_CameraSettingsIcon;
+}
+
+const uint FireboxEditor::EditorUtils::GetRenderingSettingsIcon()
+{
+	return s_RenderingSettingsIcon;
 }
 
 ImFont* FireboxEditor::EditorUtils::GetSelectedEntityNodeFont()

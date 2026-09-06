@@ -12,6 +12,5 @@ namespace Firebox {
 
 	private:
 		PxRigidDynamic* m_BodyDynamic = nullptr;
-		PxGeometry m_Geometry;
 	};
 }
