@@ -19,8 +19,8 @@ namespace Firebox {
 		virtual void SetVector2(const String& name, Vector2 vector2) override;
 		virtual void SetVector3(const String& name, Vector3 vector3) override;
 		virtual void SetVector4(const String& name, Vector4 vector4) override;
-		virtual void SetMat3(const String& name, const Mat3& matrix) override;
-		virtual void SetMat4(const String& name, const Mat4& matrix) override;
+		virtual void SetMat3(const String& name, const Mat3x3& matrix) override;
+		virtual void SetMat4(const String& name, const Mat4x4& matrix) override;
 
 		virtual uint GetID() const override { return ID; }
 

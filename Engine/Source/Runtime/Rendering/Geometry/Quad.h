@@ -7,7 +7,7 @@
 
 namespace Firebox {
 
-	class FIREBOX_API Quad
+	class FIREBOX_API Quad : public RefCounted
 	{
 	public:
 		Quad();

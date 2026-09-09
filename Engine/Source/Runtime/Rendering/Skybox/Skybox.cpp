@@ -15,17 +15,17 @@ Firebox::Skybox::Skybox()
 	m_VAO->SetIndexBuffer(m_IBO);
 	m_VAO->Unbind();
 
-	m_SkyboxShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Skybox.vert").string().c_str(), 
-		Firebox::EngineContent::Get("Shaders/GLSL/Skybox.frag").string().c_str(), nullptr);
+	m_SkyboxShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Skybox.vert").string().c_str(), 
+		Firebox::EngineContent::Shaders("GLSL/Skybox.frag").string().c_str(), nullptr);
 
 	m_SkyboxMaterial = CreateRef<Firebox::Material>(m_SkyboxShader);
 	m_Faces = {
-		Firebox::EngineContent::Get("Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_right.png").string(),
-		Firebox::EngineContent::Get("Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_left.png").string(),
-		Firebox::EngineContent::Get("Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_top.png").string(),
-		Firebox::EngineContent::Get("Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_bottom.png").string(),
-		Firebox::EngineContent::Get("Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_front.png").string(),
-		Firebox::EngineContent::Get("Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_back.png").string()
+		"Resources/EngineContent/Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_right.png",
+		"Resources/EngineContent/Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_left.png",
+		"Resources/EngineContent/Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_top.png",
+		"Resources/EngineContent/Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_bottom.png",
+		"Resources/EngineContent/Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_front.png",
+		"Resources/EngineContent/Textures/Skybox/T_Cubemap_Sky_PartlyCloudy_back.png"
 	};
 	m_SkyboxMaterial->SetCubemapTexture(Firebox::Texture::CreateCubemap(m_Faces));
 }
@@ -44,8 +44,8 @@ Firebox::Skybox::Skybox(const std::vector<String>& faces)
 	m_VAO->SetIndexBuffer(m_IBO);
 	m_VAO->Unbind();
 
-	m_SkyboxShader = Shader::Create(Firebox::EngineContent::Get("Shaders/GLSL/Skybox.vert").string().c_str(),
-		Firebox::EngineContent::Get("Shaders/GLSL/Skybox.frag").string().c_str(), nullptr);
+	m_SkyboxShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Skybox.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/Skybox.frag").string().c_str(), nullptr);
 
 	m_SkyboxMaterial = CreateRef<Firebox::Material>(m_SkyboxShader);
 	m_SkyboxMaterial->SetCubemapTexture(Firebox::Texture::CreateCubemap(faces));

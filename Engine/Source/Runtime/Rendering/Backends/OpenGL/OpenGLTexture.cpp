@@ -1,6 +1,7 @@
 #include "OpenGLTexture.h"
 #include "Core/Log.h"
 #include "OpenGLDebugger.h"
+#include "Editor/EnginePaths.h"
 
 #include <glad/glad.h>
 #define STB_IMAGE_IMPLEMENTATION
@@ -55,7 +56,7 @@ Firebox::OpenGLTexture::OpenGLTexture(const std::vector<String>& faces)
 
 	for (size_t i = 0; i < faces.size(); i++)
 	{
-		unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+		unsigned char* data = stbi_load(EngineContent::GetRoot(faces[i]).string().c_str(), &width, &height, &nrChannels, 0);
 		if (data)
 		{
 			GLenum format;

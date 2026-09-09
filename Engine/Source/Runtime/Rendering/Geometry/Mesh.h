@@ -7,7 +7,7 @@
 
 namespace Firebox {
 
-	class FIREBOX_API Mesh
+	class FIREBOX_API Mesh : public RefCounted
 	{
 	public:
 		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint>& indices);

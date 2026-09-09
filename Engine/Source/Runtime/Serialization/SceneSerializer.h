@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "Scene/Scene.h"
 #include "Scene/Entity.h"
 #include "ComponentSerializer.h"
@@ -23,16 +23,26 @@ namespace nlohmann {
 					{"Tag", registry.get<TagComponent>(handle).Tag},
 					{"Transform", registry.get<TransformComponent>(handle)}
 				};
-/*
+#if 0
 				if (registry.any_of<SkyboxComponent>(handle))
 				{
 					entityJson["Skybox"] = registry.get<SkyboxComponent>(handle);
-				}*/
-
-				if (registry.any_of<DirectionalLightComponent>(handle))
-				{
-					entityJson["Directional Light"] = registry.get<DirectionalLightComponent>(handle);
 				}
+#endif
+				if (registry.any_of<DirectionalLightComponent>(handle))
+					entityJson["Directional Light"] = registry.get<DirectionalLightComponent>(handle);
+
+				if (registry.any_of<PointLightComponent>(handle))
+					entityJson["Point Light"] = registry.get<PointLightComponent>(handle);
+
+				if (registry.any_of<SpotLightComponent>(handle))
+					entityJson["Spot Light"] = registry.get<SpotLightComponent>(handle);
+
+				if (registry.any_of<StaticMeshComponent>(handle))
+					entityJson["Static Mesh"] = registry.get<StaticMeshComponent>(handle);
+
+				if (registry.any_of<PostProcessComponent>(handle))
+					entityJson["Post Processing"] = registry.get<PostProcessComponent>(handle);
 
 				entitiesJson.push_back(entityJson);
 			}
@@ -49,16 +59,26 @@ namespace nlohmann {
 				e.AddComponent<IdComponent>(Firebox::UUID(entityJson.at("Entity").get<uint64>()));
 				e.AddComponent<TagComponent>(entityJson.at("Tag").get<String>());
 				e.AddComponent<TransformComponent>(entityJson.at("Transform").get<TransformComponent>());
-
-				/*if (entityJson.contains("Skybox"))
+#if 0
+				if (entityJson.contains("Skybox"))
 				{
 					e.AddComponent<SkyboxComponent>(entityJson.at("Skybox").get<SkyboxComponent>());
-				}*/
-
-				if (entityJson.contains("Directional Light"))
-				{
-					e.AddComponent<DirectionalLightComponent>(entityJson.at("Directional Light").get<DirectionalLightComponent>());
 				}
+#endif
+				if (entityJson.contains("Directional Light"))
+					e.AddComponent<DirectionalLightComponent>(entityJson.at("Directional Light").get<DirectionalLightComponent>());
+
+				if (entityJson.contains("Point Light"))
+					e.AddComponent<PointLightComponent>(entityJson.at("Point Light").get<PointLightComponent>());
+
+				if (entityJson.contains("Spot Light"))
+					e.AddComponent<SpotLightComponent>(entityJson.at("Spot Light").get<SpotLightComponent>());
+
+				if (entityJson.contains("Static Mesh"))
+					e.AddComponent<StaticMeshComponent>(entityJson.at("Static Mesh").get<StaticMeshComponent>());
+
+				if (entityJson.contains("Post Processing"))
+					e.AddComponent<PostProcessComponent>(entityJson.at("Post Processing").get<PostProcessComponent>());
 			}
 		}
 	};

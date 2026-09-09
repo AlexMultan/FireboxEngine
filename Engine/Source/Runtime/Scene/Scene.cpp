@@ -2,7 +2,9 @@
 #include "Components/CoreComponents.h"
 #include "Components/RenderComponents.h"
 #include "Components/AnimationComponents.h"
+#include "Components/PhysicsComponents.h"
 #include "Rendering/Renderer3D.h"
+#include "Physics/Physics3D.h"
 #include "Serialization/SceneSerializer.h"
 #include "Entity.h"
 
@@ -12,7 +14,8 @@ namespace Firebox {
 
 	Scene::Scene()
 	{
-
+		m_Registry.on_construct<BoxColliderComponent>().connect<&Scene::OnBoxColliderAdded>(*this);
+		m_Registry.on_destroy<BoxColliderComponent>().connect<&Scene::OnBoxColliderRemoved>(*this);
 	}
 
 	Scene::~Scene()
@@ -48,11 +51,13 @@ namespace Firebox {
 		{
 			if (entity.HasComponent<PointLightComponent>()) [[unlikely]]
 			{
-				Firebox::Renderer3D::DestroyPointLight(entity.GetComponent<PointLightComponent>());
-				std::cout << "Destoyed!\n";
+				Renderer3D::DestroyPointLight(entity.GetComponent<PointLightComponent>());
 			}
-			else
-				std::cout << "Not Destroyed!\n";
+
+			if (entity.HasComponent<BoxColliderComponent>())
+			{
+				Physics3D::RemoveActor(entity.GetComponent<BoxColliderComponent>().Collider->GetBody());
+			}
 
 			m_Registry.destroy(entity.GetHandle());
 		}
@@ -60,9 +65,24 @@ namespace Firebox {
 
 	void Scene::OnUpdate(float deltaTime)
 	{
+		
+	}
+
+	void Scene::OnPhysicsUpdate(float deltaTime)
+	{
+		Physics3D::Update(deltaTime);
+
+		for (auto&& [entity, transform, boxCollider] : m_Registry.view<TransformComponent, BoxColliderComponent>().each())
+		{
+			boxCollider.Collider->Synchronize(transform, boxCollider.IsStatic);
+		}
+	}
+
+	void Scene::OnRender(float deltaTime)
+	{
 		for (auto&& [entity, transform, mesh, material] : m_Registry.view<TransformComponent, MeshComponent, MaterialComponent>().each())
 		{
-			Renderer3D::DrawMesh(mesh.Mesh, material.Material, transform);
+			Renderer3D::SubmitMesh(mesh.Mesh, material.Material, transform);
 		}
 
 		for (auto&& [entity, transform, staticMesh] : m_Registry.view<TransformComponent, StaticMeshComponent>().each())
@@ -72,7 +92,7 @@ namespace Firebox {
 
 			for (size_t i = 0; i < meshes.size(); i++)
 			{
-				Renderer3D::DrawMesh(meshes[i], materials[i], transform);
+				Renderer3D::SubmitMesh(meshes[i], materials[i], transform);
 			}
 		}
 
@@ -84,7 +104,7 @@ namespace Firebox {
 
 			for (size_t i = 0; i < meshes.size(); i++)
 			{
-				Renderer3D::DrawMesh(meshes[i], materials[i], transform, animator.Animator);
+				Renderer3D::SubmitMesh(meshes[i], materials[i], transform, animator.Animator);
 			}
 		}
 
@@ -92,7 +112,32 @@ namespace Firebox {
 		{
 			Renderer3D::DrawSkybox(skybox.Skybox);
 		}
+
+		for (auto&& [entity, transform, boxCollider] : m_Registry.view<TransformComponent, BoxColliderComponent>().each())
+		{
+			Renderer3D::SubmitDebugBox(transform);
+		}
 	}
+
+	void Scene::OnBoxColliderAdded(entt::registry& registry, entt::entity entity)
+	{
+		auto&& [transform, boxCollider] = m_Registry.get<TransformComponent, BoxColliderComponent>(entity);
+
+		if (!boxCollider.Collider)
+			return;
+
+		boxCollider.Collider->CreateBoxCollider(Physics3D::GetPhysics(), Physics3D::GetScene(), transform, boxCollider.Size, boxCollider.IsStatic);
+	}
+
+	void Scene::OnBoxColliderRemoved(entt::registry& registry, entt::entity entity)
+	{
+		if (!registry.all_of<TransformComponent>(entity))
+			return;
+
+		auto&& [transform, boxCollider] = m_Registry.get<TransformComponent, BoxColliderComponent>(entity);
+		Physics3D::RemoveActor(boxCollider.Collider->GetBody());
+	}
+
 	void Scene::SaveScene(const String& filename)
 	{
 		JSON j = *this;
@@ -128,5 +173,3 @@ namespace Firebox {
 		return scene;
 	}
 }
-
-

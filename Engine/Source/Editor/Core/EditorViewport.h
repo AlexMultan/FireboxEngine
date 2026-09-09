@@ -9,7 +9,6 @@
 #include "Panels/HierarchyPanel.h"
 #include "Panels/StatsPanel.h"
 #include "Rendering/Camera/PerspectiveCamera.h"
-#include "Scene/Scene.h"
 #include "Scene/Entity.h"
 #include "EditorContext.h"
 #include "Components/CoreComponents.h"
@@ -30,6 +29,7 @@ namespace FireboxEditor {
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
 		virtual void OnUpdate(float deltaTime) override;
+		virtual void OnPhysicsUpdate(float deltaTime) override;
 		virtual void OnRender(float deltaTime) override;
 		virtual void OnEditorUIRender() override;
 		virtual void OnEvent(Firebox::Event& event) override;
@@ -40,6 +40,7 @@ namespace FireboxEditor {
 		EditorContext m_EditorContext;
 		ImGuiWindowFlags m_WindowFlags;
 		ImGuiDockNodeFlags m_DockNodeFlags;
+		String m_EditorIni;
 
 		AssetBrowser m_AssetBrowser;
 		PropertiesPanel m_PropertiesPanel;
@@ -60,5 +61,10 @@ namespace FireboxEditor {
 		Firebox::Entity m_GunEntity{};
 		Ref<Firebox::Material> m_GunMaterial;
 		Ref<Firebox::StaticMesh> m_GunMesh;
+
+		Firebox::Entity m_RifleEntity{};
+		Ref<Firebox::Material> m_RifleMaterial;
+		Ref<Firebox::Material> m_RifleMaterialMag;
+		Ref<Firebox::StaticMesh> m_RifleMesh;
 	};
 }

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 
 namespace Firebox {
-	class FIREBOX_API IndexBuffer
+	class FIREBOX_API IndexBuffer : public RefCounted
 	{
 	public:
 		~IndexBuffer() = default;

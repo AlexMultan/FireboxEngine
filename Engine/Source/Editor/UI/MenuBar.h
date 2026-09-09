@@ -16,10 +16,10 @@ namespace FireboxEditor {
 		void RenderMenuBar();
 
 	private:
-		EditorContext& m_Context;
-		Ref<Firebox::Scene> m_Scene;
+		void AddStaticMeshEntity(const String& name, const String& path);
 
 	private:
-		static void SDLCALL Callback(void* userdata, const char* const* filelist, int filter);
+		EditorContext& m_Context;
+		Ref<Firebox::Scene> m_Scene;
 	};
 }

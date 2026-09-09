@@ -1,10 +1,10 @@
 #include "Texture.h"
 #include "Rendering/Backends/OpenGL/OpenGLTexture.h"
-
+#include "Editor/EnginePaths.h"
 
 Ref<Firebox::Texture> Firebox::Texture::Create(const String& path)
 {
-	Ref<Texture> texture = CreateRef<OpenGLTexture>(path);
+	Ref<Texture> texture = CreateRef<OpenGLTexture>(EngineContent::GetRoot(path).string());
 	texture->SetTexturePath(path);
 	return texture;
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core.h"
+#include "Utils/Types.h"
 
 #include <type_traits>
 #include <random>

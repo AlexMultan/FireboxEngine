@@ -391,6 +391,134 @@ void ImGui::StyleColorsClassic(ImGuiStyle* dst)
     colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
 }
 
+void ImGui::FireboxStyleColorDark(ImGuiStyle* dst)
+{
+    ImGuiStyle* style = dst ? dst : &ImGui::GetStyle();
+    ImVec4* colors = style->Colors;
+
+    const ImVec4 bg_darkest = ImVec4(0.11f, 0.11f, 0.12f, 1.00f);
+    const ImVec4 bg_dark = ImVec4(0.14f, 0.14f, 0.15f, 1.00f);
+    const ImVec4 bg_mid = ImVec4(0.18f, 0.18f, 0.19f, 1.00f);
+    const ImVec4 bg_light = ImVec4(0.24f, 0.24f, 0.26f, 1.00f);
+    const ImVec4 bg_lighter = ImVec4(0.30f, 0.30f, 0.32f, 1.00f);
+
+    const ImVec4 accent = ImVec4(0.00f, 0.48f, 0.80f, 1.00f);
+    const ImVec4 accent_hover = ImVec4(0.11f, 0.58f, 0.90f, 1.00f);
+    const ImVec4 accent_dim = ImVec4(0.00f, 0.48f, 0.80f, 0.35f);
+
+    const ImVec4 text = ImVec4(0.85f, 0.85f, 0.85f, 1.00f);
+    const ImVec4 text_dim = ImVec4(0.50f, 0.50f, 0.52f, 1.00f);
+    const ImVec4 border = ImVec4(0.08f, 0.08f, 0.09f, 1.00f);
+
+    colors[ImGuiCol_Text] = text;
+    colors[ImGuiCol_TextDisabled] = text_dim;
+    colors[ImGuiCol_WindowBg] = bg_dark;
+    colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    colors[ImGuiCol_PopupBg] = bg_darkest;
+    colors[ImGuiCol_Border] = border;
+    colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+
+    colors[ImGuiCol_FrameBg] = bg_darkest;
+    colors[ImGuiCol_FrameBgHovered] = bg_mid;
+    colors[ImGuiCol_FrameBgActive] = bg_light;
+
+    colors[ImGuiCol_TitleBg] = bg_darkest;
+    colors[ImGuiCol_TitleBgActive] = bg_darkest;
+    colors[ImGuiCol_TitleBgCollapsed] = bg_darkest;
+    colors[ImGuiCol_MenuBarBg] = bg_mid;
+
+    colors[ImGuiCol_ScrollbarBg] = bg_darkest;
+    colors[ImGuiCol_ScrollbarGrab] = bg_light;
+    colors[ImGuiCol_ScrollbarGrabHovered] = bg_lighter;
+    colors[ImGuiCol_ScrollbarGrabActive] = accent;
+
+    colors[ImGuiCol_CheckMark] = accent;
+    colors[ImGuiCol_SliderGrab] = ImVec4(0.45f, 0.45f, 0.47f, 1.00f);
+    colors[ImGuiCol_SliderGrabActive] = accent;
+
+    colors[ImGuiCol_Button] = bg_light;
+    colors[ImGuiCol_ButtonHovered] = bg_lighter;
+    colors[ImGuiCol_ButtonActive] = accent_dim;
+
+    colors[ImGuiCol_Header] = bg_light;
+    colors[ImGuiCol_HeaderHovered] = bg_lighter;
+    colors[ImGuiCol_HeaderActive] = accent_dim;
+
+    colors[ImGuiCol_Separator] = border;
+    colors[ImGuiCol_SeparatorHovered] = accent;
+    colors[ImGuiCol_SeparatorActive] = accent_hover;
+
+    colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    colors[ImGuiCol_ResizeGripHovered] = accent_dim;
+    colors[ImGuiCol_ResizeGripActive] = accent;
+
+    colors[ImGuiCol_InputTextCursor] = colors[ImGuiCol_Text];
+
+    colors[ImGuiCol_Tab] = bg_dark;
+    colors[ImGuiCol_TabHovered] = bg_light;
+    colors[ImGuiCol_TabSelected] = bg_mid;
+    colors[ImGuiCol_TabSelectedOverline] = accent;
+    colors[ImGuiCol_TabDimmed] = bg_darkest;
+    colors[ImGuiCol_TabDimmedSelected] = bg_dark;
+    colors[ImGuiCol_TabDimmedSelectedOverline] = ImVec4(0.00f, 0.48f, 0.80f, 0.00f);
+
+    colors[ImGuiCol_DockingPreview] = accent_dim;
+    colors[ImGuiCol_DockingEmptyBg] = bg_darkest;
+
+    colors[ImGuiCol_PlotLines] = ImVec4(0.70f, 0.70f, 0.72f, 1.00f);
+    colors[ImGuiCol_PlotLinesHovered] = accent_hover;
+    colors[ImGuiCol_PlotHistogram] = ImVec4(0.45f, 0.60f, 0.75f, 1.00f);
+    colors[ImGuiCol_PlotHistogramHovered] = accent_hover;
+
+    colors[ImGuiCol_TableHeaderBg] = bg_mid;
+    colors[ImGuiCol_TableBorderStrong] = border;
+    colors[ImGuiCol_TableBorderLight] = ImVec4(0.16f, 0.16f, 0.17f, 1.00f);
+    colors[ImGuiCol_TableRowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.02f);
+
+    colors[ImGuiCol_TextLink] = accent;
+    colors[ImGuiCol_TextSelectedBg] = accent_dim;
+    colors[ImGuiCol_TreeLines] = border;
+
+    colors[ImGuiCol_DragDropTarget] = accent;
+    colors[ImGuiCol_DragDropTargetBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+
+    colors[ImGuiCol_UnsavedMarker] = accent;
+    colors[ImGuiCol_NavCursor] = accent;
+    colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+    colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.10f, 0.10f, 0.10f, 0.50f);
+    colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.60f);
+
+    style->WindowPadding = ImVec2(6, 6);
+    style->FramePadding = ImVec2(6, 3);
+    style->CellPadding = ImVec2(6, 3);
+    style->ItemSpacing = ImVec2(6, 4);
+    style->ItemInnerSpacing = ImVec2(5, 4);
+    style->IndentSpacing = 14.0f;
+    style->ScrollbarSize = 14.0f;
+    style->GrabMinSize = 8.0f;
+
+    style->WindowBorderSize = 0.0f;
+    style->ChildBorderSize = 1.0f;
+    style->PopupBorderSize = 1.0f;
+    style->FrameBorderSize = 0.0f;
+    style->TabBorderSize = 0.0f;
+    style->TabBarBorderSize = 1.0f;
+    style->SeparatorTextBorderSize = 1.0f;
+
+    style->WindowRounding = 0.0f;
+    style->ChildRounding = 0.0f;
+    style->FrameRounding = 0.0f;
+    style->PopupRounding = 0.0f;
+    style->ScrollbarRounding = 0.0f;
+    style->GrabRounding = 0.0f;
+    style->TabRounding = 0.0f;
+
+    style->WindowTitleAlign = ImVec2(0.00f, 0.50f);
+    style->ButtonTextAlign = ImVec2(0.50f, 0.50f);
+    style->SeparatorTextAlign = ImVec2(0.00f, 0.50f);
+}
+
 // Those light colors are better suited with a thicker font than the default one + FrameBorder
 void ImGui::StyleColorsLight(ImGuiStyle* dst)
 {

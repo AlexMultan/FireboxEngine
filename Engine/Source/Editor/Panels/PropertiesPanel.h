@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "Core/EditorContext.h"
 
 #include <imgui.h>

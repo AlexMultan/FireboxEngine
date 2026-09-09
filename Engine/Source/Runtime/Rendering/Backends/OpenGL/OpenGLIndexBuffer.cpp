@@ -6,7 +6,7 @@
 
 Firebox::OpenGL::OpenGLIndexBuffer::OpenGLIndexBuffer(const uint* indices, uint count) : m_Count(count)
 {
-	FB_ASSERT(sizeof(uint32_t) == sizeof(GLuint), "Size in bytes of uint32_t doesn't match the size of GLuint!");
+	FB_ASSERT(sizeof(uint32_t) == sizeof(GLuint), "Assertion Failed: Size in bytes of uint32_t doesn't match the size of GLuint!");
 	glGenBuffers(1, &m_RendererID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);

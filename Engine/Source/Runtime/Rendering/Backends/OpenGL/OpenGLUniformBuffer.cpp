@@ -9,7 +9,7 @@ Firebox::OpenGL::OpenGLUniformBuffer::OpenGLUniformBuffer()
 
 	glGenBuffers(1, &m_UBO);
 	glBindBuffer(GL_UNIFORM_BUFFER, m_UBO);
-	glBufferData(GL_UNIFORM_BUFFER, sizeof(Mat4) * 16, nullptr, GL_STATIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(Mat4x4) * 16, nullptr, GL_STATIC_DRAW);
 	glBindBufferBase(GL_UNIFORM_BUFFER, 0, m_UBO);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }

@@ -1,12 +1,11 @@
 #include "EditorViewport.h"
 #include "Core/Application.h"
-#include "Core/Log.h"
 #include "Input/Input.h"
 #include "Utils/DebugTools.h"
-#include "Utils/String.h"
 #include "Rendering/Geometry/PrimitiveShapes.h"
 #include "Core/EditorUtils.h"
 #include "Rendering/Targets/Framebuffer.h"
+#include "Rendering/Renderer3D.h"
 
 #include <imgui_impl_sdl3.h>
 #include <imgui_impl_opengl3.h>
@@ -16,7 +15,7 @@ FireboxEditor::EditorViewport::EditorViewport()
     : Layer("EditorLayer"), io(nullptr), m_HierarchyPanel("Hierarchy", m_EditorContext), m_PropertiesPanel("Details", m_EditorContext),
     m_ViewportPanel("Viewport", m_EditorContext), m_MenuBar(m_EditorContext), m_AssetBrowser("Content Browser", m_EditorContext)
 {
-   
+    m_EditorIni = Firebox::EngineContent::GetRoot("Engine/Source/Editor/FireboxEditor.ini").string();
 }
 
 FireboxEditor::EditorViewport::~EditorViewport()
@@ -29,6 +28,7 @@ void FireboxEditor::EditorViewport::OnAttach()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     io = &ImGui::GetIO();
+    io->IniFilename = m_EditorIni.c_str();
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
     io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -36,9 +36,9 @@ void FireboxEditor::EditorViewport::OnAttach()
     io->ConfigFlags |= ImGuiConfigFlags_DpiEnableScaleViewports;
     io->ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 
-    io->FontDefault = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/SourceCodePro/static/SourceCodePro-Regular.ttf").string().c_str(), 16.0f);
+    io->FontDefault = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/RobotoMono/RobotoMono-Medium.ttf").string().c_str(), 16.0f);
 
-    ImGui::FireboxEditorStyleClassic();
+    ImGui::FireboxStyleColorDark();
 
     Firebox::Window& window = Firebox::Application::Get().GetWindow();
     SDL_Window* sdlWindow = window.GetSDLWindow();
@@ -47,17 +47,10 @@ void FireboxEditor::EditorViewport::OnAttach()
     ImGuiStyle& style = ImGui::GetStyle();
     style.ScaleAllSizes(window.GetMainScale());
     style.FontScaleDpi = window.GetMainScale();
-    style.TabRounding = 3.0f;
     io->ConfigDpiScaleFonts = true;
     io->ConfigDpiScaleViewports = true;
 	io->ConfigDockingAlwaysTabBar = true;
     style.AntiAliasedFill = true;
-
-    if (io->ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    {
-        style.WindowRounding = 9.0f;
-        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-    }
 
     ImGui_ImplSDL3_InitForOpenGL(sdlWindow, glContext);
     ImGui_ImplOpenGL3_Init();
@@ -67,37 +60,56 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_StatsPanel = FireboxEditor::StatsPanel("Stats");
 
     m_EditorCamera = CreateRef<Firebox::PerspectiveCamera>(60.0f, 16.0f / 9.0f,
-        0.1f, 1000.0f);
+        0.01f, 1000.0f);
     m_EditorCamera->SetInputEnabled(false);
     m_EditorCamera->SetPosition({ 0.0f, 2.0f, 1.0f });
 
-    m_BunnyModel = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_StanfordBunny.obj").string());
+    m_BunnyModel = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_StanfordBunny.obj");
     m_BunnyEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Bunny");
     m_BunnyEntity.AddComponent<StaticMeshComponent>(m_BunnyModel);
     m_BunnyEntity.GetComponent<TransformComponent>().Position.y = 1.0f;
     m_BunnyEntity.GetComponent<TransformComponent>().Position.z = -1.0f;
     m_BunnyEntity.GetComponent<TransformComponent>().Scale = { 3.0f, 3.0f, 3.0f };
 
-    m_JerrycanMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/SM_Jerrycan.gltf").string());
+    m_JerrycanMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Jerrycan.gltf");
     m_JerrycanMaterial = CreateRef<Firebox::Material>();
-    m_JerrycanMaterial->SetDiffuseTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_BC.png").string()));
-    m_JerrycanMaterial->SetNormalTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_N.png").string()));
-    m_JerrycanMaterial->SetRoughnessTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_R.png").string()));
-    m_JerrycanMaterial->SetMetallicTexture(Firebox::Texture::Create(Firebox::EngineContent::Get("Textures/T_Jerrycan_M.png").string()));
+    m_JerrycanMaterial->SetDiffuseTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/T_Jerrycan_BC.png"));
+    m_JerrycanMaterial->SetNormalTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/T_Jerrycan_N.png"));
+    m_JerrycanMaterial->SetRoughnessTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/T_Jerrycan_R.png"));
+    m_JerrycanMaterial->SetMetallicTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/T_Jerrycan_M.png"));
     m_JerrycanMesh->SetMaterial(0, m_JerrycanMaterial);
     m_JerrycanEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Jerrycan");
     m_JerrycanEntity.AddComponent<StaticMeshComponent>(m_JerrycanMesh);
     m_JerrycanEntity.GetComponent<TransformComponent>().Position.y = 0.5f;
 
-    m_GunMesh = CreateRef<Firebox::StaticMesh>(FireboxEditor::EditorContent::Get("Models/GLOCK19.glb").string());
+    m_GunMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/GLOCK19.glb");
     m_GunMaterial = CreateRef<Firebox::Material>();
-    m_GunMaterial->SetDiffuseTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/glock_4K_BaseColor.png").string()));
-    m_GunMaterial->SetNormalTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/glock_4K_Normal.png").string()));
-    m_GunMaterial->SetRoughnessTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/glock_4K_Roughness.png").string()));
-    m_GunMaterial->SetMetallicTexture(Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Textures/glock_4K_Metallic.png").string()));
+    m_GunMaterial->SetDiffuseTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/glock_4K_BaseColor.png"));
+    m_GunMaterial->SetNormalTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/glock_4K_Normal.png"));
+    m_GunMaterial->SetRoughnessTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/glock_4K_Roughness.png"));
+    m_GunMaterial->SetMetallicTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/glock_4K_Metallic.png"));
     m_GunMesh->SetMaterial(0, m_GunMaterial);
     m_GunEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Gun");
     m_GunEntity.AddComponent<StaticMeshComponent>(m_GunMesh);
+
+    m_RifleMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_AKM.glb");
+
+    m_RifleMaterial = CreateRef<Firebox::Material>();
+    m_RifleMaterial->SetDiffuseTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/akm_Base_Color.tga"));
+    m_RifleMaterial->SetNormalTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/akm_Normal_OpenGL.tga"));
+    m_RifleMaterial->SetRoughnessTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/akm_Roughness.tga"));
+    m_RifleMaterial->SetMetallicTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/akm_Metallic.tga"));
+      
+    m_RifleMaterialMag = CreateRef<Firebox::Material>();
+    m_RifleMaterialMag->SetDiffuseTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/magazine_Base_Color.tga"));
+    m_RifleMaterialMag->SetNormalTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/magazine_Normal_OpenGL.tga"));
+    m_RifleMaterialMag->SetRoughnessTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/magazine_Roughness.tga"));
+    m_RifleMaterialMag->SetMetallicTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/magazine_Metallic.tga"));
+
+    m_RifleMesh->SetMaterial(0, m_RifleMaterial);
+    m_RifleMesh->SetMaterial(1, m_RifleMaterialMag);
+    m_RifleEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Rifle");
+    m_RifleEntity.AddComponent<StaticMeshComponent>(m_RifleMesh);
 }
 
 void FireboxEditor::EditorViewport::OnDetach()
@@ -110,6 +122,18 @@ void FireboxEditor::EditorViewport::OnDetach()
 
 void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
 {
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_Q))
+        m_JerrycanEntity.GetComponent<TransformComponent>().Position.x -= 15.0f * deltaTime;
+
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_E))
+        m_JerrycanEntity.GetComponent<TransformComponent>().Position.x += 15.0f * deltaTime;
+
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_ARROW_LEFT))
+        m_RifleEntity.GetComponent<TransformComponent>().Position.x -= 15.0f * deltaTime;
+
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_ARROW_RIGHT))
+        m_RifleEntity.GetComponent<TransformComponent>().Position.x += 15.0f * deltaTime;
+
     if (m_ViewportPanel.IsFocused() && Firebox::Input::IsMouseButtonDown(Firebox::FBK_MOUSE_BUTTON_RIGHT))
     {
         m_EditorCamera->SetInputEnabled(true);
@@ -130,12 +154,19 @@ void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
 
     if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_P))
         FB_CONSOLE_PRINT("Number of point lights: " + std::to_string(Firebox::Renderer3D::GetPointLights().size()));
+
+    m_EditorContext.GetCurrentScene()->OnUpdate(deltaTime);
+}
+
+void FireboxEditor::EditorViewport::OnPhysicsUpdate(float deltaTime)
+{
+    m_EditorContext.GetCurrentScene()->OnPhysicsUpdate(deltaTime);
 }
 
 void FireboxEditor::EditorViewport::OnRender(float deltaTime)
 {
     Firebox::Renderer3D::BeginScene(*m_EditorCamera);
-    m_EditorContext.GetCurrentScene()->OnUpdate(deltaTime);
+    m_EditorContext.GetCurrentScene()->OnRender(deltaTime);
     Firebox::Renderer3D::EndScene();
     Firebox::Renderer3D::SetGridSize(m_ViewportPanel.GetGridSize());
     Firebox::Renderer3D::SetActiveViewMode(static_cast<Firebox::ViewMode>(m_ViewportPanel.GetViewMode()));
@@ -216,4 +247,3 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
         SDL_GL_MakeCurrent(backupSDLWindow, backupCurrentContext);
     }
 }
-

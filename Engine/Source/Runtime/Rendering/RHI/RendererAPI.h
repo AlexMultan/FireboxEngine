@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "Rendering/Buffers/VertexArray.h"
 #include "APIEnum.h"
 

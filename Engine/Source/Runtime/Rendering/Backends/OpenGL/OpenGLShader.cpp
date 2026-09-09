@@ -237,7 +237,7 @@ void Firebox::OpenGLShader::SetVector4(const String& name, Vector4 vector4)
 	}
 }
 
-void Firebox::OpenGLShader::SetMat3(const String& name, const Mat3& matrix)
+void Firebox::OpenGLShader::SetMat3(const String& name, const Mat3x3& matrix)
 {
 	glUniformMatrix3fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
 	if (glGetUniformLocation(ID, name.c_str()) == -1)
@@ -247,7 +247,7 @@ void Firebox::OpenGLShader::SetMat3(const String& name, const Mat3& matrix)
 	}
 }
 
-void Firebox::OpenGLShader::SetMat4(const String& name, const Mat4& matrix)
+void Firebox::OpenGLShader::SetMat4(const String& name, const Mat4x4& matrix)
 {
 	glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
 	if (glGetUniformLocation(ID, name.c_str()) == -1)
