@@ -20,11 +20,14 @@ IncludeDir["entt"] = "ThirdParty/entt/include"
 IncludeDir["assimp"] = "ThirdParty/assimp/include"
 IncludeDir["ImGuizmo"] = "ThirdParty/ImGuizmo/src"
 IncludeDir["json"] = "ThirdParty/json/include"
+IncludeDir["PhysX"] = "ThirdParty/PhysX"
+IncludeDir["abseil"] = "ThirdParty/abseil-cpp"
 
 include "ThirdParty/Glad"
 include "ThirdParty/ImGui"
 include "ThirdParty/ImGuizmo"
 include "ThirdParty/assimp"
+include "ThirdParty/PhysX"
 
 project "FireboxRuntime"
     location "Engine/Source/Runtime"
@@ -49,6 +52,8 @@ project "FireboxRuntime"
         "%{IncludeDir.assimp}",
         "%{IncludeDir.ImGuizmo}",
         "%{IncludeDir.json}",
+        "%{IncludeDir.PhysX}",
+        "%{IncludeDir.abseil}",
         "Engine/Source/Runtime"
     }
 
@@ -63,10 +68,12 @@ project "FireboxRuntime"
         "imgui",
         "ImGuizmo",
         "assimp",
+        "PhysX"
         }
 
     defines{
-        "GLM_FORCE_DEPTH_ZERO_TO_ONE"
+        "GLM_FORCE_DEPTH_ZERO_TO_ONE",
+        "PX_PHYSX_STATIC_LIB"
     }
 
     libdirs{
@@ -114,12 +121,18 @@ project "FireboxRuntime"
         }
 
     filter "configurations:Debug"
-        defines "FIREBOX_DEBUG"
+        defines {
+          "FIREBOX_DEBUG",
+          " _DEBUG"  
+        } 
         symbols "On"
         staticruntime "Off"
 
     filter "configurations:Release"
-        defines "FIREBOX_RELEASE"
+        defines {
+            "FIREBOX_RELEASE",
+            "NDEBUG"
+        }
         optimize "On"
         staticruntime "Off"
 
@@ -129,8 +142,6 @@ project "FireboxRuntime"
         staticruntime "On"
 
     filter {}
-
-
 
 
 project "SampleGame"
@@ -160,6 +171,8 @@ project "SampleGame"
         "ThirdParty/ImGuizmo/src",
         "ThirdParty/assimp/include",
         "ThirdParty/json/include",
+        "ThirdParty/PhysX",
+        "ThirdParty/abseil-cpp",
         "Engine/Source/Runtime"
     }
 
@@ -187,13 +200,19 @@ project "SampleGame"
         }
 
         filter "configurations:Debug"
-            defines "FIREBOX_DEBUG"
+            defines {
+                "FIREBOX_DEBUG",
+                " _DEBUG"  
+            }
             symbols "On"
             staticruntime "Off"
             kind "ConsoleApp"
 
         filter "configurations:Release"
-            defines "FIREBOX_RELEASE"
+            defines {
+                "FIREBOX_RELEASE",
+                "NDEBUG"
+            }
             optimize "On"
             staticruntime "Off"
             kind "ConsoleApp"
@@ -229,7 +248,8 @@ project "FireboxEditor"
         "opengl32.lib",
         "Glad",
         "imgui",
-        "ImGuizmo"
+        "ImGuizmo",
+        "PhysX"
     }
 
     dependson { "SampleGame" }
@@ -248,6 +268,8 @@ project "FireboxEditor"
         "ThirdParty/assimp/include",
         "ThirdParty/ImGuizmo/src",
         "ThirdParty/json/include",
+        "ThirdParty/PhysX",
+        "ThirdParty/abseil-cpp",
         "Engine/Source/Runtime",
         "%{IncludeDir.Glad}",
         "Engine/Source/Editor"
@@ -277,12 +299,18 @@ project "FireboxEditor"
         }
 
         filter "configurations:Debug"
-            defines "FIREBOX_DEBUG"
+            defines {
+                "FIREBOX_DEBUG",
+                "_DEBUG"
+            }
             symbols "On"
             staticruntime "Off"
 
         filter "configurations:Release"
-            defines "FIREBOX_RELEASE"
+            defines {
+                "FIREBOX_RELEASE",
+                "NDEBUG"
+            }
             optimize "On"
             staticruntime "Off"
 

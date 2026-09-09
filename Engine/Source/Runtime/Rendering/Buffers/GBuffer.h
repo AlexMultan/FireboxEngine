@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 
 namespace Firebox {
 
@@ -17,7 +18,7 @@ namespace Firebox {
 		uint GBufferAttachments[4];
 	};
 
-	class FIREBOX_API GBuffer
+	class FIREBOX_API GBuffer : public RefCounted
 	{
 	public:
 		virtual ~GBuffer() = default;

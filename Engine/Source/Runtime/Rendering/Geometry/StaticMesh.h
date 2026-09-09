@@ -18,10 +18,10 @@ namespace Firebox {
 	struct BoneInfo
 	{
 		int Id;
-		Mat4 Offset;
+		Mat4x4 Offset;
 	};
 
-	class FIREBOX_API StaticMesh
+	class FIREBOX_API StaticMesh : public RefCounted
 	{
 	public:
 		StaticMesh(const String& path);

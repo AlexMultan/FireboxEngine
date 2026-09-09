@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 
 #include <assimp/scene.h>
 
@@ -30,7 +31,7 @@ namespace Firebox {
 		Bone(const String& name, int id, const aiNodeAnim* channel);
 		void Update(float animTime);
 
-		inline Mat4 GetLocalTransform() { return m_LocalTransform; }
+		inline Mat4x4 GetLocalTransform() { return m_LocalTransform; }
 		inline String GetBoneName() const { return m_Name; }
 		inline int GetBoneId() { return m_Id; }
 		int GetPositionIndex(float animTime);
@@ -39,9 +40,9 @@ namespace Firebox {
 
 	private:
 		float GetScaleFactor(float lastTimeStamp, float nextTimeStamp, float animTime);
-		Mat4 InterpolatePosition(float animTime);
-		Mat4 InterpolateRotation(float animTime);
-		Mat4 InterpolateScaling(float animTime);
+		Mat4x4 InterpolatePosition(float animTime);
+		Mat4x4 InterpolateRotation(float animTime);
+		Mat4x4 InterpolateScaling(float animTime);
 
 	private:
 		std::vector<KeyPosition> m_Positions;
@@ -51,7 +52,7 @@ namespace Firebox {
 		int m_NumRotations;
 		int m_NumScalings;
 
-		Mat4 m_LocalTransform;
+		Mat4x4 m_LocalTransform;
 		String m_Name;
 		int m_Id;
 	};

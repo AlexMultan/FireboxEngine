@@ -57,7 +57,7 @@ void FireboxEditor::MenuBar::RenderMenuBar()
                 ofn.lpstrFile = szFile;
                 ofn.nMaxFile = sizeof(szFile) / sizeof(wchar_t);
                 ofn.lpstrFilter =
-                    L"Scene (*.fbscene)\0*.fbscene\0"
+                    L"Project (*.fbproject)\0*.fbproject\0"
                     L"All Files (*.*)\0*.*\0\0";
                 ofn.nFilterIndex = 1;
                 ofn.lpstrFileTitle = NULL;
@@ -68,13 +68,11 @@ void FireboxEditor::MenuBar::RenderMenuBar()
                 if (GetOpenFileNameW(&ofn))
                 {
                     std::wstring selectedFile = ofn.lpstrFile;
-                    size_t len = wcstombs(nullptr, selectedFile.c_str(), 0) + 1;
-                    char* buffer = new char[len];
-                    wcstombs(buffer, selectedFile.c_str(), len);
+                    int len = WideCharToMultiByte(CP_UTF8, 0, selectedFile.c_str(), -1, nullptr, 0, nullptr, nullptr);
+                    String utf8Path(len, 0);
+                    WideCharToMultiByte(CP_UTF8, 0, selectedFile.c_str(), -1, utf8Path.data(), len, nullptr, nullptr);
 
 					FB_EDITOR_INFO("Successfully opened Firebox project!");
-
-                    delete[] buffer;
                 }
             }
 
@@ -157,14 +155,23 @@ void FireboxEditor::MenuBar::RenderMenuBar()
                 if (GetOpenFileNameW(&ofn))
                 {
                     std::wstring selectedFile = ofn.lpstrFile;
-                    size_t len = wcstombs(nullptr, selectedFile.c_str(), 0) + 1;
-                    char* buffer = new char[len];
-                    wcstombs(buffer, selectedFile.c_str(), len);
+                    int len = WideCharToMultiByte(CP_UTF8, 0, selectedFile.c_str(), -1, nullptr, 0, nullptr, nullptr);
+                    String utf8Path(len, 0);
+                    WideCharToMultiByte(CP_UTF8, 0, selectedFile.c_str(), -1, utf8Path.data(), len, nullptr, nullptr);
 
-                    Ref<Firebox::Scene> loadedScene = Firebox::Scene::LoadScene(buffer);
-                    m_Context.SetCurrentScene(loadedScene);
-
-                    delete[] buffer;
+                    try
+                    {
+                        Ref<Firebox::Scene> loadedScene = Firebox::Scene::LoadScene(utf8Path);
+                        m_Context.SetCurrentScene(loadedScene);
+                    }
+                    catch (const std::exception& e) 
+                    {
+                        FB_EDITOR_ERROR("Failed to load scene: {}", e.what());
+                    }
+                    catch (...)
+                    {
+                        FB_EDITOR_ERROR("Failed to load scene: unknown exception");
+                    }
                 }
 			}
 
@@ -265,50 +272,32 @@ void FireboxEditor::MenuBar::RenderMenuBar()
 			{
 				if (ImGui::MenuItem("Plane"))
 				{
-					Firebox::Entity planeEntity = m_Context.GetCurrentScene()->CreateEntity("Plane");
-					m_Context.SetSelectedEntity(planeEntity);
-					Ref<Firebox::StaticMesh> planeMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Plane.glb");
-					planeEntity.AddComponent<StaticMeshComponent>(planeMesh);
+                    AddStaticMeshEntity("Plane", "Resources/EditorContent/Models/SM_Plane.glb");
 				}
 
 				if (ImGui::MenuItem("Cube"))
 				{
-					Firebox::Entity cubeEntity = m_Context.GetCurrentScene()->CreateEntity("Cube");
-					m_Context.SetSelectedEntity(cubeEntity);
-					Ref<Firebox::StaticMesh> cubeMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Cube.glb");
-					cubeEntity.AddComponent<StaticMeshComponent>(cubeMesh);
+                    AddStaticMeshEntity("Cube", "Resources/EditorContent/Models/SM_Cube.glb");
 				}
 
 				if (ImGui::MenuItem("Sphere"))
 				{
-					Firebox::Entity sphereEntity = m_Context.GetCurrentScene()->CreateEntity("Sphere");
-					m_Context.SetSelectedEntity(sphereEntity);
-					Ref<Firebox::StaticMesh> sphereMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Sphere.glb");
-					sphereEntity.AddComponent<StaticMeshComponent>(sphereMesh);
+                    AddStaticMeshEntity("Sphere", "Resources/EditorContent/Models/SM_Sphere.glb");
 				}
 
 				if (ImGui::MenuItem("Cylinder"))
 				{
-					Firebox::Entity cylinderEntity = m_Context.GetCurrentScene()->CreateEntity("Cylinder");
-					m_Context.SetSelectedEntity(cylinderEntity);
-					Ref<Firebox::StaticMesh> cylinderMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Cylinder.obj");
-					cylinderEntity.AddComponent<StaticMeshComponent>(cylinderMesh);
+                    AddStaticMeshEntity("Cylinder", "Resources/EditorContent/Models/SM_Cylinder.obj");
 				}
 
 				if (ImGui::MenuItem("Cone"))
 				{
-					Firebox::Entity coneEntity = m_Context.GetCurrentScene()->CreateEntity("Cone");
-					m_Context.SetSelectedEntity(coneEntity);
-					Ref<Firebox::StaticMesh> coneMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Cone.glb");
-					coneEntity.AddComponent<StaticMeshComponent>(coneMesh);
+                    AddStaticMeshEntity("Cone", "Resources/EditorContent/Models/SM_Cone.glb");
 				}
 
 				if (ImGui::MenuItem("Monkey"))
 				{
-					Firebox::Entity monkeyEntity = m_Context.GetCurrentScene()->CreateEntity("Monkey");
-					m_Context.SetSelectedEntity(monkeyEntity);
-					Ref<Firebox::StaticMesh> monkeyMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Monkey.glb");
-					monkeyEntity.AddComponent<StaticMeshComponent>(monkeyMesh);
+                    AddStaticMeshEntity("Monkey", "Resources/EditorContent/Models/SM_Monkey.glb");
 				}
 				ImGui::EndMenu();
 			}
@@ -341,17 +330,17 @@ void FireboxEditor::MenuBar::RenderMenuBar()
 
 			if (ImGui::MenuItem("Skybox"))
 			{
-				Firebox::Entity skyboxEntity = m_Context.GetCurrentScene()->CreateEntity("Skybox");
-				Ref<Firebox::Skybox> skybox = CreateRef<Firebox::Skybox>();
-				m_Context.SetSelectedEntity(skyboxEntity);
-				skyboxEntity.AddComponent<SkyboxComponent>(skybox);
+                Firebox::Entity entity = m_Context.GetCurrentScene()->CreateEntity("Skybox");
+                Ref<Firebox::Skybox> skybox = CreateRef<Firebox::Skybox>();
+                m_Context.SetSelectedEntity(entity);
+                entity.AddComponent<SkyboxComponent>(skybox);
 			}
 
 			if (ImGui::MenuItem("Post Process Volume"))
 			{
-				Firebox::Entity postProcessEnitity = m_Context.GetCurrentScene()->CreateEntity("Post Process Volume");
-				m_Context.SetSelectedEntity(postProcessEnitity);
-				postProcessEnitity.AddComponent<PostProcessComponent>();
+                Firebox::Entity entity = m_Context.GetCurrentScene()->CreateEntity("Post Process Volume");
+                m_Context.SetSelectedEntity(entity);
+                entity.AddComponent<PostProcessComponent>();
 			}
 
 			ImGui::EndMenu();
@@ -359,4 +348,12 @@ void FireboxEditor::MenuBar::RenderMenuBar()
 
         ImGui::EndMainMenuBar();
     }
+}
+
+void FireboxEditor::MenuBar::AddStaticMeshEntity(const String& name, const String& path)
+{
+    Firebox::Entity entity = m_Context.GetCurrentScene()->CreateEntity(name);
+    m_Context.SetSelectedEntity(entity);
+    Ref<Firebox::StaticMesh> staticMesh = CreateRef<Firebox::StaticMesh>(path);
+    entity.AddComponent<StaticMeshComponent>(staticMesh);
 }

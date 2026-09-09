@@ -41,7 +41,7 @@ void FireboxEditor::HierarchyPanel::RenderHierarchyrPanel(const Ref<Firebox::Sce
 			bool isSelected = m_SelectedEntity && (m_SelectedEntity.GetComponent<IdComponent>().GetId() == id);
 			if (EditorUI::EntityHierarchyNode::DrawNode(registry.get<TagComponent>(e).Tag.c_str(), id, isSelected))
 			{
-				m_Context.SetSelectedEntity(Firebox::Entity(e, scene.get()));
+				m_Context.SetSelectedEntity(Firebox::Entity(e, scene.Get()));
 				FB_EDITOR_TRACE("Selected Entity ID: {0}", id);
 			}
 		}

@@ -7,7 +7,7 @@
 
 namespace Firebox {
 
-	class FIREBOX_API Entity
+	class FIREBOX_API Entity : public RefCounted
 	{
 	public:
 		Entity();
@@ -34,21 +34,21 @@ namespace Firebox {
 		template<typename T>
 		T& GetComponent()
 		{
-			FB_ASSERT(HasComponent<T>(), "Entity doesn't have a component");
+			FB_ASSERT(HasComponent<T>(), "Assertion Failed: Entity doesn't have a component");
 			return m_Scene->m_Registry.get<T>(m_Handle);
 		}
 
 		template<typename T>
 		const T& GetComponent() const
 		{
-			FB_ASSERT(HasComponent<T>(), "Entity doesn't have a component");
+			FB_ASSERT(HasComponent<T>(), "Assertion Failed: Entity doesn't have a component");
 			return m_Scene->m_Registry.get<T>(m_Handle);
 		}
 
 		template<typename T>
 		T& RemoveComponent()
 		{
-			FB_ASSERT(!HasComponent<T>(), "Entity doesn't have a component");
+			FB_ASSERT(!HasComponent<T>(), "Assertion Failed: Entity doesn't have a component");
 			return m_Scene->m_Registry.remove<T>(m_Handle);
 		}
 
@@ -57,11 +57,15 @@ namespace Firebox {
 			return m_Scene != nullptr && m_Handle != entt::null && m_Scene->m_Registry.valid(m_Handle);
 		}
 
+		bool operator==(const Entity& other) const
+		{
+			return m_Handle == other.m_Handle && m_Scene == other.m_Scene;
+		}
+
 		inline const entt::entity GetHandle() const { return m_Handle; }
 
 	private:
 		entt::entity m_Handle{ entt::null };
-		Ref<Entity> m_ParentEntity;
 		Scene* m_Scene = nullptr;
 	};
 }

@@ -1,12 +1,11 @@
 #include "EditorViewport.h"
 #include "Core/Application.h"
-#include "Core/Log.h"
 #include "Input/Input.h"
 #include "Utils/DebugTools.h"
-#include "Utils/String.h"
 #include "Rendering/Geometry/PrimitiveShapes.h"
 #include "Core/EditorUtils.h"
 #include "Rendering/Targets/Framebuffer.h"
+#include "Rendering/Renderer3D.h"
 
 #include <imgui_impl_sdl3.h>
 #include <imgui_impl_opengl3.h>
@@ -16,7 +15,7 @@ FireboxEditor::EditorViewport::EditorViewport()
     : Layer("EditorLayer"), io(nullptr), m_HierarchyPanel("Hierarchy", m_EditorContext), m_PropertiesPanel("Details", m_EditorContext),
     m_ViewportPanel("Viewport", m_EditorContext), m_MenuBar(m_EditorContext), m_AssetBrowser("Content Browser", m_EditorContext)
 {
-   
+    m_EditorIni = Firebox::EngineContent::GetRoot("Engine/Source/Editor/FireboxEditor.ini").string();
 }
 
 FireboxEditor::EditorViewport::~EditorViewport()
@@ -29,6 +28,7 @@ void FireboxEditor::EditorViewport::OnAttach()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     io = &ImGui::GetIO();
+    io->IniFilename = m_EditorIni.c_str();
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
     io->ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -122,6 +122,18 @@ void FireboxEditor::EditorViewport::OnDetach()
 
 void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
 {
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_Q))
+        m_JerrycanEntity.GetComponent<TransformComponent>().Position.x -= 15.0f * deltaTime;
+
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_E))
+        m_JerrycanEntity.GetComponent<TransformComponent>().Position.x += 15.0f * deltaTime;
+
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_ARROW_LEFT))
+        m_RifleEntity.GetComponent<TransformComponent>().Position.x -= 15.0f * deltaTime;
+
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_ARROW_RIGHT))
+        m_RifleEntity.GetComponent<TransformComponent>().Position.x += 15.0f * deltaTime;
+
     if (m_ViewportPanel.IsFocused() && Firebox::Input::IsMouseButtonDown(Firebox::FBK_MOUSE_BUTTON_RIGHT))
     {
         m_EditorCamera->SetInputEnabled(true);
@@ -142,12 +154,19 @@ void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
 
     if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_P))
         FB_CONSOLE_PRINT("Number of point lights: " + std::to_string(Firebox::Renderer3D::GetPointLights().size()));
+
+    m_EditorContext.GetCurrentScene()->OnUpdate(deltaTime);
+}
+
+void FireboxEditor::EditorViewport::OnPhysicsUpdate(float deltaTime)
+{
+    m_EditorContext.GetCurrentScene()->OnPhysicsUpdate(deltaTime);
 }
 
 void FireboxEditor::EditorViewport::OnRender(float deltaTime)
 {
     Firebox::Renderer3D::BeginScene(*m_EditorCamera);
-    m_EditorContext.GetCurrentScene()->OnUpdate(deltaTime);
+    m_EditorContext.GetCurrentScene()->OnRender(deltaTime);
     Firebox::Renderer3D::EndScene();
     Firebox::Renderer3D::SetGridSize(m_ViewportPanel.GetGridSize());
     Firebox::Renderer3D::SetActiveViewMode(static_cast<Firebox::ViewMode>(m_ViewportPanel.GetViewMode()));
@@ -228,4 +247,3 @@ void FireboxEditor::EditorViewport::OnEditorUIRender()
         SDL_GL_MakeCurrent(backupSDLWindow, backupCurrentContext);
     }
 }
-

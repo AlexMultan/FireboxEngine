@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 
 namespace Firebox {
 
@@ -10,7 +11,7 @@ namespace Firebox {
 		uint Height;
 	};
 
-	class FIREBOX_API SSAO
+	class FIREBOX_API SSAO : public RefCounted
 	{
 	public:
 		virtual ~SSAO() = default;

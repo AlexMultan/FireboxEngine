@@ -1,8 +1,5 @@
 #pragma once
-
-#include "Utils/Types.h"
-#include "Utils/Timer.h"
-#include "Math/Math.h"
+#pragma warning(disable: 4251)
 
 #ifdef FIREBOX_PLATFORM_WIN64
 	#ifdef FIREBOX_BUILD_DLL

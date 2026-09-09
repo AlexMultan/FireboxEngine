@@ -2,6 +2,7 @@
 
 #include <string>
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "Events/Event.h"
 
 namespace Firebox {
@@ -17,6 +18,7 @@ namespace Firebox {
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 		virtual void OnUpdate(float deltaTime) {}
+		virtual void OnPhysicsUpdate(float deltaTime) {}
 		virtual void OnRender(float deltaTime) {}
 		virtual void OnEditorUIRender() {}
 		virtual void OnEvent(Event& event) {}

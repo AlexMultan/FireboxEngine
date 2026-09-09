@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "Texture.h"
 #include "Shader.h"
 
@@ -11,7 +12,7 @@ namespace Firebox {
 
 	};
 
-	class FIREBOX_API Material
+	class FIREBOX_API Material : public RefCounted
 	{
 	public:
 		Material();

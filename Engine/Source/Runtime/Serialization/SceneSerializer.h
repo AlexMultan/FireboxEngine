@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/Core.h"
+#include "Core/CoreMinimal.h"
 #include "Scene/Scene.h"
 #include "Scene/Entity.h"
 #include "ComponentSerializer.h"
