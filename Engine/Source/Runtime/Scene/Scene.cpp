@@ -51,17 +51,34 @@ namespace Firebox {
 		{
 			if (entity.HasComponent<PointLightComponent>()) [[unlikely]]
 			{
-				Firebox::Renderer3D::DestroyPointLight(entity.GetComponent<PointLightComponent>());
-				std::cout << "Destoyed!\n";
+				Renderer3D::DestroyPointLight(entity.GetComponent<PointLightComponent>());
 			}
-			else
-				std::cout << "Not Destroyed!\n";
+
+			if (entity.HasComponent<BoxColliderComponent>())
+			{
+				Physics3D::RemoveActor(entity.GetComponent<BoxColliderComponent>().Collider->GetBody());
+			}
 
 			m_Registry.destroy(entity.GetHandle());
 		}
 	}
 
 	void Scene::OnUpdate(float deltaTime)
+	{
+		
+	}
+
+	void Scene::OnPhysicsUpdate(float deltaTime)
+	{
+		Physics3D::Update(deltaTime);
+
+		for (auto&& [entity, transform, boxCollider] : m_Registry.view<TransformComponent, BoxColliderComponent>().each())
+		{
+			boxCollider.Collider->Synchronize(transform, boxCollider.IsStatic);
+		}
+	}
+
+	void Scene::OnRender(float deltaTime)
 	{
 		for (auto&& [entity, transform, mesh, material] : m_Registry.view<TransformComponent, MeshComponent, MaterialComponent>().each())
 		{
@@ -91,18 +108,15 @@ namespace Firebox {
 			}
 		}
 
-		for (auto&& [entity, transform, boxCollider] : m_Registry.view<TransformComponent, BoxColliderComponent>().each())
-		{
-			boxCollider.Collider->Synchronize(transform);
-			Renderer3D::SubmitDebugBox(transform);
-		}
-
 		for (auto&& [entity, skybox] : m_Registry.view<SkyboxComponent>().each())
 		{
 			Renderer3D::DrawSkybox(skybox.Skybox);
 		}
 
-		Physics3D::Update(deltaTime);
+		for (auto&& [entity, transform, boxCollider] : m_Registry.view<TransformComponent, BoxColliderComponent>().each())
+		{
+			Renderer3D::SubmitDebugBox(transform);
+		}
 	}
 
 	void Scene::OnBoxColliderAdded(entt::registry& registry, entt::entity entity)
@@ -112,7 +126,7 @@ namespace Firebox {
 		if (!boxCollider.Collider)
 			return;
 
-		boxCollider.Collider->CreateBoxCollider(Physics3D::GetPhysics(), Physics3D::GetScene(), transform, boxCollider.Size, true);
+		boxCollider.Collider->CreateBoxCollider(Physics3D::GetPhysics(), Physics3D::GetScene(), transform, boxCollider.Size, boxCollider.IsStatic);
 	}
 
 	void Scene::OnBoxColliderRemoved(entt::registry& registry, entt::entity entity)

@@ -11,6 +11,7 @@ struct BoxColliderComponent
 {
 	Ref<Firebox::BoxCollider> Collider;
 	Vector3 Size = { 1.0f, 1.0f, 1.0f };
+	bool IsStatic = true;
 
 	BoxColliderComponent() = default;
 	BoxColliderComponent(const BoxColliderComponent&) = default;

@@ -15,7 +15,7 @@ namespace Firebox {
 	public:
 		BoxCollider() = default;
 		void CreateBoxCollider(PxPhysics* physics, PxScene* scene, const TransformComponent& transform, const Vector3& size, bool isStatic);
-		void Synchronize(const TransformComponent& transform);
+		void Synchronize(TransformComponent& transform, bool isStatic);
 		~BoxCollider();
 
 		inline PxRigidActor& GetBody() { return *m_Body; }
@@ -23,8 +23,8 @@ namespace Firebox {
 		void UpdateBoxSize(const Vector3& newSize);
 
 	private:
-		PxShape*		m_Shape = nullptr;
-		PxRigidActor*	m_Body = nullptr;
-		PxMaterial*		m_Material = nullptr;
+		PxShape* m_Shape = nullptr;
+		PxRigidActor* m_Body = nullptr;
+		PxMaterial* m_Material = nullptr;
 	};
 }

@@ -23,6 +23,8 @@ namespace Firebox {
 		Entity CreateEntity(const String& name);
 		void DestroyEntity(Entity entity);
 		void OnUpdate(float deltaTime);
+		void OnPhysicsUpdate(float deltaTime);
+		void OnRender(float deltaTime);
 
 		// Events
 		void OnBoxColliderAdded(entt::registry& registry, entt::entity entity);

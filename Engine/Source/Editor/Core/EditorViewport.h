@@ -29,6 +29,7 @@ namespace FireboxEditor {
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;
 		virtual void OnUpdate(float deltaTime) override;
+		virtual void OnPhysicsUpdate(float deltaTime) override;
 		virtual void OnRender(float deltaTime) override;
 		virtual void OnEditorUIRender() override;
 		virtual void OnEvent(Firebox::Event& event) override;

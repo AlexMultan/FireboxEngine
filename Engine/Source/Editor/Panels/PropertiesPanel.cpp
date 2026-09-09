@@ -253,7 +253,7 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 			if (boxColliderTree)
 			{
-				ImGui::Text("This is a box collider component :)");
+				ImGui::Checkbox("Static", &m_SelectedEntity.GetComponent<BoxColliderComponent>().IsStatic);
 				ImGui::TreePop();
 			}
 		}

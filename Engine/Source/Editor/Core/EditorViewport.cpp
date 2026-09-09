@@ -122,6 +122,18 @@ void FireboxEditor::EditorViewport::OnDetach()
 
 void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
 {
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_Q))
+        m_JerrycanEntity.GetComponent<TransformComponent>().Position.x -= 15.0f * deltaTime;
+
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_E))
+        m_JerrycanEntity.GetComponent<TransformComponent>().Position.x += 15.0f * deltaTime;
+
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_ARROW_LEFT))
+        m_RifleEntity.GetComponent<TransformComponent>().Position.x -= 15.0f * deltaTime;
+
+    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_ARROW_RIGHT))
+        m_RifleEntity.GetComponent<TransformComponent>().Position.x += 15.0f * deltaTime;
+
     if (m_ViewportPanel.IsFocused() && Firebox::Input::IsMouseButtonDown(Firebox::FBK_MOUSE_BUTTON_RIGHT))
     {
         m_EditorCamera->SetInputEnabled(true);
@@ -142,12 +154,19 @@ void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
 
     if (Firebox::Input::IsKeyClicked(Firebox::FBK_KEY_P))
         FB_CONSOLE_PRINT("Number of point lights: " + std::to_string(Firebox::Renderer3D::GetPointLights().size()));
+
+    m_EditorContext.GetCurrentScene()->OnUpdate(deltaTime);
+}
+
+void FireboxEditor::EditorViewport::OnPhysicsUpdate(float deltaTime)
+{
+    m_EditorContext.GetCurrentScene()->OnPhysicsUpdate(deltaTime);
 }
 
 void FireboxEditor::EditorViewport::OnRender(float deltaTime)
 {
     Firebox::Renderer3D::BeginScene(*m_EditorCamera);
-    m_EditorContext.GetCurrentScene()->OnUpdate(deltaTime);
+    m_EditorContext.GetCurrentScene()->OnRender(deltaTime);
     Firebox::Renderer3D::EndScene();
     Firebox::Renderer3D::SetGridSize(m_ViewportPanel.GetGridSize());
     Firebox::Renderer3D::SetActiveViewMode(static_cast<Firebox::ViewMode>(m_ViewportPanel.GetViewMode()));

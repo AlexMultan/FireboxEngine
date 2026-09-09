@@ -70,6 +70,11 @@ void Firebox::Application::Run()
 
         for (Layer* layer : m_LayerStack)
         {
+            layer->OnPhysicsUpdate(timer.GetDeltaTime());
+        }
+
+        for (Layer* layer : m_LayerStack)
+        {
             layer->OnRender(timer.GetDeltaTime());
         }
 
