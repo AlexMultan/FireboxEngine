@@ -102,6 +102,7 @@ FireboxEngine/
 - Windows x64
 - C++20 compatible compiler (MSVC recommended)
 - Visual Studio 2022/2026
+  
 **Linux**
 - C++20 compatible compiler (Clang)
 - GDB for debugging
@@ -118,6 +119,7 @@ git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
 2. Run `GenerateVisualStudioFiles.bat` under `Build/Windows/`
 3. Open the generated `.sln` in Visual Studio and build the solution.
 4. Run `FireboxEditor`
+   
 **Linux**
  
 1. Clone the repository:
