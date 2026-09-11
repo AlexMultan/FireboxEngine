@@ -103,7 +103,7 @@ FireboxEngine/
 - C++20 compatible compiler (MSVC recommended)
 - Visual Studio 2022/2026
 **Linux**
-- C++20 compatible compiler (Clang; initial support in progress)
+- C++20 compatible compiler (Clang)
 - GDB for debugging
 - Toolchain dependencies can be installed via the provided setup script
 
@@ -115,7 +115,7 @@ FireboxEngine/
 ```bash
 git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
 ```
-2. In the project root directory, run `GenerateVisualStudioFiles.bat`
+2. Run `GenerateVisualStudioFiles.bat` under `Build/Windows/`
 3. Open the generated `.sln` in Visual Studio and build the solution.
 4. Run `FireboxEditor`
 **Linux**
@@ -124,11 +124,11 @@ git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
 ```bash
 git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
 ```
-2. Install toolchain dependencies:
+2. Open terminal in Build/Linux and install toolchain dependencies
 ```bash
 ./SetupToolchain.sh --install-deps
 ```
-3. Run the Linux build scripts under `Build/Linux/`
+3. Run `GenerateProjectFiles.sh` under `Build/Linux/`
 4. Run `FireboxEditor`
 
 ## Supported Platforms
