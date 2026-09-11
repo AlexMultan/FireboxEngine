@@ -51,8 +51,6 @@ namespace FireboxEditor {
 		StatsPanel m_StatsPanel;
 
 		Ref<Firebox::PerspectiveCamera> m_EditorCamera;
-		Firebox::Entity m_BunnyEntity{};
-		Ref<Firebox::StaticMesh> m_BunnyModel;
 
 		Firebox::Entity m_JerrycanEntity{};
 		Ref<Firebox::Material> m_JerrycanMaterial;

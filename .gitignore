@@ -1,8 +1,10 @@
 .vs/
 Binaries/
+..Binaries/   
 Intermediate/
 bin/
 bin-int/
+ThirdParty/SDL/lib/linux-x64/
 
 imgui.ini
 imgui*.ini
@@ -12,5 +14,14 @@ imgui*.ini
 *.filters
 *.sln
 *.log
+
+Makefile
+Engine/Source/Editor/Makefile
+Engine/Source/Runtime/Makefile
+Projects/SampleGame/Makefile
+ThirdParty/Glad/Makefile
+ThirdParty/ImGui/Makefile
+ThirdParty/ImGuizmo/Makefile
+ThirdParty/PhysX/Makefile
 
 !/vendor/bin/

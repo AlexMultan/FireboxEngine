@@ -21,6 +21,7 @@ IncludeDir["assimp"] = "ThirdParty/assimp/include"
 IncludeDir["ImGuizmo"] = "ThirdParty/ImGuizmo/src"
 IncludeDir["json"] = "ThirdParty/json/include"
 IncludeDir["PhysX"] = "ThirdParty/PhysX"
+IncludeDir["PhysXInc"] = "ThirdParty/PhysX/physx/include"
 IncludeDir["abseil"] = "ThirdParty/abseil-cpp"
 
 include "ThirdParty/Glad"
@@ -53,6 +54,7 @@ project "FireboxRuntime"
         "%{IncludeDir.ImGuizmo}",
         "%{IncludeDir.json}",
         "%{IncludeDir.PhysX}",
+        "%{IncludeDir.PhysXInc}",
         "%{IncludeDir.abseil}",
         "Engine/Source/Runtime"
     }
@@ -63,7 +65,6 @@ project "FireboxRuntime"
 
     links{
         "SDL3",
-        "opengl32.lib",
         "Glad",
         "imgui",
         "ImGuizmo",
@@ -76,14 +77,10 @@ project "FireboxRuntime"
         "PX_PHYSX_STATIC_LIB"
     }
 
-    libdirs{
-        "ThirdParty/SDL/lib/x64"
-    }
-
     filter "action:vs2022"
         toolset "msc"
 
-    filter "action:gmake2"
+    filter "action:gmake"
         toolset "clang"
         buildoptions {
             "-Wall",
@@ -94,30 +91,46 @@ project "FireboxRuntime"
         cppdialect "C++20"
         systemversion "latest"
         defines{ "FIREBOX_PLATFORM_WIN64", "FIREBOX_BUILD_DLL" }
-        links { "imm32" }
+        links { "opengl32.lib", "imm32" }
+        libdirs{ "ThirdParty/SDL/lib/x64" }
         buildoptions "/utf-8"
 
-    filter "configurations:Debug or Release"
-        kind "SharedLib"
-        defines "FIREBOX_BUILD_DLL"
-        postbuildcommands{
-            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
+    filter "system:linux"
+        cppdialect "C++20"
+        defines{ "FIREBOX_PLATFORM_LINUX", "FIREBOX_BUILD_DLL" }
+        links { "GL", "dl", "pthread", "X11" }
+        libdirs{ "ThirdParty/SDL/lib/linux-x64" }
+        pic "On"
 
-            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame",
-            "{COPY} %{cfg.buildtarget.relpath} %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame",
-            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame"
-        }
+    filter "configurations:Debug or Release"
+    kind "SharedLib"
+    defines "FIREBOX_BUILD_DLL"
+    postbuildcommands{
+        "{MKDIR} %{wks.location}/Binaries/" .. outputdir .. "/FireboxEditor",
+        "{COPY} %{cfg.buildtarget.relpath} %{wks.location}/Binaries/" .. outputdir .. "/FireboxEditor",
+
+        "{MKDIR} %{wks.location}/Binaries/" .. outputdir .. "/Projects/SampleGame",
+        "{COPY} %{cfg.buildtarget.relpath} %{wks.location}/Binaries/" .. outputdir .. "/Projects/SampleGame"
+    }
 
     filter "configurations:Shipping"
         kind "StaticLib"
         defines "FIREBOX_STATIC"
         postbuildcommands{
-            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/FireboxEditor",
-            "{MKDIR} %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame",
-            "{COPY} %{wks.location}ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}Binaries/" .. outputdir .. "/Projects/SampleGame"
+            "{MKDIR} %{wks.location}/Binaries/" .. outputdir .. "/FireboxEditor",
+            "{MKDIR} %{wks.location}/Binaries/" .. outputdir .. "/Projects/SampleGame"
+        }
+
+    filter { "configurations:Debug or Release or Shipping", "system:windows" }
+        postbuildcommands{
+            "{COPY} %{wks.location}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}/Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{wks.location}/ThirdParty/SDL/lib/x64/SDL3.dll %{wks.location}/Binaries/" .. outputdir .. "/Projects/SampleGame"
+        }
+
+    filter { "configurations:Debug or Release or Shipping", "system:linux" }
+        postbuildcommands{
+            "{COPY} %{wks.location}/ThirdParty/SDL/lib/linux-x64/libSDL3.so* %{wks.location}/Binaries/" .. outputdir .. "/FireboxEditor",
+            "{COPY} %{wks.location}/ThirdParty/SDL/lib/linux-x64/libSDL3.so* %{wks.location}/Binaries/" .. outputdir .. "/Projects/SampleGame"
         }
 
     filter "configurations:Debug"
@@ -172,6 +185,7 @@ project "SampleGame"
         "ThirdParty/assimp/include",
         "ThirdParty/json/include",
         "ThirdParty/PhysX",
+        "%{IncludeDir.PhysXInc}",
         "ThirdParty/abseil-cpp",
         "Engine/Source/Runtime"
     }
@@ -179,7 +193,7 @@ project "SampleGame"
     filter "action:vs2022"
         toolset "msc"
 
-    filter "action:gmake2"
+    filter "action:gmake"
         toolset "clang"
         buildoptions {
             "-Wall",
@@ -228,6 +242,49 @@ project "SampleGame"
 
         filter {}
 
+    filter "system:linux"
+        cppdialect "C++20"
+
+        defines{
+            "FIREBOX_PLATFORM_LINUX"
+        }
+
+        links {
+            "SDL3",
+            "dl",
+            "pthread"
+        }
+
+        libdirs{
+            "ThirdParty/SDL/lib/linux-x64"
+        }
+
+        filter { "system:linux", "configurations:Debug" }
+            defines {
+                "FIREBOX_DEBUG",
+                "_DEBUG"
+            }
+            symbols "On"
+            staticruntime "Off"
+            kind "ConsoleApp"
+
+        filter { "system:linux", "configurations:Release" }
+            defines {
+                "FIREBOX_RELEASE",
+                "NDEBUG"
+            }
+            optimize "On"
+            staticruntime "Off"
+            kind "ConsoleApp"
+
+        filter { "system:linux", "configurations:Shipping" }
+            defines "FIREBOX_SHIPPING"
+            optimize "On"
+            staticruntime "On"
+            kind "ConsoleApp"
+
+        filter {}
+
 
 project "FireboxEditor"
     location "Engine/Source/Editor"
@@ -244,8 +301,6 @@ project "FireboxEditor"
 
     links{
         "FireboxRuntime",
-        "SDL3",
-        "opengl32.lib",
         "Glad",
         "imgui",
         "ImGuizmo",
@@ -253,10 +308,6 @@ project "FireboxEditor"
     }
 
     dependson { "SampleGame" }
-
-    libdirs{
-        "ThirdParty/SDL/lib/x64"
-    }
 
     includedirs{
         "ThirdParty/spdlog/include",
@@ -269,6 +320,7 @@ project "FireboxEditor"
         "ThirdParty/ImGuizmo/src",
         "ThirdParty/json/include",
         "ThirdParty/PhysX",
+        "%{IncludeDir.PhysXInc}",
         "ThirdParty/abseil-cpp",
         "Engine/Source/Runtime",
         "%{IncludeDir.Glad}",
@@ -278,7 +330,7 @@ project "FireboxEditor"
     filter "action:vs2022"
         toolset "msc"
 
-    filter "action:gmake2"
+    filter "action:gmake"
         toolset "clang"
         buildoptions {
             "-Wall",
@@ -295,7 +347,13 @@ project "FireboxEditor"
         }
 
         links {
+            "SDL3",
+            "opengl32.lib",
             "imm32"
+        }
+
+        libdirs{
+            "ThirdParty/SDL/lib/x64"
         }
 
         filter "configurations:Debug"
@@ -322,4 +380,46 @@ project "FireboxEditor"
         filter {"system:windows"}  
             buildoptions "/utf-8"
         
+        filter {}
+
+    filter "system:linux"
+        cppdialect "C++20"
+
+        defines{
+            "FIREBOX_PLATFORM_LINUX"
+        }
+
+        links {
+            "SDL3",
+            "GL",
+            "dl",
+            "pthread",
+            "X11"
+        }
+
+        libdirs{
+            "ThirdParty/SDL/lib/linux-x64"
+        }
+
+        filter { "system:linux", "configurations:Debug" }
+            defines {
+                "FIREBOX_DEBUG",
+                "_DEBUG"
+            }
+            symbols "On"
+            staticruntime "Off"
+
+        filter { "system:linux", "configurations:Release" }
+            defines {
+                "FIREBOX_RELEASE",
+                "NDEBUG"
+            }
+            optimize "On"
+            staticruntime "Off"
+
+        filter { "system:linux", "configurations:Shipping" }
+            defines "FIREBOX_SHIPPING"
+            optimize "On"
+            staticruntime "On"
+
         filter {}

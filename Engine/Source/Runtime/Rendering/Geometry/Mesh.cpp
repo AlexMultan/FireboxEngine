@@ -1,10 +1,12 @@
 #include "Mesh.h"
+#include "Utils/DebugTools.h"
 
 Firebox::Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint>& indices)
 {
 	m_VAO = VertexArray::Create();
 	m_VAO->Bind();
 	m_VBO = VertexBuffer::Create(vertices.data(), vertices.size() * sizeof(Vertex));
+	Console::AddVertices(vertices.size());
 	m_VBO->SetLayout({
 		{ ShaderDataType::Float3, "aPos" },
 		{ ShaderDataType::Float3, "aNormal" },
@@ -16,6 +18,7 @@ Firebox::Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint>
 		});
 
 	m_IBO = IndexBuffer::Create(indices.data(), indices.size());
+	Console::AddIndices(indices.size());
 	m_VAO->AddVertexBuffer(m_VBO);
 	m_VAO->SetIndexBuffer(m_IBO);
 	m_VAO->Unbind();

@@ -6,7 +6,10 @@
 
 #include <SDL3/SDL.h>
 #include <functional>
-#include <windows.h>
+
+#ifdef WIN32
+	#include <windows.h>
+#endif
 
 namespace Firebox {
 
@@ -44,8 +47,10 @@ namespace Firebox {
 		void PerformanceCounterStart();
 		void PerformanceCounterEnd();
 
+#ifdef WIN32
 		HWND GetHWND();
 		MonitorInfo GetCurrentMonitorResolution(HWND hwnd);
+#endif
 
 		void SetEventCallback(const EventCallbackFn& callback) { m_EventCallback = callback; }
 		void SetRawEventCallback(const RawEventCallbackFn& callback) { m_RawEventCallback = callback; }
