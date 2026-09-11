@@ -126,7 +126,7 @@ git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
 ```bash
 git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
 ```
-2. Open terminal in Build/Linux and install toolchain dependencies
+2. Open terminal in `Build/Linux/` and install toolchain dependencies
 ```bash
 ./SetupToolchain.sh --install-deps
 ```
