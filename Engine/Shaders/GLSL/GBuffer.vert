@@ -27,17 +27,11 @@ void main()
     float totalWeight = 0.0;
     for(int i = 0; i < MAX_BONE_INFLUENCE; i++)
     {
-        if(aBoneIDs[i] == -1)
+        if(aBoneIDs[i] < 0 || aBoneIDs[i] >= MAX_BONES)
         {
             continue;
         }
-        if(aBoneIDs[i] > MAX_BONES)
-        {
-            totalPos = vec4(aPos, 1.0);
-            totalNormal = aNormal;
-            totalWeight = 1.0;
-            break;
-        }
+
         mat4 boneMat = u_FinalBoneMatrices[aBoneIDs[i]];
         totalPos += (boneMat * vec4(aPos, 1.0)) * aWeights[i];
         totalNormal += mat3(boneMat) * aNormal * aWeights[i];

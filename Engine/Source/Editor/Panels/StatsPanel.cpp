@@ -19,7 +19,10 @@ FireboxEditor::StatsPanel::~StatsPanel()
 void FireboxEditor::StatsPanel::RenderPanel()
 {
 	ImGui::Begin(m_Name.c_str());
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::Text("Frames per second: %.1f", ImGui::GetIO().Framerate);
+	ImGui::Text("Application average %.3f ms/frame", 1000.0f / ImGui::GetIO().Framerate);
 	ImGui::Text("Draw Calls: %d", Firebox::Console::GetDrawCalls());
+	ImGui::Text("Vertices: %llu", static_cast<unsigned long long>(Firebox::Console::GetVertexCount()));
+	ImGui::Text("Indices: %llu", static_cast<unsigned long long>(Firebox::Console::GetIndexCount()));
 	ImGui::End();
 }

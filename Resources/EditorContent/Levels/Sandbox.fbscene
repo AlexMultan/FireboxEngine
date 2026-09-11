@@ -2,13 +2,13 @@
     "Scene": "Sandbox",
     "Entities": [
         {
-            "Entity": 942881351213125428,
-            "Tag": "Post Process Volume",
+            "Entity": 60558117392842870,
+            "Tag": "Sphere",
             "Transform": {
                 "Position": {
-                    "X": 0.0,
-                    "Y": 0.0,
-                    "Z": 0.0
+                    "X": -1.2000000476837158,
+                    "Y": 0.800000011920929,
+                    "Z": -1.100000023841858
                 },
                 "Rotation": {
                     "X": 0.0,
@@ -16,56 +16,13 @@
                     "Z": 0.0
                 },
                 "Scale": {
-                    "X": 1.0,
-                    "Y": 1.0,
-                    "Z": 1.0
-                }
-            },
-            "Post Processing": {
-                "Gamma": 1.5,
-                "Contrast": 1.0,
-                "Saturation": 1.0,
-                "Gain": 1.0,
-                "Temperature": 6500.0,
-                "Tint": 0.0,
-                "BloomIntensity": 0.75,
-                "Exposure": 1.0,
-                "VignetteIntensity": 0.4000000059604645,
-                "Sharpen": 0.0,
-                "ChromaticAbberrationIntensity": 0.0,
-                "Slope": 0.8999999761581421,
-                "Toe": 0.5,
-                "AmbientOcclusionKernelSize": 64,
-                "AmbientOcclusionIntensity": 0.5,
-                "AmbientOcclusionRadius": 0.5,
-                "AmbientOcclusionBias": 0.02500000037252903,
-                "EnableSSAO": true,
-                "MotionBlurIntensity": 0.5,
-                "InfiniteExtent": true
-            }
-        },
-        {
-            "Entity": 11394289435320468263,
-            "Tag": "Cube",
-            "Transform": {
-                "Position": {
-                    "X": -1.399999976158142,
-                    "Y": 0.4000000059604645,
-                    "Z": -1.3000000715255737
-                },
-                "Rotation": {
-                    "X": 0.0,
-                    "Y": 23.29990577697754,
-                    "Z": 0.0
-                },
-                "Scale": {
-                    "X": 0.3999999463558197,
-                    "Y": 0.4000000059604645,
-                    "Z": 0.3999999463558197
+                    "X": 0.20000000298023224,
+                    "Y": 0.20000000298023224,
+                    "Z": 0.20000000298023224
                 }
             },
             "Static Mesh": {
-                "Model Path": "Resources/EditorContent/Models/SM_Cube.glb",
+                "Model Path": "Resources/EditorContent/Models/SM_Sphere.glb",
                 "Materials": [
                     {
                         "Diffuse": null,
@@ -87,7 +44,7 @@
             }
         },
         {
-            "Entity": 11421496675640365768,
+            "Entity": 1906896838244281021,
             "Tag": "Plane",
             "Transform": {
                 "Position": {
@@ -101,9 +58,9 @@
                     "Z": 0.0
                 },
                 "Scale": {
-                    "X": 2.240000009536743,
-                    "Y": 2.240000009536743,
-                    "Z": 2.240000009536743
+                    "X": 1.6999999284744263,
+                    "Y": 1.6999999284744263,
+                    "Z": 1.6999999284744263
                 }
             },
             "Static Mesh": {
@@ -129,7 +86,49 @@
             }
         },
         {
-            "Entity": 9044070249113192595,
+            "Entity": 16349485313529563656,
+            "Tag": "Cube",
+            "Transform": {
+                "Position": {
+                    "X": 0.0,
+                    "Y": 0.5,
+                    "Z": -2.700000047683716
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 0.4000000059604645,
+                    "Y": 0.4000000059604645,
+                    "Z": 0.4000000059604645
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "Resources/EditorContent/Models/SM_Cube.glb",
+                "Materials": [
+                    {
+                        "Diffuse": null,
+                        "Roughness": null,
+                        "Metallic": null,
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
+                        },
+                        "Diffuse Color": {
+                            "R": 0.699999988079071,
+                            "G": 0.699999988079071,
+                            "B": 0.699999988079071,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.20000000298023224,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        },
+        {
+            "Entity": 11995809958443833510,
             "Tag": "Directional Light",
             "Transform": {
                 "Position": {
@@ -163,23 +162,23 @@
             }
         },
         {
-            "Entity": 18321849810084550959,
+            "Entity": 13242217506170279007,
             "Tag": "Rifle",
             "Transform": {
                 "Position": {
-                    "X": 1.600000023841858,
-                    "Y": 1.100000023841858,
+                    "X": 0.0,
+                    "Y": 0.5,
                     "Z": 0.0
                 },
                 "Rotation": {
-                    "X": 0.0,
-                    "Y": 89.62724304199219,
-                    "Z": -89.49919128417969
+                    "X": -3.463778057266609e-06,
+                    "Y": 86.99964141845703,
+                    "Z": -87.29945373535156
                 },
                 "Scale": {
-                    "X": 0.9999902248382568,
-                    "Y": 0.9999967813491821,
-                    "Z": 0.9999884963035583
+                    "X": 0.9999986886978149,
+                    "Y": 0.9999988675117493,
+                    "Z": 0.9999970197677612
                 }
             },
             "Static Mesh": {
@@ -233,12 +232,12 @@
             }
         },
         {
-            "Entity": 5157892293970144979,
+            "Entity": 4415724819814781655,
             "Tag": "Gun",
             "Transform": {
                 "Position": {
-                    "X": 0.699999988079071,
-                    "Y": 1.1999999284744263,
+                    "X": 1.2000000476837158,
+                    "Y": 1.0,
                     "Z": 0.0
                 },
                 "Rotation": {
@@ -281,11 +280,11 @@
             }
         },
         {
-            "Entity": 17647197488666132325,
+            "Entity": 17601028884275182009,
             "Tag": "Jerrycan",
             "Transform": {
                 "Position": {
-                    "X": -0.6000000238418579,
+                    "X": -1.3000000715255737,
                     "Y": 0.5,
                     "Z": 0.0
                 },
@@ -323,48 +322,6 @@
                             "A": 1.0
                         },
                         "Roughness Value": 0.5,
-                        "Metallic Value": 0.0
-                    }
-                ]
-            }
-        },
-        {
-            "Entity": 12161530988948338367,
-            "Tag": "Bunny",
-            "Transform": {
-                "Position": {
-                    "X": 0.4000000059604645,
-                    "Y": 0.6000000238418579,
-                    "Z": -1.0
-                },
-                "Rotation": {
-                    "X": 0.0,
-                    "Y": -0.0,
-                    "Z": 0.0
-                },
-                "Scale": {
-                    "X": 3.0,
-                    "Y": 3.0,
-                    "Z": 3.0
-                }
-            },
-            "Static Mesh": {
-                "Model Path": "Resources/EditorContent/Models/SM_StanfordBunny.obj",
-                "Materials": [
-                    {
-                        "Diffuse": null,
-                        "Roughness": null,
-                        "Metallic": null,
-                        "Normal": {
-                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
-                        },
-                        "Diffuse Color": {
-                            "R": 0.699999988079071,
-                            "G": 0.699999988079071,
-                            "B": 0.699999988079071,
-                            "A": 1.0
-                        },
-                        "Roughness Value": 0.20000000298023224,
                         "Metallic Value": 0.0
                     }
                 ]

@@ -73,7 +73,7 @@ namespace Firebox {
 		{
 			Vertex vertex;
 			Vector3 vec;
-
+			SetVertexBoneDataDefault(vertex);
 			vec.x = mesh->mVertices[i].x;
 			vec.y = mesh->mVertices[i].y;
 			vec.z = mesh->mVertices[i].z;

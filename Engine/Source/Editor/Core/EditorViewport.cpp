@@ -64,13 +64,6 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_EditorCamera->SetInputEnabled(false);
     m_EditorCamera->SetPosition({ 0.0f, 2.0f, 1.0f });
 
-    m_BunnyModel = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_StanfordBunny.obj");
-    m_BunnyEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Bunny");
-    m_BunnyEntity.AddComponent<StaticMeshComponent>(m_BunnyModel);
-    m_BunnyEntity.GetComponent<TransformComponent>().Position.y = 1.0f;
-    m_BunnyEntity.GetComponent<TransformComponent>().Position.z = -1.0f;
-    m_BunnyEntity.GetComponent<TransformComponent>().Scale = { 3.0f, 3.0f, 3.0f };
-
     m_JerrycanMesh = CreateRef<Firebox::StaticMesh>("Resources/EditorContent/Models/SM_Jerrycan.gltf");
     m_JerrycanMaterial = CreateRef<Firebox::Material>();
     m_JerrycanMaterial->SetDiffuseTexture(Firebox::Texture::Create("Resources/EditorContent/Textures/T_Jerrycan_BC.png"));
@@ -122,18 +115,6 @@ void FireboxEditor::EditorViewport::OnDetach()
 
 void FireboxEditor::EditorViewport::OnUpdate(float deltaTime)
 {
-    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_Q))
-        m_JerrycanEntity.GetComponent<TransformComponent>().Position.x -= 15.0f * deltaTime;
-
-    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_E))
-        m_JerrycanEntity.GetComponent<TransformComponent>().Position.x += 15.0f * deltaTime;
-
-    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_ARROW_LEFT))
-        m_RifleEntity.GetComponent<TransformComponent>().Position.x -= 15.0f * deltaTime;
-
-    if (Firebox::Input::IsKeyDown(Firebox::FBK_KEY_ARROW_RIGHT))
-        m_RifleEntity.GetComponent<TransformComponent>().Position.x += 15.0f * deltaTime;
-
     if (m_ViewportPanel.IsFocused() && Firebox::Input::IsMouseButtonDown(Firebox::FBK_MOUSE_BUTTON_RIGHT))
     {
         m_EditorCamera->SetInputEnabled(true);

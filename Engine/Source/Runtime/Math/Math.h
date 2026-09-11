@@ -149,10 +149,15 @@ namespace Mathf {
 	}
 
 	static inline Vector3 Slerp(const Vector3& a, const Vector3& b, float alpha)
-	{
-		float omega = acos(DotProduct(a, b));
-		return ((sin((1 - alpha) * omega) / sin(omega)) * a) + (sin(alpha * omega)) / sin(omega) * b;
-	}
+{
+	float omega = acos(DotProduct(a, b));
+	float sinOmega = sin(omega);
+
+	float coeffA = static_cast<float>(sin((1 - alpha) * omega) / sinOmega);
+	float coeffB = static_cast<float>(sin(alpha * omega) / sinOmega);
+
+	return (coeffA * a) + (coeffB * b);
+}
 
 	static inline float Magnitude(const Vector2& vec)
 	{

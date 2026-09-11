@@ -15,14 +15,19 @@ namespace Firebox {
 	private:
 		static std::deque<String> s_Messages;
 		static uint s_DrawCalls;
+		static size_t s_VertexCount;
+		static uint s_IndexCount;
 
 	public:
 		static const std::deque<String>& GetMessages();
 		static const uint GetDrawCalls();
-
+		static const size_t GetVertexCount();
+		static const uint GetIndexCount();
 		static void AddDebugMessage(const String& message);
 		static void AddDrawCall();
 		static void SetDrawCalls(uint count);
+		static void AddVertices(size_t count);
+		static void AddIndices(uint count);
 		static void ClearConsole();
 	};
 }

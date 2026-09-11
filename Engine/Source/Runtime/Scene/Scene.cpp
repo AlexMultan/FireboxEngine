@@ -157,17 +157,17 @@ namespace Firebox {
 		std::ifstream file(filename);
 		JSON j;
 
-		if (file.is_open())
+		if (!file.is_open())
 		{
-			file >> j;
-			file.close();
-			FB_CORE_TRACE("Successfully loaded scene: {0}", filename);
-		}
-		else
-		{
-			FB_CORE_ERROR("Error: Could not open file for reading: {0}", filename);
+			FB_CORE_ERROR("Error: Could not open file for reading: {0} (errno: {1} - {2})",
+				filename, errno, strerror(errno));
 			return nullptr;
 		}
+
+		file >> j;
+		file.close();
+		FB_CORE_TRACE("Successfully loaded scene: {0}", filename);
+
 		Ref<Scene> scene = CreateRef<Scene>();
 		j.get_to(*scene);
 		return scene;
