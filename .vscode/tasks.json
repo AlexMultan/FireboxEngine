@@ -1,0 +1,62 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Generate Project Files",
+            "type": "shell",
+            "command": "${workspaceFolder}/Build/Linux/GenerateProjectFiles.sh",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build (Debug)",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "config=debug",
+                "-j$(nproc)"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": ["Generate Project Files"],
+            "dependsOrder": "sequence",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Build (Release)",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "config=release",
+                "-j$(nproc)"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "dependsOn": ["Generate Project Files"],
+            "dependsOrder": "sequence",
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Build (Shipping)",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "config=shipping",
+                "-j$(nproc)"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "dependsOn": ["Generate Project Files"],
+            "dependsOrder": "sequence",
+            "problemMatcher": ["$gcc"]
+        }
+    ]
+}

@@ -119,16 +119,18 @@ project "assimp"
   filter "action:vs2022"
         toolset "msc"
 
-    filter "action:gmake"
-        toolset "clang"
-        buildoptions {
-            "-Wall",
-            "-Wextra"
-        }
+    filter { "action:gmake", "files:contrib/zlib/**.c" }
+    buildoptions { "-include unistd.h" }
 
 
    filter "system:windows"
       systemversion "latest"
+
+   filter "system:linux"
+      pic "On"
+      removefiles {
+          "contrib/zlib/contrib/minizip/iowin32.c"
+      }
 
    filter  "configurations:Debug"
        runtime "Debug"

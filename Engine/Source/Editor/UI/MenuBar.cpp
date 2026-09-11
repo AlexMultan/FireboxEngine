@@ -9,10 +9,6 @@
 #include "Core/EditorUtils.h"
 #include "UI/ImGuiHelpers.h"
 
-#include <imgui.h>
-#include <windows.h>
-#include <commdlg.h>
-
 FireboxEditor::MenuBar::MenuBar(FireboxEditor::EditorContext& context) : m_Context(context), m_Scene(nullptr)
 {
     m_Context.AddSceneChangeListener([this](const Ref<Firebox::Scene>& newScene)
@@ -34,8 +30,8 @@ void FireboxEditor::MenuBar::RenderMenuBar()
         if (ImGui::Begin("Project Settings", &showProjectSettings))
         {
             ImGui::Text("In Progress");
-            ImGui::End();
         }
+        ImGui::End();
     }
 
     if (ImGui::BeginMainMenuBar())
@@ -48,30 +44,9 @@ void FireboxEditor::MenuBar::RenderMenuBar()
             }
             if (ImGui::MenuItem("Open", "Ctrl+O"))
             {
-                OPENFILENAMEW ofn;
-                wchar_t szFile[260] = L"";
-
-                ZeroMemory(&ofn, sizeof(ofn));
-                ofn.lStructSize = sizeof(ofn);
-                ofn.hwndOwner = NULL;
-                ofn.lpstrFile = szFile;
-                ofn.nMaxFile = sizeof(szFile) / sizeof(wchar_t);
-                ofn.lpstrFilter =
-                    L"Project (*.fbproject)\0*.fbproject\0"
-                    L"All Files (*.*)\0*.*\0\0";
-                ofn.nFilterIndex = 1;
-                ofn.lpstrFileTitle = NULL;
-                ofn.nMaxFileTitle = 0;
-                ofn.lpstrInitialDir = NULL;
-                ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-
-                if (GetOpenFileNameW(&ofn))
+                String utf8Path = OpenFileDialog(L"Project", L"*.fbproject", "Project | *.fbproject");
+                if(!utf8Path.empty())
                 {
-                    std::wstring selectedFile = ofn.lpstrFile;
-                    int len = WideCharToMultiByte(CP_UTF8, 0, selectedFile.c_str(), -1, nullptr, 0, nullptr, nullptr);
-                    String utf8Path(len, 0);
-                    WideCharToMultiByte(CP_UTF8, 0, selectedFile.c_str(), -1, utf8Path.data(), len, nullptr, nullptr);
-
 					FB_EDITOR_INFO("Successfully opened Firebox project!");
                 }
             }
@@ -135,30 +110,10 @@ void FireboxEditor::MenuBar::RenderMenuBar()
 
 			if (ImGui::MenuItem("Load", "Ctrl+Shift+L"))
 			{
-                OPENFILENAMEW ofn;
-                wchar_t szFile[260] = L"";
-
-                ZeroMemory(&ofn, sizeof(ofn));
-                ofn.lStructSize = sizeof(ofn);
-                ofn.hwndOwner = NULL;
-                ofn.lpstrFile = szFile;
-                ofn.nMaxFile = sizeof(szFile) / sizeof(wchar_t);
-                ofn.lpstrFilter =
-                    L"Scene (*.fbscene)\0*.fbscene\0"
-                    L"All Files (*.*)\0*.*\0\0";
-                ofn.nFilterIndex = 1;
-                ofn.lpstrFileTitle = NULL;
-                ofn.nMaxFileTitle = 0;
-                ofn.lpstrInitialDir = NULL;
-                ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-
-                if (GetOpenFileNameW(&ofn))
+                String utf8Path = OpenFileDialog(L"Scene", L"*.fbscene", "Scene | *.fbscene");
+                FB_CORE_TRACE("Dialog returned: [{0}] (len={1})", utf8Path, utf8Path.size());
+                if (!utf8Path.empty())
                 {
-                    std::wstring selectedFile = ofn.lpstrFile;
-                    int len = WideCharToMultiByte(CP_UTF8, 0, selectedFile.c_str(), -1, nullptr, 0, nullptr, nullptr);
-                    String utf8Path(len, 0);
-                    WideCharToMultiByte(CP_UTF8, 0, selectedFile.c_str(), -1, utf8Path.data(), len, nullptr, nullptr);
-
                     try
                     {
                         Ref<Firebox::Scene> loadedScene = Firebox::Scene::LoadScene(utf8Path);
@@ -356,4 +311,69 @@ void FireboxEditor::MenuBar::AddStaticMeshEntity(const String& name, const Strin
     m_Context.SetSelectedEntity(entity);
     Ref<Firebox::StaticMesh> staticMesh = CreateRef<Firebox::StaticMesh>(path);
     entity.AddComponent<StaticMeshComponent>(staticMesh);
+}
+
+String FireboxEditor::MenuBar::OpenFileDialog(const wchar_t* filterName, const wchar_t* filterPattern, const char* zenityPattern)
+{
+#ifdef _WIN32
+        OPENFILENAMEW ofn;
+        wchar_t szFile[260] = L"";
+
+        std::wstring filter;
+        filter += filterName;
+        filter += L" (";
+        filter += filterPattern;
+        filter += L")";
+        filter.push_back(L'\0');
+        filter += filterPattern;
+        filter.push_back(L'\0');
+        filter += L"All Files (*.*)";
+        filter.push_back(L'\0');
+        filter += L"*.*";
+        filter.push_back(L'\0');
+        filter.push_back(L'\0');
+
+        ZeroMemory(&ofn, sizeof(ofn));
+        ofn.lStructSize = sizeof(ofn);
+        ofn.hwndOwner = NULL;
+        ofn.lpstrFile = szFile;
+        ofn.nMaxFile = sizeof(szFile) / sizeof(wchar_t);
+        ofn.lpstrFilter = filter.c_str();
+        ofn.nFilterIndex = 1;
+        ofn.lpstrFileTitle = NULL;
+        ofn.nMaxFileTitle = 0;
+        ofn.lpstrInitialDir = NULL;
+        ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+        if (!GetOpenFileNameW(&ofn))
+            return "";
+
+        std::wstring selectedFile = ofn.lpstrFile;
+        int len = WideCharToMultiByte(CP_UTF8, 0, selectedFile.c_str(), -1, nullptr, 0, nullptr, nullptr);
+        String utf8Path(len, 0);
+        WideCharToMultiByte(CP_UTF8, 0, selectedFile.c_str(), -1, utf8Path.data(), len, nullptr, nullptr);
+        if (!utf8Path.empty() && utf8Path.back() == '\0')
+            utf8Path.pop_back();
+
+        return utf8Path;
+#else
+        std::string command = "zenity --file-selection --title=\"Select File\" --file-filter=\"";
+        command += zenityPattern;
+        command += "\" 2>/dev/null";
+
+        std::array<char, 1024> buffer{};
+        std::string result;
+
+        std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.c_str(), "r"), pclose);
+        if (!pipe)
+            return "";
+
+        while (fgets(buffer.data(), (int)buffer.size(), pipe.get()) != nullptr)
+            result += buffer.data();
+
+        while (!result.empty() && (result.back() == '\n' || result.back() == '\r'))
+            result.pop_back();
+
+        return result;
+#endif
 }

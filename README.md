@@ -58,7 +58,7 @@ A custom 3D game engine built from scratch in C++, featuring a standalone editor
 - Layer system
 - `Mathf` namespace: `Lerp`, `Slerp`, `Magnitude` and other math utilities
 - Random number generator
-- Dedicated GPU forcing on Windows (NvOptimus/AMD PowerXpress) and Linux (NV_PRIME/DRI_PRIME), for OpenGL
+- Dedicated GPU forcing on Windows (NvOptimus/AMD PowerXpress)
 ## Physics System (WIP)
 - Powered by Nvidia PhysX
 - Physics scene management with adding and removing physics actors at runtime
@@ -81,6 +81,9 @@ A custom 3D game engine built from scratch in C++, featuring a standalone editor
  
 ```
 FireboxEngine/
+├── Build/
+│   ├── Linux/              # Linux build scripts
+│   └── Windows/            # Windows build scripts
 ├── Engine/
 │   ├── Source/
 │   │   ├── Runtime/        # Core engine library (renderer, ECS, events, input, animation)
@@ -95,24 +98,47 @@ FireboxEngine/
  
 ### Prerequisites
  
-- Windows x64 (cross platform support planned)
-- C++20 compatible compiler (MSVC recommended, initial Clang support in progress)
+**Windows**
+- Windows x64
+- C++20 compatible compiler (MSVC recommended)
 - Visual Studio 2022/2026
+  
+**Linux**
+- C++20 compatible compiler (Clang)
+- GDB for debugging
+- Toolchain dependencies can be installed via the provided setup script
+
 ### Build Instructions
+ 
+**Windows**
  
 1. Clone the repository:
 ```bash
 git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
 ```
-2. In the project root directory, run `GenerateVisualStudioFiles.bat`
+2. Run `GenerateVisualStudioFiles.bat` under `Build/Windows/`
 3. Open the generated `.sln` in Visual Studio and build the solution.
 4. Run `FireboxEditor`
+   
+**Linux**
+ 
+1. Clone the repository:
+```bash
+git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
+```
+2. Open terminal in Build/Linux and install toolchain dependencies
+```bash
+./SetupToolchain.sh --install-deps
+```
+3. Run `GenerateProjectFiles.sh` under `Build/Linux/`
+4. Run `FireboxEditor`
+
 ## Supported Platforms
  
 | Platform | Status |
 |---|---|
 | Windows x64 | Supported |
-| Linux | Planned |
+| Linux | Supported |
  
 ## Known Issues
  
@@ -155,7 +181,4 @@ git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
 - Editor preferences and project settings
 - Undo/redo system
 - Material Editor (Unreal Engine style)
-### Platform
-- Linux support
-- Clang compiler full support
  

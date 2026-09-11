@@ -1,4 +1,4 @@
-physxdir = "physx"
+physxdir = path.getabsolute("physx")
 
 physxmodules = {
 	"source/foundation",
@@ -36,24 +36,39 @@ project "PhysX"
 
 	files{}
 
+	includedirs { physxdir .. "/include" }
+
 	for _, mod in ipairs(physxmodules) do
-        local base = physxdir .. "/" .. mod
+    local base = physxdir .. "/" .. mod
 
-        files{
-            base .. "/**.cpp",
-            base .. "/**.h"
-        }
+    files{
+        base .. "/**.cpp",
+        base .. "/**.h"
+    }
+    includedirs { base }
 
-        includedirs { base }
-        for _, dir in ipairs(os.matchdirs(base .. "/**")) do
-            includedirs { dir }
-        end
+    for _, dir in ipairs(os.matchdirs(base .. "/**")) do
+        local lower = dir:lower()
+        local isWindowsDir = lower:find("/windows") or lower:find("\\windows")
+        local isUnixDir    = lower:find("/unix")    or lower:find("\\unix")
+        local isLinuxDir   = lower:find("/linux")   or lower:find("\\linux")
+        local isMacDir     = lower:find("/mac")     or lower:find("\\mac")
+
+        filter "system:windows"
+            if not (isUnixDir or isLinuxDir or isMacDir) then
+                includedirs { dir }
+            end
+        filter "system:linux"
+            if not (isWindowsDir or isMacDir) then
+                includedirs { dir }
+            end
+        filter "system:macosx"
+            if not (isWindowsDir or isUnixDir or isLinuxDir) then
+                includedirs { dir }
+            end
+        filter {}
     end
-
-    includedirs { physxdir .. "/include" }
-    for _, dir in ipairs(os.matchdirs(physxdir .. "/include/**")) do
-        includedirs { dir }
-    end
+end
 
 	includedirs { physxdir .. "/source/physxgpu/include" }
     includedirs { physxdir .. "/pvdruntime/include" }
@@ -68,6 +83,11 @@ project "PhysX"
 
 	filter "action:gmake"
 		toolset "clang"
+		buildoptions { "-I" .. physxdir .. "/include" }
+		for _, mod in ipairs(physxmodules) do
+			buildoptions { "-I" .. physxdir .. "/" .. mod }
+		end
+	filter {}
 
 	filter "system:windows"
 		systemversion "latest"
@@ -80,6 +100,8 @@ project "PhysX"
     }
 
 	filter "system:linux"
+		defines { "PX_LINUX" }
+		pic "On"
 		removefiles{
             physxdir .. "/**/windows/**",
             physxdir .. "/**/mac/**"

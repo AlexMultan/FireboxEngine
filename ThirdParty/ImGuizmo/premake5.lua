@@ -19,7 +19,7 @@ project "ImGuizmo"
 	filter "action:vs2022"
         toolset "msc"
 
-    filter "action:gmake2"
+    filter "action:gmake"
         toolset "clang"
         buildoptions {
             "-Wall",
@@ -32,3 +32,6 @@ project "ImGuizmo"
 
         filter {"system:windows", "configurations:Release"}
             buildoptions "/MD"
+
+    filter "system:linux"
+        pic "On"
