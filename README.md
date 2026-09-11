@@ -158,8 +158,6 @@ git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
 - Particle system
 ### Graphics API
 - Complete Vulkan backend via RHI layer (`VulkanSwapchain`, command buffers, render passes)
-- Full RHI abstraction so renderer is completely API agnostic
-- Eventually deprecate direct OpenGL calls in favor of RHI
 ### Physics
 - SphereCollider, CapsuleCollider and ConvexCollider
 - RigidBody component with mass, drag and constraints
