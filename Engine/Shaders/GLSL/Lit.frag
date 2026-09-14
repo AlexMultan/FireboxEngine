@@ -139,14 +139,14 @@ float CalculateShadow(vec3 lightDirection, vec3 normal, vec3 fragPosWorldSpace)
     float angle = randomAngle(fragPosWorldSpace);
     mat2 rot = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
 
-    for (int i = 0; i < 16; i++)
+    for (int i = 0; i < 32; i++)
     {
         vec2 offset = rot * POISSON_DISK[i] * texelSize * filterRadius;
         float pcfDepth = texture(u_ShadowMap, vec3(projCoords.xy + offset, layer)).r;
         shadow += (currentDepth - bias) > pcfDepth ? 1.0 : 0.0;
     }
 
-    return shadow / 16.0;
+    return shadow / 32.0;
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)
