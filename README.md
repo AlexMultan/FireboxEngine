@@ -142,8 +142,8 @@ git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
  
 ## Known Issues
  
-- Cascaded shadow maps currently broken after transition to deferred shading pipeline
 - Animation system functional but needs further work
+- Cascaded shadow mapping works but needs further work. 
 ## Future Plans
  
 ### Rendering
