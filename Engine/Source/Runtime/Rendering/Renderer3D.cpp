@@ -397,7 +397,16 @@ void Firebox::Renderer3D::SetSpotLightUniforms(const Ref<Shader>& shader, int co
 Ref<Firebox::Shader> Firebox::Renderer3D::BindLitUniforms()
 {
 	Ref<Shader> shader = s_Data.LitShader;
+
 	shader->UseShader();
+	shader->SetFloat("u_FarPlane", s_Data.FarPlane);
+	shader->SetInt("u_CascadeCount", s_Data.ShadowMap->GetCascadeLevels().size());
+	for (size_t i = 0; i < s_Data.ShadowMap->GetCascadeLevels().size(); i++)
+		shader->SetFloat("u_CascadePlaneDistances[" + std::to_string(i) + "]", s_Data.ShadowMap->GetCascadeLevels()[i]);
+	s_Data.RendererAPI->BindTextureArray(31, s_Data.ShadowMap->GetDepthTexture());
+	shader->SetInt("u_ShadowMap", 31);
+	shader->SetMat4("u_View", s_Data.ViewMatrix);
+
 	shader->SetVector3("u_ViewPos", s_Data.CameraPosition);
 	shader->SetFloat("u_PostProcessSettings.gamma", s_Data.PostProcessing.Gamma);
 	shader->SetFloat("u_PostProcessSettings.enableSSAO", s_Data.PostProcessing.EnableSSAO);
@@ -421,8 +430,8 @@ Ref<Firebox::Shader> Firebox::Renderer3D::BindDepthUniforms()
 	Ref<Shader> shader = s_Data.DepthShader;
 	shader->UseShader();
 	shader->SetMat4("u_Projection", s_Data.ProjectionMatrix);
-	shader->SetFloat("u_Near", s_Data.NearPlane);
-	shader->SetFloat("u_Far", s_Data.FarPlane);
+	shader->SetFloat("u_Near", 0.1f);
+	shader->SetFloat("u_Far", 1000.0f);
 	return shader;
 }
 
@@ -566,9 +575,6 @@ void Firebox::Renderer3D::SSAOPass()
 	s_Data.SSAO->UnbindSSAOBlurBuffer();
 }
 
-
-// NOTE: Shadow Mask framebuffer and texture is valid, but it remains black at all times. Changing any value in the ShadowMaskShader does not change
-// the end result of the final output. It's possible gBuffer textures that are passed into ShadowMaskShader are in the view space instead of world space. 
 void Firebox::Renderer3D::ShadowMaskPass()
 {
 	s_Data.gBuffer->BindGBufferPositionNormal();
@@ -642,11 +648,11 @@ void Firebox::Renderer3D::DebugShapesPass()
 void Firebox::Renderer3D::ShadowMapPass()
 {
 	const auto lightMatrices = s_Data.ShadowMap->GetLightSpaceMatrices();
-	s_Data.ShadowMap->BindShadowMap();
-
+	
 	s_Data.RendererAPI->SetDepthFunc(Firebox::APIEnum::API_LESS);
 	s_Data.RendererAPI->ClearDepth(1.0f);
-
+	
+	s_Data.ShadowMap->BindShadowMap();
 	s_ShadowUniformBuffer->BindUniformBuffer();
 	for (size_t i = 0; i < lightMatrices.size(); i++)
 		s_Data.RendererAPI->BufferSubData(Firebox::APIEnum::API_UNIFORM_BUFFER, i * sizeof(Mat4x4), sizeof(Mat4x4), &lightMatrices[i]);

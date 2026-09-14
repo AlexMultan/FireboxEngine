@@ -40,7 +40,7 @@ namespace Firebox {
 		ShadowMapProps m_ShadowMapProps;
 		uint m_LightDepthMaps = 0;
 		uint m_LightFBO = 0;
-		uint m_DepthMapResolution = 4096;
+		uint m_DepthMapResolution = 8192;
 		Mat4x4 m_LightSpaceMatrix = Mat4x4(1.0f);
 		std::vector<float> m_ShadowCascadeLevels{};
 		

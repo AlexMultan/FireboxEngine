@@ -52,7 +52,7 @@ void Firebox::OpenGL::OpenGLShadowMask::Invalidate()
 
     glGenTextures(1, &m_ShadowMaskInfo.ShadowMaskTexture);
     glBindTexture(GL_TEXTURE_2D, m_ShadowMaskInfo.ShadowMaskTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, m_ShadowMaskInfo.Width, m_ShadowMaskInfo.Height, 0, GL_RED, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, m_ShadowMaskInfo.Width, m_ShadowMaskInfo.Height, 0, GL_RED, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ShadowMaskInfo.ShadowMaskTexture, 0);
