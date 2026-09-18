@@ -139,6 +139,7 @@ namespace nlohmann {
 			j = JSON{
 				{"Position", plc.Position},
 				{"Color", plc.Color},
+				{"Intensity", plc.Intensity},
 				{"Constant", plc.Constant},
 				{"Linear", plc.Linear},
 				{"Quadratic", plc.Quadratic}
@@ -149,10 +150,10 @@ namespace nlohmann {
 		{
 			j.at("Position").get_to(plc.Position);
 			j.at("Color").get_to(plc.Color);
+			j.at("Intensity").get_to(plc.Intensity);
 			j.at("Constant").get_to(plc.Constant);
 			j.at("Linear").get_to(plc.Linear);
 			j.at("Quadratic").get_to(plc.Quadratic);
-			Firebox::Renderer3D::GetPointLights().emplace_back(plc);
 		}
 	};
 

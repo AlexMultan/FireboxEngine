@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Core/CoreMinimal.h"
+#include "Rendering/Materials/Texture.h"
+
 #include <imgui.h>
 
 namespace FireboxEditor {
@@ -21,19 +23,22 @@ namespace FireboxEditor {
 		static const ImVec2& GetScreenSize();
 		static const uint GetCameraSettingsIcon();
 		static const uint GetRenderingSettingsIcon();
+		static const uint GetPointLightIcon();
 
 	private:
+		static Ref<Firebox::Texture> s_MeshIconTexture;
+		static Ref<Firebox::Texture> s_DirectoryIconTexture;
+		static Ref<Firebox::Texture> s_FileIconTexture;
+		static Ref<Firebox::Texture> s_ReturnIconTexture;
+		static Ref<Firebox::Texture> s_EmptySceneThumbnailTexture;
+		static Ref<Firebox::Texture> s_BasicSceneThumbnailTexture;
+		static Ref<Firebox::Texture> s_CameraSettingsIconTexture;
+		static Ref<Firebox::Texture> s_RenderingSettingsIconTexture;
+		static Ref<Firebox::Texture> s_PointLightIconTexture;
+
 		static ImGuiIO* s_ImGuiIO;
-		static uint s_MeshIcon;
 		static ImFont* s_SelectedEntityNodeFont;
 		static ImFont* s_TransformAxesFont;
 		static ImFont* s_TransformValuesFont;
-		static uint s_DirectoryIcon;
-		static uint s_FileIcon;
-		static uint s_ReturnIcon;
-		static uint s_EmptySceneThumbnail;
-		static uint s_BasicSceneThumbnail;
-		static uint s_CameraSettingsIcon;
-		static uint s_RenderingSettingsIcon;
 	};
 }

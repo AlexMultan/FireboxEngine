@@ -49,9 +49,9 @@ namespace Firebox {
 	{
 		if (entity)
 		{
-			if (entity.HasComponent<PointLightComponent>()) [[unlikely]]
+			if (entity.HasComponent<PointLightComponent>())
 			{
-				Renderer3D::DestroyPointLight(entity.GetComponent<PointLightComponent>());
+				Renderer3D::DestroyPointLight(entity.GetHandle());
 			}
 
 			if (entity.HasComponent<BoxColliderComponent>())

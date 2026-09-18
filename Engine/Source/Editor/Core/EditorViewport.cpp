@@ -103,6 +103,8 @@ void FireboxEditor::EditorViewport::OnAttach()
     m_RifleMesh->SetMaterial(1, m_RifleMaterialMag);
     m_RifleEntity = m_EditorContext.GetCurrentScene()->CreateEntity("Rifle");
     m_RifleEntity.AddComponent<StaticMeshComponent>(m_RifleMesh);
+
+    
 }
 
 void FireboxEditor::EditorViewport::OnDetach()

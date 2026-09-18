@@ -272,7 +272,7 @@ void FireboxEditor::MenuBar::RenderMenuBar()
 				Firebox::Entity pointLightEntity = m_Context.GetCurrentScene()->CreateEntity("Point Light");
 				m_Context.SetSelectedEntity(pointLightEntity);
 				pointLightEntity.AddComponent<PointLightComponent>();
-				Firebox::Renderer3D::GetPointLights().emplace_back(pointLightEntity.GetComponent<PointLightComponent>());
+				Firebox::Renderer3D::AddPointLight(pointLightEntity.GetHandle(), pointLightEntity.GetComponent<PointLightComponent>());
 			}
 
 			if (ImGui::MenuItem("Spot Light"))

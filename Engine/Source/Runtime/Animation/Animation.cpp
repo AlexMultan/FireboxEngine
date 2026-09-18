@@ -1,13 +1,14 @@
 #include "Animation.h"
 #include "Utils/Assert.h"
 #include "Utils/AssimpHelpers.h"
+#include "Editor/EnginePaths.h"
 
 // TO-DO: Investigate this class for memory corruption/fragmentation/leaks
 
 Firebox::Animation::Animation(const String& path, const Ref<StaticMesh>& model)
 {
 	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate);
+	const aiScene* scene = importer.ReadFile(EngineContent::GetRoot(path).string(), aiProcess_Triangulate);
 	auto anim = scene->mAnimations[0];
 	m_Duration = anim->mDuration;
 	m_TicksPerSecond = anim->mTicksPerSecond;
