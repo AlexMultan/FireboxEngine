@@ -19,101 +19,63 @@ namespace Mathf {
 		return (180.0f / PI) * angle;
 	}
 
+	static inline Mat4x4 Inverse(const Mat4x4& matrix)
+	{
+		return glm::inverse(matrix);
+	}
+
+	static inline Vector3 Normalize(const Vector3& vec)
+	{
+		return glm::normalize(vec);
+	}
+
 #pragma endregion
 
 #pragma region Rounding & Approximation
 
 	static inline float Ceil(float a)
 	{
-		int trancated = int(a);
-
-		if (a == trancated)
-			return a;
-
-		if (a > 0)
-			return static_cast<float>(trancated + 1);
-		else
-			return static_cast<float>(trancated);
+		return std::ceil(a);
 	}
 
 	static inline double Ceil(double a)
 	{
-		int trancated = int(a);
-
-		if (a == trancated)
-			return a;
-
-		if (a > 0)
-			return static_cast<double>(trancated + 1);
-		else
-			return static_cast<double>(trancated);
+		return std::ceil(a);
 	}
 
 	static inline int CeilToInt(float a)
 	{
-		int trancated = static_cast<int>(a);
-
-		if (a == trancated)
-			return a;
-
-		if (a > 0)
-			return trancated + 1;
-		else
-			return trancated;
+		return static_cast<int>(std::ceil(a));
 	}
 
 	static inline float Floor(float a)
 	{
-		int trancated = static_cast<int>(a);
-
-		if (a == trancated)
-			return a;
-
-		if (a > 0)
-			return static_cast<float>(trancated - 1);
-		else
-			return static_cast<float>(trancated);
+		return std::floor(a);
 	}
 
 	static inline double Floor(double a)
 	{
-		int trancated = int(a);
-
-		if (a == trancated)
-			return a;
-
-		if (a > 0)
-			return static_cast<double>(trancated - 1);
-		else
-			return static_cast<double>(trancated);
+		return std::floor(a);
 	}
 
 	static inline int FloorToInt(float a)
 	{
-		int trancated = int(a);
-
-		if (a == trancated)
-			return a;
-
-		if (a > 0)
-			return trancated - 1;
-		else
-			return trancated;
+		return static_cast<int>(std::floor(a));
 	}
 
 	static inline float Round(float a)
 	{
-
+		return std::round(a);
 	}
 
 	static inline int RoundToInt(float a)
 	{
-
+		return static_cast<int>(std::round(a));
 	}
 
 	static inline float Approximately(float a, float b)
 	{
-
+		return std::abs(a - b) < std::numeric_limits<float>::epsilon();
 	}
 
 #pragma endregion
@@ -128,7 +90,7 @@ namespace Mathf {
 		return (a.x * b.x) + (a.y * b.y) + (a.z * b.z);
 	}
 
-	static inline const Vector3& CrossProduct(const Vector3& a, const Vector3& b)
+	static inline Vector3 CrossProduct(const Vector3& a, const Vector3& b)
 	{
 		auto x = (a.y * b.z) - (a.z * b.y);
 		auto y = (a.z * b.x) - (a.x * b.z);

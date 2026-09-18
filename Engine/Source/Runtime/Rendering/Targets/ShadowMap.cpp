@@ -3,6 +3,7 @@
 #include "Rendering/RHI/RendererAPI.h"
 #include "Utils/String.h"
 #include "Utils/Assert.h"
+#include "Math/Math.h"
 
 #include <algorithm>
 #include <cfloat>
@@ -29,10 +30,10 @@ void Firebox::ShadowMap::SetCascadeLevels()
 	if (m_ShadowMapProps.FarPlane == 0) [[unlikely]]
 		m_ShadowMapProps.FarPlane = 1000;
 
+	m_ShadowCascadeLevels.emplace_back(m_ShadowMapProps.FarPlane / 100.0f);
 	m_ShadowCascadeLevels.emplace_back(m_ShadowMapProps.FarPlane / 50.0f);
 	m_ShadowCascadeLevels.emplace_back(m_ShadowMapProps.FarPlane / 25.0f);
 	m_ShadowCascadeLevels.emplace_back(m_ShadowMapProps.FarPlane / 10.0f);
-	m_ShadowCascadeLevels.emplace_back(m_ShadowMapProps.FarPlane / 2.0f);
 
 	FB_ASSERT(m_ShadowCascadeLevels[0] > m_ShadowMapProps.NearPlane, "Assertion Failed: m_ShadowCascadeLevels[0] is smaller than a near plane!");
 }
@@ -51,7 +52,8 @@ void Firebox::ShadowMap::SetShadowMapProps(float fov, float nearPlane, float far
 std::vector<Mat4x4> Firebox::ShadowMap::GetLightSpaceMatrices()
 {
 	size_t cascadeCount = m_ShadowCascadeLevels.size();
-	std::vector<Mat4x4> ret(cascadeCount);
+	std::vector<Mat4x4> ret;
+	ret.reserve(cascadeCount);
 	for (size_t i = 0; i < cascadeCount; i++)
 	{
 		float prevSplit = (i == 0) ? m_ShadowMapProps.NearPlane : m_ShadowCascadeLevels[i - 1];
@@ -66,7 +68,8 @@ std::vector<Vector3> Firebox::ShadowMap::GetFrustumCornersWorldSpace(const Mat4x
 {
 	Mat4x4 inverse = glm::inverse(projection * view);
 
-	std::vector<Vector3> corners(8);
+	std::vector<Vector3> corners;
+	corners.reserve(8);
 	for (int x = 0; x < 2; x++)
 	{
 		for (int y = 0; y < 2; y++)
@@ -93,40 +96,42 @@ Mat4x4 Firebox::ShadowMap::GetLightSpaceMatrix(const float nearPlane, const floa
 
 	Vector3 center(0.0f);
 	for (auto& corner : frustumCorners)
-		center += Vector3(corner);
+		center += corner;
 	center /= frustumCorners.size();
 
-	Vector3 lightDir = glm::normalize(-m_ShadowMapProps.LightDir);
-	Mat4x4 lightView = glm::lookAt(center + lightDir * 50.0f, center, Vector3(0.0f, 1.0f, 0.0f));
-
-	float minX = std::numeric_limits<float>::max();
-	float maxX = std::numeric_limits<float>::lowest();
-	float minY = std::numeric_limits<float>::max();
-	float maxY = std::numeric_limits<float>::lowest();
-	float minZ = std::numeric_limits<float>::max();
-	float maxZ = std::numeric_limits<float>::lowest();
-
+	float radius = 0.0f;
 	for (const auto& v : frustumCorners)
-	{
-		const auto lightSpaceCorner = lightView * Vector4(v, 1.0f);
-		minX = std::min(minX, lightSpaceCorner.x);
-		maxX = std::max(maxX, lightSpaceCorner.x);
-		minY = std::min(minY, lightSpaceCorner.y);
-		maxY = std::max(maxY, lightSpaceCorner.y);
-		minZ = std::min(minZ, lightSpaceCorner.z);
-		maxZ = std::max(maxZ, lightSpaceCorner.z);
-	}
+		radius = std::max(radius, Mathf::Magnitude(v - center));
 
-	// TODO: replace with light space union of scene caster AABBs once frustum culling tracks object bounds
+	radius = std::ceil(radius * 16.0f) / 16.0f;
+
+	Vector3 maxExtents(radius);
+	Vector3 minExtents = -maxExtents;
+
+	Vector3 lightDir = Mathf::Normalize(-m_ShadowMapProps.LightDir);
+	Mat4x4 lightView = glm::lookAt(center - lightDir * radius, center, Vector3(0.0f, 1.0f, 0.0f));
 
 	constexpr float zOffset = 200.0f;
-	if (minZ < 0) minZ -= zOffset; else minZ -= zOffset;
-	if (maxZ < 0) maxZ += zOffset; else maxZ += zOffset;
+	float minZ = minExtents.z - zOffset;
+	float maxZ = maxExtents.z + zOffset;
 
 #ifdef GLM_FORCE_DEPTH_ZERO_TO_ONE
-	Mat4x4 lightProjection = glm::orthoZO(minX, maxX, minY, maxY, minZ, maxZ);
+	Mat4x4 lightProjection = glm::orthoZO(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, maxZ, minZ);
 #else
-	Mat4 lightProjection = glm::ortho(minX, maxX, minY, maxY, minZ, maxZ);
+	Mat4x4 lightProjection = glm::ortho(minExtents.x, maxExtents.x, minExtents.y, maxExtents.y, maxZ, minZ);
 #endif
+
+	Mat4x4 shadowMatrix = lightProjection * lightView;
+	Vector4 shadowOrigin = shadowMatrix * Vector4(0.0f, 0.0f, 0.0f, 1.0f);
+	shadowOrigin *= (static_cast<float>(m_DepthMapResolution) / 2.0f);
+
+	Vector4 roundedOrigin = glm::round(shadowOrigin);
+	Vector4 roundOffset = (roundedOrigin - shadowOrigin) * (2.0f / static_cast<float>(m_DepthMapResolution));
+	roundOffset.z = 0.0f;
+	roundOffset.w = 0.0f;
+
+	lightProjection[3][0] += roundOffset.x;
+	lightProjection[3][1] += roundOffset.y;
+
 	return lightProjection * lightView;
 }

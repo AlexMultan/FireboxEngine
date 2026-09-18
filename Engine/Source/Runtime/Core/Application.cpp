@@ -34,7 +34,7 @@ void Firebox::Application::PushOverlay(Layer* layer)
 
 void Firebox::Application::Run()
 {
-    m_Window->SetMaxFPS(144.0f);
+    m_Window->SetMaxFPS(9999.0f);
 
     Renderer3D::Init();
     Physics3D::Init();

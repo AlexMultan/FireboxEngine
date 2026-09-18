@@ -42,18 +42,38 @@ void Firebox::Renderer3D::SetActiveViewMode(const ViewMode& viewMode) { s_ViewMo
 
 void Firebox::Renderer3D::SetPostProcessComponent(const PostProcessComponent& postProcess) { s_Data.PostProcessing = postProcess; }
 
-void Firebox::Renderer3D::DestroyPointLight(const PointLightComponent& pointLight)
+void Firebox::Renderer3D::AddPointLight(Firebox::Entity entity, const PointLightComponent& pointLight)
 {
-	auto it = std::find(s_Data.PointLights.begin(), s_Data.PointLights.end(), pointLight);
-	if (it != s_Data.PointLights.end())
+	auto it = std::find_if(s_Data.PointLights.begin(), s_Data.PointLights.end(), [entity](const PointLight& light) { return light.Handle == entity; });
+	
+	if(it != s_Data.PointLights.end())
 	{
-		*it = s_Data.PointLights.back();
-		s_Data.PointLights.pop_back();
+		it->Component = pointLight;
+		return;
 	}
-	for (auto& light : s_Data.PointLights)
+	
+	s_Data.PointLights.push_back({ entity, pointLight });
+}
+
+void Firebox::Renderer3D::DestroyPointLight(Firebox::Entity entity)
+{
+	auto it = std::find_if(s_Data.PointLights.begin(), s_Data.PointLights.end(), [entity](const PointLight& light) { return light.Handle == entity; });
+
+	if(it != s_Data.PointLights.end())
 	{
-		std::cout << Utils::ToString(light.Position) << "\n";
+		s_Data.PointLights.erase(it);
 	}
+}
+
+void Firebox::Renderer3D::UpdatePointLight(Firebox::Entity entity, const PointLightComponent& pointLight)
+{
+	if(PointLightComponent* light = GetPointLight(entity))
+		*light = pointLight;
+}
+
+void Firebox::Renderer3D::ClearPointLights()
+{	
+	s_Data.PointLights.clear();
 }
 
 void Firebox::Renderer3D::Init()
@@ -312,7 +332,13 @@ PostProcessComponent& Firebox::Renderer3D::GetPostProcessSettings()
 	return s_Data.PostProcessing;
 }
 
-std::vector<PointLightComponent>& Firebox::Renderer3D::GetPointLights()
+PointLightComponent* Firebox::Renderer3D::GetPointLight(Entity entity)
+{
+    auto it = std::find_if(s_Data.PointLights.begin(), s_Data.PointLights.end(), [entity](const PointLight& light) { return light.Handle == entity; });
+	return it != s_Data.PointLights.end() ? &it->Component : nullptr;
+}
+
+const std::vector<Firebox::PointLight>& Firebox::Renderer3D::GetPointLights()
 {
 	return s_Data.PointLights;
 }
@@ -320,6 +346,16 @@ std::vector<PointLightComponent>& Firebox::Renderer3D::GetPointLights()
 std::vector<SpotLightComponent>& Firebox::Renderer3D::GetSpotLights()
 {
 	return s_Data.SpotLights;
+}
+
+const Mat4x4& Firebox::Renderer3D::GetCameraViewMatrix()
+{
+    return s_Data.ViewMatrix;
+}
+
+const Mat4x4& Firebox::Renderer3D::GetCameraProjectionMatrix()
+{
+    return s_Data.ProjectionMatrix;
 }
 
 void Firebox::Renderer3D::SetCascadeUniforms(const Ref<Shader>& shader)
@@ -352,23 +388,18 @@ void Firebox::Renderer3D::SetSkeletalAnimationUniforms(const Ref<Shader>& shader
 
 void Firebox::Renderer3D::SetPointLightUniforms(const Ref<Shader>& shader, int count)
 {
-	if (count <= 0)
-		return;
-
 	shader->SetInt("u_NumberOfPointLights", count);
 	for (int i = 0; i < count; i++)
 	{
-		const auto& light = s_Data.PointLights[i];
+		const auto& light = s_Data.PointLights[i].Component;
 		const std::string prefix = "u_PointLights[" + std::to_string(i) + "].";
 		shader->SetVector3(prefix + "position", light.Position);
-		shader->SetVector3(prefix + "ambient", light.Color * 0.2f);
-		shader->SetVector3(prefix + "diffuse", light.Color);
-		shader->SetVector3(prefix + "specular", light.Color);
+		shader->SetVector4(prefix + "color", light.Color);
+		shader->SetFloat(prefix + "intensity", light.Intensity);
 		shader->SetFloat(prefix + "constant", light.Constant);
 		shader->SetFloat(prefix + "linear", light.Linear);
 		shader->SetFloat(prefix + "quadratic", light.Quadratic);
 	}
-	
 }
 
 void Firebox::Renderer3D::SetSpotLightUniforms(const Ref<Shader>& shader, int count)
@@ -397,7 +428,16 @@ void Firebox::Renderer3D::SetSpotLightUniforms(const Ref<Shader>& shader, int co
 Ref<Firebox::Shader> Firebox::Renderer3D::BindLitUniforms()
 {
 	Ref<Shader> shader = s_Data.LitShader;
+
 	shader->UseShader();
+	shader->SetFloat("u_FarPlane", s_Data.FarPlane);
+	shader->SetInt("u_CascadeCount", s_Data.ShadowMap->GetCascadeLevels().size());
+	for (size_t i = 0; i < s_Data.ShadowMap->GetCascadeLevels().size(); i++)
+		shader->SetFloat("u_CascadePlaneDistances[" + std::to_string(i) + "]", s_Data.ShadowMap->GetCascadeLevels()[i]);
+	s_Data.RendererAPI->BindTextureArray(31, s_Data.ShadowMap->GetDepthTexture());
+	shader->SetInt("u_ShadowMap", 31);
+	shader->SetMat4("u_View", s_Data.ViewMatrix);
+
 	shader->SetVector3("u_ViewPos", s_Data.CameraPosition);
 	shader->SetFloat("u_PostProcessSettings.gamma", s_Data.PostProcessing.Gamma);
 	shader->SetFloat("u_PostProcessSettings.enableSSAO", s_Data.PostProcessing.EnableSSAO);
@@ -421,8 +461,8 @@ Ref<Firebox::Shader> Firebox::Renderer3D::BindDepthUniforms()
 	Ref<Shader> shader = s_Data.DepthShader;
 	shader->UseShader();
 	shader->SetMat4("u_Projection", s_Data.ProjectionMatrix);
-	shader->SetFloat("u_Near", s_Data.NearPlane);
-	shader->SetFloat("u_Far", s_Data.FarPlane);
+	shader->SetFloat("u_Near", 0.1f);
+	shader->SetFloat("u_Far", 1000.0f);
 	return shader;
 }
 
@@ -566,9 +606,6 @@ void Firebox::Renderer3D::SSAOPass()
 	s_Data.SSAO->UnbindSSAOBlurBuffer();
 }
 
-
-// NOTE: Shadow Mask framebuffer and texture is valid, but it remains black at all times. Changing any value in the ShadowMaskShader does not change
-// the end result of the final output. It's possible gBuffer textures that are passed into ShadowMaskShader are in the view space instead of world space. 
 void Firebox::Renderer3D::ShadowMaskPass()
 {
 	s_Data.gBuffer->BindGBufferPositionNormal();
@@ -642,11 +679,11 @@ void Firebox::Renderer3D::DebugShapesPass()
 void Firebox::Renderer3D::ShadowMapPass()
 {
 	const auto lightMatrices = s_Data.ShadowMap->GetLightSpaceMatrices();
-	s_Data.ShadowMap->BindShadowMap();
-
+	
 	s_Data.RendererAPI->SetDepthFunc(Firebox::APIEnum::API_LESS);
 	s_Data.RendererAPI->ClearDepth(1.0f);
-
+	
+	s_Data.ShadowMap->BindShadowMap();
 	s_ShadowUniformBuffer->BindUniformBuffer();
 	for (size_t i = 0; i < lightMatrices.size(); i++)
 		s_Data.RendererAPI->BufferSubData(Firebox::APIEnum::API_UNIFORM_BUFFER, i * sizeof(Mat4x4), sizeof(Mat4x4), &lightMatrices[i]);

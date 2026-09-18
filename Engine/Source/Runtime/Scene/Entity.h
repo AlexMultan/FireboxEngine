@@ -11,6 +11,7 @@ namespace Firebox {
 	{
 	public:
 		Entity();
+		Entity(entt::entity handle);
 		Entity(entt::entity handle, Scene* scene);
 
 		template<typename T>

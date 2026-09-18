@@ -13,7 +13,7 @@ namespace Firebox {
 		std::vector<AssimpNodeData> Children;
 	};
 
-	class FIREBOX_API Animation
+	class FIREBOX_API Animation : public RefCounted
 	{
 	public:
 		Animation() = default;

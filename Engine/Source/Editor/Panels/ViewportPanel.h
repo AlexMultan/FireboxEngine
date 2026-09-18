@@ -5,6 +5,8 @@
 #include "Rendering/Targets/Framebuffer.h"
 #include "Core/EditorContext.h"
 
+#include <imgui.h>
+
 namespace FireboxEditor {
 
 	enum class GizmoTransformType : uint
@@ -27,6 +29,7 @@ namespace FireboxEditor {
 		~ViewportPanel();
 
 		void RenderViewport(const Mat4x4& viewMatrix, const Mat4x4& projectionMatrix);
+		void DrawGizmoIcon(const Vector3& worldPosition, const Mat4x4& view, const Mat4x4& projection, ImTextureID iconTexture, float iconSize);
 
 		inline const Vector2& GetViewportSize() { return m_ViewportSize; }
 		inline bool IsFocused() const { return m_IsFocused; }

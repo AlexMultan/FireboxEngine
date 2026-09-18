@@ -51,6 +51,7 @@ namespace nlohmann {
 
 		static void from_json(const JSON& j, Firebox::Scene& scene)
 		{
+			Firebox::Renderer3D::ClearPointLights();
 			scene.SetSceneName(j.at("Scene").get<String>());
 			
 			for (const auto& entityJson : j.at("Entities"))
@@ -69,7 +70,10 @@ namespace nlohmann {
 					e.AddComponent<DirectionalLightComponent>(entityJson.at("Directional Light").get<DirectionalLightComponent>());
 
 				if (entityJson.contains("Point Light"))
-					e.AddComponent<PointLightComponent>(entityJson.at("Point Light").get<PointLightComponent>());
+				{
+					auto& plc = e.AddComponent<PointLightComponent>(entityJson.at("Point Light").get<PointLightComponent>());
+					Firebox::Renderer3D::AddPointLight(e.GetHandle(), plc);
+				}
 
 				if (entityJson.contains("Spot Light"))
 					e.AddComponent<SpotLightComponent>(entityJson.at("Spot Light").get<SpotLightComponent>());

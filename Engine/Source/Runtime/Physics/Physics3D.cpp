@@ -25,7 +25,7 @@ PxMaterial*	Firebox::Physics3D::GetMaterial()	{ return s_Material; }
 void Firebox::Physics3D::Init()
 {
 	s_Foundation = PxCreateFoundation(PX_PHYSICS_VERSION, s_Allocator, s_ErrorCallback);
-	FB_ASSERT(s_Foundation, "Assertion Failed: Physics foundation is not valid!")
+	FB_ASSERT(s_Foundation, "Assertion Failed: Physics foundation is not valid!");
 
 	s_Pvd = PxCreatePvd(*s_Foundation);
 	PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate(PVD_HOST, 5425, 10);

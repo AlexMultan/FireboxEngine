@@ -25,8 +25,9 @@ void EditorUI::FloatParameters::Checkbox(bool* otherBool, const char* label)
 }
 
 // TODO: Move int parameters to other class or just leave it here and rename the file and the class.
-void EditorUI::FloatParameters::Int1(int* otherInt, const char* label)
+bool EditorUI::FloatParameters::Int1(int* otherInt, const char* label)
 {
+	bool changed = false;
 	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0.0f, 0.0f));
 	ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
 
@@ -37,15 +38,17 @@ void EditorUI::FloatParameters::Int1(int* otherInt, const char* label)
 		ImGui::SameLine();
 
 		ImGui::TableNextColumn();
-		DrawIntParameter("##", label, Vector4(0.611f, 0.0f, 0.0f, 1.0f), otherInt, false);
+		changed = DrawIntParameter("##", label, Vector4(0.611f, 0.0f, 0.0f, 1.0f), otherInt, false);
 		ImGui::EndTable();
 	}
 
 	ImGui::PopStyleVar(2);
+	return changed;
 }
 
-void EditorUI::FloatParameters::Float1(float* otherFloat, const char* label)
+bool EditorUI::FloatParameters::Float1(float* otherFloat, const char* label)
 {
+	bool changed = false;
 	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0.0f, 0.0f));
 	ImGui::PushStyleVar(ImGuiStyleVar_ChildBorderSize, 0.0f);
 
@@ -56,54 +59,33 @@ void EditorUI::FloatParameters::Float1(float* otherFloat, const char* label)
 		ImGui::SameLine();
 
 		ImGui::TableNextColumn();
-		DrawFloatParameter("##", label, Vector4(0.611f, 0.0f, 0.0f, 1.0f), otherFloat, false);
+		changed = DrawFloatParameter("##", label, Vector4(0.611f, 0.0f, 0.0f, 1.0f), otherFloat, false);
 		ImGui::EndTable();
 	}
 
 	ImGui::PopStyleVar(2);
+	return changed;
 }
 
-void EditorUI::FloatParameters::Float2(Vector2* otherVector, const char* label)
+bool EditorUI::FloatParameters::Float2(Vector2* otherVector, const char* label)
 {
-	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0.0f, 0.0f));
-
-	if (ImGui::BeginTable("Parameters Row", 3))
-	{
-		ImGui::TableNextColumn();
-		ImGui::Text(label);
-
-		ImGui::TableNextColumn();
-		DrawFloatParameter("X", label, Vector4(0.611f, 0.0f, 0.0f, 1.0f), &otherVector->x, true);
-		ImGui::TableNextColumn();
-		DrawFloatParameter("Y", label, Vector4(0.02f, 0.58f, 0.0f, 1.0f), &otherVector->y, true);
-		ImGui::EndTable();
-	}
-
-	ImGui::PopStyleVar();
+	static const char* componentLabels[2] = { "X", "Y" };
+	return DrawFloatComponents(&otherVector->x, 2, componentLabels, label);
 }
 
-void EditorUI::FloatParameters::Float3(Vector3* otherVector, const char* label)
+bool EditorUI::FloatParameters::Float3(Vector3* otherVector, const char* label)
 {
-	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0.0f, 0.0f));
-
-	if (ImGui::BeginTable("Parameters Row", 4))
-	{
-		ImGui::TableNextColumn();
-		ImGui::Text(label);
-
-		ImGui::TableNextColumn();
-		DrawFloatParameter("X", label, Vector4(0.611f, 0.0f, 0.0f, 1.0f), &otherVector->x, true);
-		ImGui::TableNextColumn();
-		DrawFloatParameter("Y", label, Vector4(0.02f, 0.58f, 0.0f, 1.0f), &otherVector->y, true);
-		ImGui::TableNextColumn();
-		DrawFloatParameter("Z", label, Vector4(0.0f, 0.466f, 1.0f, 1.0f), &otherVector->z, true);
-		ImGui::EndTable();
-	}
-
-	ImGui::PopStyleVar();
+	static const char* componentLabels[3] = { "X", "Y", "Z"};
+	return DrawFloatComponents(&otherVector->x, 3, componentLabels, label);
 }
 
-void EditorUI::FloatParameters::DrawFloatParameter(const char* text, const char* groupLabel, Vector4 color, float* parameter, bool labelBox)
+bool EditorUI::FloatParameters::Float4(Vector4* otherVector, const char* label)
+{
+	static const char* componentLabels[4] = { "R", "G", "B", "A" };
+	return DrawFloatComponents(&otherVector->r, 4, componentLabels, label);
+}
+
+bool EditorUI::FloatParameters::DrawFloatParameter(const char* text, const char* groupLabel, Vector4 color, float* parameter, bool labelBox)
 {
 	if (labelBox)
 	{
@@ -127,13 +109,13 @@ void EditorUI::FloatParameters::DrawFloatParameter(const char* text, const char*
 	char id[64];
 	snprintf(id, sizeof(id), "##%s_%s", groupLabel, text);
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.86f, 0.86f, 0.86f, 1.0f));
-	//ImGui::PushFont(FireboxEditor::EditorUtils::GetTransformValuesFont());
-	ImGui::DragFloat(id, parameter, 0.05f, -99999999.0f, 99999999.0f);
+	bool changed = ImGui::DragFloat(id, parameter, 0.05f, -99999999.0f, 99999999.0f);
 	ImGui::PopStyleColor();
-	//ImGui::PopFont();
+
+	return changed;
 }
 
-void EditorUI::FloatParameters::DrawIntParameter(const char* text, const char* groupLabel, Vector4 color, int* parameter, bool labelBox)
+bool EditorUI::FloatParameters::DrawIntParameter(const char* text, const char* groupLabel, Vector4 color, int* parameter, bool labelBox)
 {
 	if (labelBox)
 	{
@@ -157,10 +139,10 @@ void EditorUI::FloatParameters::DrawIntParameter(const char* text, const char* g
 	char id[64];
 	snprintf(id, sizeof(id), "##%s_%s", groupLabel, text);
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.86f, 0.86f, 0.86f, 1.0f));
-	//ImGui::PushFont(FireboxEditor::EditorUtils::GetTransformValuesFont());
-	ImGui::DragInt(id, parameter, 0.05f, -99999999, 99999999);
+	bool changed = ImGui::DragInt(id, parameter, 0.05f, -99999999, 99999999);
 	ImGui::PopStyleColor();
-	//ImGui::PopFont();
+
+	return changed;
 }
 
 void EditorUI::FloatParameters::DrawCheckbox(const char* text, const char* groupLabel, Vector4 color, bool* parameter)
@@ -170,4 +152,26 @@ void EditorUI::FloatParameters::DrawCheckbox(const char* text, const char* group
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.86f, 0.86f, 0.86f, 1.0f));
 	ImGui::Checkbox(id, parameter);
 	ImGui::PopStyleColor();
+}
+
+bool EditorUI::FloatParameters::DrawFloatComponents(float* components, int count, const char* const* labels, const char* groupLabel)
+{
+    bool changed = false;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, ImVec2(0.0f, 0.0f));
+	if (ImGui::BeginTable("Parameters Row", count + 1))
+	{
+		ImGui::TableNextColumn();
+		ImGui::TextUnformatted(groupLabel);
+
+		for (int i = 0; i < count; i++)
+		{
+			ImGui::TableNextColumn();
+			changed |= DrawFloatParameter(labels[i], groupLabel, s_ComponentColors[i], &components[i], true);
+		}
+
+		ImGui::EndTable();
+	}
+	ImGui::PopStyleVar();
+	return changed;
 }
