@@ -10,7 +10,7 @@ struct DirectionalLight {
 
 struct PointLight {
     vec3 position;
-    vec3 color;
+    vec4 color;
     float intensity;
     float constant;
     float linear;
@@ -245,24 +245,10 @@ vec3 CalculateDirectionalLight(DirectionalLight directionalLight, vec3 viewDir, 
 
 vec3 CalculatePointLight(PointLight pointLight, vec3 fragPos, vec3 viewDir, vec3 albedo, float roughness, float ssao, vec3 normal, float metallic)
 {
-    // 
-    // float diff = max(dot(normal, pointLightDir), 0.0);
-    // vec3 reflectDir = reflect(-pointLightDir, normal);
-    // float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256.0);
-    // vec3 ambient = vec3(pointLight.ambient * _albedo * ssao);
-    // vec3 diffuse = pointLight.diffuse * diff * _albedo;
-    // vec3 specular = pointLight.specular * spec * _specular;
-    // float distance = length(pointLight.position - fragPos);
-    // float attenuation = 1.0 / (pointLight.constant + pointLight.linear * distance + pointLight.quadratic * (distance * distance));    
-    // ambient *= attenuation;  
-    // diffuse *= attenuation;
-    // specular *= attenuation;   
-    // return (ambient + diffuse + specular);
-
     vec3 N = normalize(normal);
     float dist = length(fragPos);
     float attenuation = 1.0 / (pointLight.constant + pointLight.linear * dist + pointLight.quadratic * (dist * dist));
-    vec3 radiance = pointLight.color * attenuation * pointLight.intensity;
+    vec3 radiance = pointLight.color.rgb * attenuation * pointLight.intensity;
     vec3 Lo = CookTorrancePointLight(N, viewDir, pointLight.position, fragPos, albedo, metallic, roughness, radiance);
     vec3 ambient = vec3(0.03) * albedo * ssao;
     vec3 color = ambient + Lo;

@@ -52,7 +52,7 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Mat4x4& viewMatrix, cons
 	uint pointLightIcon = FireboxEditor::EditorUtils::GetPointLightIcon();
 	for(auto& light : Firebox::Renderer3D::GetPointLights())
 	{
-		DrawGizmoIcon(light.Position, Firebox::Renderer3D::GetCameraViewMatrix(), Firebox::Renderer3D::GetCameraProjectionMatrix(),
+		DrawGizmoIcon(light.Component.Position, Firebox::Renderer3D::GetCameraViewMatrix(), Firebox::Renderer3D::GetCameraProjectionMatrix(),
 			(ImTextureID)(uintptr_t)pointLightIcon, 64.0f);
 	}
 

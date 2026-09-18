@@ -79,7 +79,11 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 			}
 
 			if (m_SelectedEntity.HasComponent<PointLightComponent>())
-				Firebox::Renderer3D::GetPointLights()[0].Position = m_SelectedEntity.GetComponent<TransformComponent>().Position;
+			{
+				auto& pointLight = m_SelectedEntity.GetComponent<PointLightComponent>();
+				pointLight.Position = m_SelectedEntity.GetComponent<TransformComponent>().Position;
+				Firebox::Renderer3D::UpdatePointLight(m_SelectedEntity.GetHandle(), pointLight);
+			}
 
 		}
 
@@ -164,16 +168,22 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 			PushTreeNodeStyle();
 			 
 			bool pointLightTree = ImGui::TreeNodeEx("Point Light Settings", defaultFlags);
-
+			
 			PopTreeNodeStyle();
 
+			auto& pointLight = m_SelectedEntity.GetComponent<PointLightComponent>();
 			if (pointLightTree)
 			{
-				// Temporary solution!
-				ImGui::ColorPicker3("Color", &Firebox::Renderer3D::GetPointLights()[0].Color.r);
-				EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPointLights()[0].Constant, "Constant");
-				EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPointLights()[0].Linear, "Linear");
-				EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPointLights()[0].Quadratic, "Quadratic");
+				bool changed = false;
+				changed |= EditorUI::FloatParameters::Float4(&pointLight.Color, "Color");
+				changed |= EditorUI::FloatParameters::Float1(&pointLight.Intensity, "Intensity");
+				changed |= EditorUI::FloatParameters::Float1(&pointLight.Linear, "Linear");
+				changed |= EditorUI::FloatParameters::Float1(&pointLight.Quadratic, "Quadratic");
+				changed |= EditorUI::FloatParameters::Float1(&pointLight.Constant, "Constant");
+
+				if(changed)
+					Firebox::Renderer3D::UpdatePointLight(m_SelectedEntity.GetHandle(), pointLight);
+
 				ImGui::TreePop();
 			}
 		}

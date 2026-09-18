@@ -42,18 +42,38 @@ void Firebox::Renderer3D::SetActiveViewMode(const ViewMode& viewMode) { s_ViewMo
 
 void Firebox::Renderer3D::SetPostProcessComponent(const PostProcessComponent& postProcess) { s_Data.PostProcessing = postProcess; }
 
-void Firebox::Renderer3D::DestroyPointLight(const PointLightComponent& pointLight)
+void Firebox::Renderer3D::AddPointLight(Firebox::Entity entity, const PointLightComponent& pointLight)
 {
-	auto it = std::find(s_Data.PointLights.begin(), s_Data.PointLights.end(), pointLight);
-	if (it != s_Data.PointLights.end())
+	auto it = std::find_if(s_Data.PointLights.begin(), s_Data.PointLights.end(), [entity](const PointLight& light) { return light.Handle == entity; });
+	
+	if(it != s_Data.PointLights.end())
 	{
-		*it = s_Data.PointLights.back();
-		s_Data.PointLights.pop_back();
+		it->Component = pointLight;
+		return;
 	}
-	for (auto& light : s_Data.PointLights)
+	
+	s_Data.PointLights.push_back({ entity, pointLight });
+}
+
+void Firebox::Renderer3D::DestroyPointLight(Firebox::Entity entity)
+{
+	auto it = std::find_if(s_Data.PointLights.begin(), s_Data.PointLights.end(), [entity](const PointLight& light) { return light.Handle == entity; });
+
+	if(it != s_Data.PointLights.end())
 	{
-		std::cout << Utils::ToString(light.Position) << "\n";
+		s_Data.PointLights.erase(it);
 	}
+}
+
+void Firebox::Renderer3D::UpdatePointLight(Firebox::Entity entity, const PointLightComponent& pointLight)
+{
+	if(PointLightComponent* light = GetPointLight(entity))
+		*light = pointLight;
+}
+
+void Firebox::Renderer3D::ClearPointLights()
+{	
+	s_Data.PointLights.clear();
 }
 
 void Firebox::Renderer3D::Init()
@@ -312,7 +332,13 @@ PostProcessComponent& Firebox::Renderer3D::GetPostProcessSettings()
 	return s_Data.PostProcessing;
 }
 
-std::vector<PointLightComponent>& Firebox::Renderer3D::GetPointLights()
+PointLightComponent* Firebox::Renderer3D::GetPointLight(Entity entity)
+{
+    auto it = std::find_if(s_Data.PointLights.begin(), s_Data.PointLights.end(), [entity](const PointLight& light) { return light.Handle == entity; });
+	return it != s_Data.PointLights.end() ? &it->Component : nullptr;
+}
+
+const std::vector<Firebox::PointLight>& Firebox::Renderer3D::GetPointLights()
 {
 	return s_Data.PointLights;
 }
@@ -362,16 +388,13 @@ void Firebox::Renderer3D::SetSkeletalAnimationUniforms(const Ref<Shader>& shader
 
 void Firebox::Renderer3D::SetPointLightUniforms(const Ref<Shader>& shader, int count)
 {
-	if (count <= 0)
-		return;
-
 	shader->SetInt("u_NumberOfPointLights", count);
 	for (int i = 0; i < count; i++)
 	{
-		const auto& light = s_Data.PointLights[i];
+		const auto& light = s_Data.PointLights[i].Component;
 		const std::string prefix = "u_PointLights[" + std::to_string(i) + "].";
 		shader->SetVector3(prefix + "position", light.Position);
-		shader->SetVector3(prefix + "color", light.Color);
+		shader->SetVector4(prefix + "color", light.Color);
 		shader->SetFloat(prefix + "intensity", light.Intensity);
 		shader->SetFloat(prefix + "constant", light.Constant);
 		shader->SetFloat(prefix + "linear", light.Linear);

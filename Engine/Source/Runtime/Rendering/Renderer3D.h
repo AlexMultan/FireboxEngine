@@ -16,6 +16,7 @@
 #include "PostProcess/SSAO.h"
 #include "Animation/Animator.h"
 #include "Rendering/Geometry/Quad.h"
+#include "Scene/Entity.h"
 
 class Mesh;
 class PostProcessComponent;
@@ -33,6 +34,12 @@ namespace Firebox {
 		Metallic = 6,
 		AmbientOcclusion = 7,
 		DebugCascadeLevels = 8
+	};
+
+	struct PointLight
+	{
+		Firebox::Entity Handle{entt::null};
+		PointLightComponent Component;
 	};
 
 	class FIREBOX_API Renderer3D
@@ -58,14 +65,19 @@ namespace Firebox {
 		static DirectionalLightComponent& GetDirectionalLight();
 		static void SetDirectionalLight(const DirectionalLightComponent& directionalLight);
 		static PostProcessComponent& GetPostProcessSettings();
-		static std::vector<PointLightComponent>& GetPointLights();
 		static std::vector<SpotLightComponent>& GetSpotLights();
 		static const Mat4x4& GetCameraViewMatrix();
 		static const Mat4x4& GetCameraProjectionMatrix();
 		static void SetGridSize(const float& gridSize);
 		static void SetActiveViewMode(const ViewMode& viewMode);
 		static void SetPostProcessComponent(const PostProcessComponent& postProcess);
-		static void DestroyPointLight(const PointLightComponent& pointLight);
+		static void AddPointLight(Entity entity, const PointLightComponent& pointLight);
+		static void DestroyPointLight(Entity entity);
+		static void UpdatePointLight(Entity entity, const PointLightComponent& pointLight);
+		static void ClearPointLights();
+
+		static PointLightComponent* GetPointLight(Entity entity);
+		static const std::vector<PointLight>& GetPointLights();
 
 		// Shader / resource access
 		static Ref<Shader> GetLitShader();
@@ -152,7 +164,7 @@ namespace Firebox {
 			float FOV;
 			float AspectRatio;
 			DirectionalLightComponent DirectionalLight{ {-0.2f, -1.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, 1.0f };
-			std::vector<PointLightComponent> PointLights;
+			std::vector<PointLight> PointLights;
 			std::vector<SpotLightComponent> SpotLights;
 			SpotLightComponent SpotLight;
 			Ref<ShadowMap> ShadowMap;
