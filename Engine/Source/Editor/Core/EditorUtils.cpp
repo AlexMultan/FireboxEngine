@@ -1,17 +1,18 @@
 #include "EditorUtils.h"
-#include "Rendering/Materials/Texture.h"
 #include "Editor/EnginePaths.h"
 #include "Editor/EditorPaths.h"
 #include "Utils/String.h"
 
-uint FireboxEditor::EditorUtils::s_MeshIcon = 0;
-uint FireboxEditor::EditorUtils::s_DirectoryIcon = 0;
-uint FireboxEditor::EditorUtils::s_FileIcon = 0;
-uint FireboxEditor::EditorUtils::s_ReturnIcon = 0;
-uint FireboxEditor::EditorUtils::s_EmptySceneThumbnail = 0;
-uint FireboxEditor::EditorUtils::s_BasicSceneThumbnail = 0;
-uint FireboxEditor::EditorUtils::s_CameraSettingsIcon = 0;
-uint FireboxEditor::EditorUtils::s_RenderingSettingsIcon = 0;
+Ref<Firebox::Texture> FireboxEditor::EditorUtils::s_MeshIconTexture = nullptr;
+Ref<Firebox::Texture> FireboxEditor::EditorUtils::s_DirectoryIconTexture = nullptr;
+Ref<Firebox::Texture> FireboxEditor::EditorUtils::s_FileIconTexture = nullptr;
+Ref<Firebox::Texture> FireboxEditor::EditorUtils::s_ReturnIconTexture = nullptr;
+Ref<Firebox::Texture> FireboxEditor::EditorUtils::s_EmptySceneThumbnailTexture = nullptr;
+Ref<Firebox::Texture> FireboxEditor::EditorUtils::s_BasicSceneThumbnailTexture = nullptr;
+Ref<Firebox::Texture> FireboxEditor::EditorUtils::s_CameraSettingsIconTexture = nullptr;
+Ref<Firebox::Texture> FireboxEditor::EditorUtils::s_RenderingSettingsIconTexture = nullptr;
+Ref<Firebox::Texture> FireboxEditor::EditorUtils::s_PointLightIconTexture = nullptr;
+
 ImFont* FireboxEditor::EditorUtils::s_SelectedEntityNodeFont = nullptr;
 ImFont* FireboxEditor::EditorUtils::s_TransformAxesFont = nullptr;
 ImFont* FireboxEditor::EditorUtils::s_TransformValuesFont = nullptr;
@@ -20,32 +21,40 @@ ImGuiIO* FireboxEditor::EditorUtils::s_ImGuiIO = nullptr;
 void FireboxEditor::EditorUtils::Init(ImGuiIO* io)
 {
 	s_ImGuiIO = io;
-	s_MeshIcon = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_MeshIcon.png").string())->GetTextureID();
-	s_DirectoryIcon = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_DirectoryIcon.png").string())->GetTextureID();
-	s_FileIcon = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_FileIcon.png").string())->GetTextureID();
-	s_ReturnIcon = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_ReturnIcon.png").string())->GetTextureID();
-	s_EmptySceneThumbnail = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_EmptySceneThumbnail.png").string())->GetTextureID();
-	s_BasicSceneThumbnail = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_BasicSceneThumbnail.png").string())->GetTextureID();
+
+	s_MeshIconTexture = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_MeshIcon.png").string());
+	s_DirectoryIconTexture = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_DirectoryIcon.png").string());
+	s_FileIconTexture = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_FileIcon.png").string());
+	s_ReturnIconTexture = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_ReturnIcon.png").string());
+	s_EmptySceneThumbnailTexture = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_EmptySceneThumbnail.png").string());
+	s_BasicSceneThumbnailTexture = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_BasicSceneThumbnail.png").string());
+	s_CameraSettingsIconTexture = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_CameraIcon.png").string());
+	s_RenderingSettingsIconTexture = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_RenderingIcon.png").string());
+	s_PointLightIconTexture = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_PointLightIcon.png").string());
+
 	s_SelectedEntityNodeFont = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/Geist/static/Geist-Bold.ttf").string().c_str(), 17.0f);
 	s_TransformAxesFont = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/Geist_Mono/static/GeistMono-SemiBold.ttf").string().c_str(), 16.0f);
 	s_TransformValuesFont = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/Ubuntu_Sans/static/UbuntuSans_SemiCondensed-Medium.ttf").string().c_str(), 17.0f);
-	s_CameraSettingsIcon = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_CameraIcon.png").string())->GetTextureID();
-	s_RenderingSettingsIcon = Firebox::Texture::Create(FireboxEditor::EditorContent::Get("Icons/T_RenderingIcon.png").string())->GetTextureID();
 }
 
 const uint FireboxEditor::EditorUtils::GetMeshIcon()
 {
-	return s_MeshIcon;
+	return s_MeshIconTexture ? s_MeshIconTexture->GetTextureID() : 0;
 }
 
 const uint FireboxEditor::EditorUtils::GetCameraSettingsIcon()
 {
-	return s_CameraSettingsIcon;
+	return s_CameraSettingsIconTexture ? s_CameraSettingsIconTexture->GetTextureID() : 0;
 }
 
 const uint FireboxEditor::EditorUtils::GetRenderingSettingsIcon()
 {
-	return s_RenderingSettingsIcon;
+	return s_RenderingSettingsIconTexture ? s_RenderingSettingsIconTexture->GetTextureID() : 0;
+}
+
+const uint FireboxEditor::EditorUtils::GetPointLightIcon()
+{
+	return s_PointLightIconTexture ? s_PointLightIconTexture->GetTextureID() : 0;
 }
 
 ImFont* FireboxEditor::EditorUtils::GetSelectedEntityNodeFont()
@@ -65,27 +74,27 @@ ImFont* FireboxEditor::EditorUtils::GetTransformValuesFont()
 
 const uint FireboxEditor::EditorUtils::GetDirectoryIcon()
 {
-	return s_DirectoryIcon;
+	return s_DirectoryIconTexture ? s_DirectoryIconTexture->GetTextureID() : 0;
 }
 
 const uint FireboxEditor::EditorUtils::GetFileIcon()
 {
-	return s_FileIcon;
+	return s_FileIconTexture ? s_FileIconTexture->GetTextureID() : 0;
 }
 
 const uint FireboxEditor::EditorUtils::GetReturnIcon()
 {
-	return s_ReturnIcon;
+	return s_ReturnIconTexture ? s_ReturnIconTexture->GetTextureID() : 0;
 }
 
 const uint FireboxEditor::EditorUtils::GetEmptySceneThumbnail()
 {
-	return s_EmptySceneThumbnail;
+	return s_EmptySceneThumbnailTexture ? s_EmptySceneThumbnailTexture->GetTextureID() : 0;
 }
 
 const uint FireboxEditor::EditorUtils::GetBasicSceneThumbnail()
 {
-	return s_BasicSceneThumbnail;
+	return s_BasicSceneThumbnailTexture ? s_BasicSceneThumbnailTexture->GetTextureID() : 0;
 }
 
 const ImVec2& FireboxEditor::EditorUtils::GetScreenSize()

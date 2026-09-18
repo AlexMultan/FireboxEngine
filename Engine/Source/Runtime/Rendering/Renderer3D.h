@@ -60,6 +60,8 @@ namespace Firebox {
 		static PostProcessComponent& GetPostProcessSettings();
 		static std::vector<PointLightComponent>& GetPointLights();
 		static std::vector<SpotLightComponent>& GetSpotLights();
+		static const Mat4x4& GetCameraViewMatrix();
+		static const Mat4x4& GetCameraProjectionMatrix();
 		static void SetGridSize(const float& gridSize);
 		static void SetActiveViewMode(const ViewMode& viewMode);
 		static void SetPostProcessComponent(const PostProcessComponent& postProcess);

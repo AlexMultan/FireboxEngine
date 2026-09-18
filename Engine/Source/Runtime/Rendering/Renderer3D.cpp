@@ -322,6 +322,16 @@ std::vector<SpotLightComponent>& Firebox::Renderer3D::GetSpotLights()
 	return s_Data.SpotLights;
 }
 
+const Mat4x4& Firebox::Renderer3D::GetCameraViewMatrix()
+{
+    return s_Data.ViewMatrix;
+}
+
+const Mat4x4& Firebox::Renderer3D::GetCameraProjectionMatrix()
+{
+    return s_Data.ProjectionMatrix;
+}
+
 void Firebox::Renderer3D::SetCascadeUniforms(const Ref<Shader>& shader)
 {
 	const auto& cascadeLevels = s_Data.ShadowMap->GetCascadeLevels();
@@ -361,14 +371,12 @@ void Firebox::Renderer3D::SetPointLightUniforms(const Ref<Shader>& shader, int c
 		const auto& light = s_Data.PointLights[i];
 		const std::string prefix = "u_PointLights[" + std::to_string(i) + "].";
 		shader->SetVector3(prefix + "position", light.Position);
-		shader->SetVector3(prefix + "ambient", light.Color * 0.2f);
-		shader->SetVector3(prefix + "diffuse", light.Color);
-		shader->SetVector3(prefix + "specular", light.Color);
+		shader->SetVector3(prefix + "color", light.Color);
+		shader->SetFloat(prefix + "intensity", light.Intensity);
 		shader->SetFloat(prefix + "constant", light.Constant);
 		shader->SetFloat(prefix + "linear", light.Linear);
 		shader->SetFloat(prefix + "quadratic", light.Quadratic);
 	}
-	
 }
 
 void Firebox::Renderer3D::SetSpotLightUniforms(const Ref<Shader>& shader, int count)

@@ -1,14 +1,14 @@
 set -euo pipefail
- 
+
 PREMAKE_VERSION="${PREMAKE_VERSION:-5.0.0-beta8}"
- 
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
- 
+
 ACTION="${1:-gmake}"
 VENDOR_PREMAKE_DIR="$REPO_ROOT/vendor/bin/premake"
 VENDORED_PREMAKE="$VENDOR_PREMAKE_DIR/premake5"
- 
+
 resolve_premake_bin() {
     if [ -n "${PREMAKE_BIN:-}" ]; then
         echo "$PREMAKE_BIN"
@@ -24,9 +24,9 @@ resolve_premake_bin() {
     fi
     echo ""
 }
- 
+
 PREMAKE_BIN="$(resolve_premake_bin)"
- 
+
 if [ -z "$PREMAKE_BIN" ]; then
     echo "premake5 not found on PATH or vendored at $VENDORED_PREMAKE; downloading v$PREMAKE_VERSION ..."
     TMP_DIR="$(mktemp -d)"
@@ -39,20 +39,20 @@ if [ -z "$PREMAKE_BIN" ]; then
     PREMAKE_BIN="$VENDORED_PREMAKE"
     echo "Vendored premake5 v$PREMAKE_VERSION at $VENDORED_PREMAKE"
 fi
- 
+
 echo "Searching for workspace premake5.lua files under $REPO_ROOT ..."
- 
+
 mapfile -t SCRIPTS < <(grep -l -R --include="premake5.lua" -E "^\s*workspace\s*\"" "$REPO_ROOT")
- 
+
 if [ ${#SCRIPTS[@]} -eq 0 ]; then
     echo "No workspace premake5.lua files found." >&2
     exit 1
 fi
- 
+
 for script in "${SCRIPTS[@]}"; do
     dir="$(dirname "$script")"
     echo "==> Generating ($ACTION) for $script"
     (cd "$dir" && "$PREMAKE_BIN" "$ACTION")
 done
- 
+
 echo "Done."

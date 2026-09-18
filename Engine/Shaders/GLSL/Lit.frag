@@ -10,9 +10,8 @@ struct DirectionalLight {
 
 struct PointLight {
     vec3 position;
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
+    vec3 color;
+    float intensity;
     float constant;
     float linear;
     float quadratic;
@@ -208,35 +207,67 @@ vec3 CookTorranceDirectional(vec3 N, vec3 V, vec3 lightDir, vec3 radiance, vec3 
     return Lo;
 }
 
-vec3 CalculateDirectionalLight(DirectionalLight directionalLight, vec3 viewDir, vec3 normal, float shadow, 
-    vec3 _albedo, float _roughness, float _metallic, float ssao)
+vec3 CookTorrancePointLight(vec3 N, vec3 V, vec3 lightPos, vec3 worldPos, vec3 albedo, float metallic, float roughness, vec3 radiance)
+{
+    vec3 F0 = mix(vec3(0.04), albedo, metallic);
+    vec3 L = normalize(lightPos - worldPos);
+    vec3 H = normalize(V + L);
+
+    float NDF = DistributionGGX(N, H, roughness);
+    float G = GeometrySmith(N, V, L, roughness);
+    vec3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);
+
+    vec3 nom = NDF * G * F;
+    float denom = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
+    vec3 specular = nom / denom;
+
+    vec3 kS = F;
+    vec3 kD = (vec3(1.0) - kS) * (1.0 - metallic);
+
+    float NdotL = max(dot(N, L), 0.0);
+
+    vec3 Lo = (kD * albedo / PI + specular) * radiance * NdotL;
+    return Lo;
+}
+
+vec3 CalculateDirectionalLight(DirectionalLight directionalLight, vec3 viewDir, vec3 normal, float shadow, vec3 albedo, float roughness, 
+    float metallic, float ssao)
 {
     vec3 directionalLightDir = normalize(-directionalLight.direction);
     vec3 N = normalize(normal);
     vec3 radiance =  directionalLight.color * directionalLight.intensity;
 
-    vec3 Lo = CookTorranceDirectional(N, viewDir, directionalLightDir, radiance, _albedo, _metallic, _roughness);
-    vec3 ambient = vec3(0.03) * _albedo * ssao;
+    vec3 Lo = CookTorranceDirectional(N, viewDir, directionalLightDir, radiance, albedo, metallic, roughness);
+    vec3 ambient = vec3(0.03) * albedo * ssao;
     vec3 color = ambient + (1.0 - shadow) * Lo;
     return color;
 }
 
-vec3 CalculatePointLight(PointLight pointLight, vec3 normal, vec3 fragPos, vec3 viewDir, 
-    vec3 _albedo, float _specular, float ssao)
+vec3 CalculatePointLight(PointLight pointLight, vec3 fragPos, vec3 viewDir, vec3 albedo, float roughness, float ssao, vec3 normal, float metallic)
 {
-    vec3 pointLightDir = normalize(pointLight.position - fragPos);
-    float diff = max(dot(normal, pointLightDir), 0.0);
-    vec3 reflectDir = reflect(-pointLightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256.0);
-    vec3 ambient = vec3(pointLight.ambient * _albedo * ssao);
-    vec3 diffuse = pointLight.diffuse * diff * _albedo;
-    vec3 specular = pointLight.specular * spec * _specular;
-    float distance = length(pointLight.position - fragPos);
-    float attenuation = 1.0 / (pointLight.constant + pointLight.linear * distance + pointLight.quadratic * (distance * distance));    
-    ambient *= attenuation;  
-    diffuse *= attenuation;
-    specular *= attenuation;   
-    return (ambient + diffuse + specular);
+    // 
+    // float diff = max(dot(normal, pointLightDir), 0.0);
+    // vec3 reflectDir = reflect(-pointLightDir, normal);
+    // float spec = pow(max(dot(viewDir, reflectDir), 0.0), 256.0);
+    // vec3 ambient = vec3(pointLight.ambient * _albedo * ssao);
+    // vec3 diffuse = pointLight.diffuse * diff * _albedo;
+    // vec3 specular = pointLight.specular * spec * _specular;
+    // float distance = length(pointLight.position - fragPos);
+    // float attenuation = 1.0 / (pointLight.constant + pointLight.linear * distance + pointLight.quadratic * (distance * distance));    
+    // ambient *= attenuation;  
+    // diffuse *= attenuation;
+    // specular *= attenuation;   
+    // return (ambient + diffuse + specular);
+
+    vec3 N = normalize(normal);
+    float dist = length(fragPos);
+    float attenuation = 1.0 / (pointLight.constant + pointLight.linear * dist + pointLight.quadratic * (dist * dist));
+    vec3 radiance = pointLight.color * attenuation * pointLight.intensity;
+    vec3 Lo = CookTorrancePointLight(N, viewDir, pointLight.position, fragPos, albedo, metallic, roughness, radiance);
+    vec3 ambient = vec3(0.03) * albedo * ssao;
+    vec3 color = ambient + Lo;
+
+    return color;
 }
 
 vec3 CalculateSpotLight(SpotLight spotLight, vec3 normal, vec3 fragPos, vec3 viewDir, float shadow, 
@@ -284,8 +315,8 @@ void main()
         for (int i = 0; i < MAX_POINT_LIGHTS; i++)
         {
             if (i >= u_NumberOfPointLights) break;
-            result += CalculatePointLight(u_PointLights[i], Normal, FragPos, viewDir, Albedo, 
-                Roughness, AmbientOcclusion);
+            result += CalculatePointLight(u_PointLights[i], FragPos, viewDir, Albedo, 
+                Roughness, AmbientOcclusion, Normal, Metallic);
         }
     }
 
@@ -299,6 +330,7 @@ void main()
         }
     }
 
+    result /= (result + vec3(1.0));
     result = pow(result.rgb, vec3(1.0 / max(u_PostProcessSettings.gamma, 0.0001)));
     FragColor = vec4(result, 1.0);
 }

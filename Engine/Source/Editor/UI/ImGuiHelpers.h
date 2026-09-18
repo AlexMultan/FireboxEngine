@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Utils/Types.h"
+
 #include <imgui.h>
 
 namespace ImGui {

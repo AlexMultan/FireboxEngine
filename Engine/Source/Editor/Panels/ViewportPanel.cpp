@@ -8,7 +8,6 @@
 #include "Rendering/Renderer3D.h"
 #include "Core/EditorUtils.h"
 
-#include <imgui.h>
 #include <ImGuizmo.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -50,6 +49,12 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Mat4x4& viewMatrix, cons
 	}
 
 	m_IsFocused = ImGui::IsWindowHovered();
+	uint pointLightIcon = FireboxEditor::EditorUtils::GetPointLightIcon();
+	for(auto& light : Firebox::Renderer3D::GetPointLights())
+	{
+		DrawGizmoIcon(light.Position, Firebox::Renderer3D::GetCameraViewMatrix(), Firebox::Renderer3D::GetCameraProjectionMatrix(),
+			(ImTextureID)(uintptr_t)pointLightIcon, 64.0f);
+	}
 
 	if (m_SelectedEntity && m_SelectedEntity.HasComponent<TransformComponent>())
 	{
@@ -165,4 +170,33 @@ void FireboxEditor::ViewportPanel::RenderViewport(const Mat4x4& viewMatrix, cons
 	ImGui::End();
 
 	ImGui::PopStyleVar();
+}
+
+void FireboxEditor::ViewportPanel::DrawGizmoIcon(const Vector3& worldPosition, const Mat4x4& view, const Mat4x4& projection, ImTextureID iconTexture, float iconSize)
+{
+	Mat4x4 viewProjection = projection * view;
+	Vector4 clipPosition = viewProjection * Vector4(worldPosition, 1.0f);
+
+	if(clipPosition.w <= 0.0f)
+		return;
+
+	Vector3 ndc = Vector3(clipPosition) / clipPosition.w;
+
+	if(ndc.x < -1.5f || ndc.x > 1.5f || ndc.y < -1.5f || ndc.y > 1.5f)
+		return;
+
+	ImVec2 viewportPosition = ImGui::GetWindowPos();
+	ImVec2 viewportSize = ImGui::GetWindowSize();
+
+	ImVec2 screenPosition;
+	screenPosition.x = viewportPosition.x + (ndc.x * 0.5f + 0.5f) * viewportSize.x;
+	screenPosition.y = viewportPosition.y + (1.0f - (ndc.y * 0.5f + 0.5f)) * viewportSize.y;
+
+	ImDrawList* drawList = ImGui::GetWindowDrawList();
+
+	ImVec2 pMin(screenPosition.x - iconSize * 0.5f, screenPosition.y - iconSize * 0.5f);
+	ImVec2 pMax(screenPosition.x + iconSize * 0.5f, screenPosition.y + iconSize * 0.5f);
+
+	if(iconTexture)
+		drawList->AddImage(iconTexture, pMin, pMax, {0, 0}, {1, 1});
 }
