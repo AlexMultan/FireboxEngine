@@ -143,11 +143,9 @@ git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
 ## Known Issues
  
 - Animation system functional but needs further work
-- Cascaded shadow mapping works but needs further work. 
 ## Future Plans
  
 ### Rendering
-- Fix cascaded shadow maps in deferred pipeline
 - Screen Space Reflections (SSR)
 - Screen Space Global Illumination (SSGI)
 - Subpixel Morphological Anti-Aliasing (SMAA)
