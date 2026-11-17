@@ -242,7 +242,8 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 				if (ImGui::TreeNodeEx("Ambient Occlusion", ImGuiTreeNodeFlags_Framed))
 				{
-					EditorUI::FloatParameters::Checkbox(&Firebox::Renderer3D::GetPostProcessSettings().EnableSSAO, "Enable SSAO (Screen-Space Ambient Occlusion");
+					EditorUI::FloatParameters::Checkbox(&Firebox::Renderer3D::GetPostProcessSettings().EnableSSAO, "Enable SSAO");
+					EditorUI::FloatParameters::Checkbox(&Firebox::Renderer3D::GetPostProcessSettings().EnableFXAA, "Enable FXAA");
 					EditorUI::FloatParameters::Int1(&Firebox::Renderer3D::GetPostProcessSettings().AmbientOcclusionKernelSize, "Kernel Size");
 					EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPostProcessSettings().AmbientOcclusionIntensity, "Intensity");
 					EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPostProcessSettings().AmbientOcclusionRadius, "Radius");

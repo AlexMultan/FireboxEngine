@@ -38,7 +38,7 @@ float randomAngle(vec3 seed)
 void main()
 {
     vec3 fragPosWorldSpace = texture(u_gPosition, TexCoords).rgb;
-    vec3 normal = texture(u_gNormalMetallic, TexCoords).rgb;
+    vec3 normal = texture(u_gNormalMetallic, TexCoords).rgb * 2.0 - 1.0;
 
     if (length(fragPosWorldSpace) < 0.0001)
     {

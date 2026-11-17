@@ -29,6 +29,7 @@ Ref<Firebox::Shader> Firebox::Renderer3D::GetMetallicVisShader()			{ return s_Da
 Ref<Firebox::Shader> Firebox::Renderer3D::GetAmbientOcclusionVisShader()	{ return s_Data.AmbientOcclusionVisShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetSSAOShader()					{ return s_Data.SSAOShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetSSAOBlurShader()				{ return s_Data.SSAOBlurShader; }
+Ref<Firebox::Shader> Firebox::Renderer3D::GetFXAAShader()					{ return s_Data.FXAAShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetDepthShader()					{ return s_Data.DepthShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetShadowShader()					{ return s_Data.ShadowDepthShader; }
 Ref<Firebox::Shader> Firebox::Renderer3D::GetDebugCascadeLevelsShader()		{ return s_Data.DebugCascadeLevelsShader; }
@@ -141,6 +142,10 @@ void Firebox::Renderer3D::Init()
 	s_Data.SSAOBlurShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
 		Firebox::EngineContent::Shaders("GLSL/SSAO_Blur.frag").string().c_str(), nullptr);
 
+	FB_CORE_TRACE("Creating FXAAShader...");
+	s_Data.FXAAShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/Base.vert").string().c_str(),
+		Firebox::EngineContent::Shaders("GLSL/FXAA.frag").string().c_str(), nullptr);
+
 	FB_CORE_TRACE("Creating ShadowMapShader...");
 	s_Data.ShadowDepthShader = Shader::Create(Firebox::EngineContent::Shaders("GLSL/ShadowMap.vert").string().c_str(),
 		Firebox::EngineContent::Shaders("GLSL/ShadowMap.frag").string().c_str(),
@@ -172,6 +177,9 @@ void Firebox::Renderer3D::Init()
 	s_Data.SSAO->ResizeSSAOBuffer(s_Data.MainFramebuffer->GetSpecs().Width, s_Data.MainFramebuffer->GetSpecs().Height);
 	s_Data.SSAO->GenerateSampleKernel();
 	s_Data.SSAO->GenerateNoiseTexture();
+
+	s_Data.FXAA = Firebox::FXAA::Create();
+	s_Data.FXAA->ResizeFXAABuffer(s_Data.MainFramebuffer->GetSpecs().Width, s_Data.MainFramebuffer->GetSpecs().Height);
 
 	s_ScreenQuad = CreateScope<Firebox::Quad>();
 
@@ -273,6 +281,9 @@ void Firebox::Renderer3D::EndScene()
 	SkyboxPass();
 	DrawGrid();
 	Flush();
+	
+	FXAAPass();
+
 	DebugShapesPass();
 	s_Data.MainFramebuffer->UnbindFramebuffer();
 }
@@ -606,6 +617,25 @@ void Firebox::Renderer3D::SSAOPass()
 	s_Data.SSAO->UnbindSSAOBlurBuffer();
 }
 
+void Firebox::Renderer3D::FXAAPass()
+{
+	s_Data.FXAA->BindFXAABuffer();
+
+	constexpr uint sceneColorUnit = 0;
+	s_Data.FXAAShader->UseShader();
+	s_Data.FXAA->BindSceneTexture(s_Data.MainFramebuffer->GetColorAttachment(), sceneColorUnit);
+	s_Data.FXAAShader->SetInt("u_SceneColor", sceneColorUnit);
+
+	s_Data.RendererAPI->Disable(APIEnum::API_DEPTH_TEST);
+	s_Data.RendererAPI->DrawIndexed(s_ScreenQuad->GetVertexArray());
+	s_Data.RendererAPI->Enable(APIEnum::API_DEPTH_TEST);
+
+	s_Data.FXAA->UnbindFXAABuffer();
+
+	s_Data.FXAA->BlitToFramebuffer(s_Data.MainFramebuffer->GetID());
+	s_Data.MainFramebuffer->BindFramebuffer();
+}
+
 void Firebox::Renderer3D::ShadowMaskPass()
 {
 	s_Data.gBuffer->BindGBufferPositionNormal();
@@ -711,4 +741,5 @@ void Firebox::Renderer3D::OnViewportResize(uint width, uint height)
 	s_Data.gBuffer->ResizeGBuffer(width, height);
 	s_Data.ShadowMask->ResizeShadowMask(width, height);
 	s_Data.SSAO->ResizeSSAOBuffer(width, height);
+	s_Data.FXAA->ResizeFXAABuffer(width, height);
 }
