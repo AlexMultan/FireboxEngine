@@ -57,6 +57,71 @@ const uint FireboxEditor::EditorUtils::GetPointLightIcon()
 	return s_PointLightIconTexture ? s_PointLightIconTexture->GetTextureID() : 0;
 }
 
+String FireboxEditor::EditorUtils::OpenFileDialog(const wchar_t* filterName, const wchar_t* filterPattern, const char* zenityPattern)
+{
+#ifdef _WIN32
+    OPENFILENAMEW ofn;
+    wchar_t szFile[260] = L"";
+
+    std::wstring filter;
+    filter += filterName;
+    filter += L" (";
+    filter += filterPattern;
+    filter += L")";
+    filter.push_back(L'\0');
+    filter += filterPattern;
+    filter.push_back(L'\0');
+    filter += L"All Files (*.*)";
+    filter.push_back(L'\0');
+    filter += L"*.*";
+    filter.push_back(L'\0');
+    filter.push_back(L'\0');
+
+    ZeroMemory(&ofn, sizeof(ofn));
+    ofn.lStructSize = sizeof(ofn);
+    ofn.hwndOwner = NULL;
+    ofn.lpstrFile = szFile;
+    ofn.nMaxFile = sizeof(szFile) / sizeof(wchar_t);
+    ofn.lpstrFilter = filter.c_str();
+    ofn.nFilterIndex = 1;
+    ofn.lpstrFileTitle = NULL;
+    ofn.nMaxFileTitle = 0;
+    ofn.lpstrInitialDir = NULL;
+    ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+    if (!GetOpenFileNameW(&ofn))
+        return "";
+
+    std::wstring selectedFile = ofn.lpstrFile;
+    int len = WideCharToMultiByte(CP_UTF8, 0, selectedFile.c_str(), -1, nullptr, 0, nullptr, nullptr);
+    String utf8Path(len, 0);
+    WideCharToMultiByte(CP_UTF8, 0, selectedFile.c_str(), -1, utf8Path.data(), len, nullptr, nullptr);
+    if (!utf8Path.empty() && utf8Path.back() == '\0')
+        utf8Path.pop_back();
+
+    return utf8Path;
+#else
+    std::string command = "zenity --file-selection --title=\"Select File\" --file-filter=\"";
+    command += zenityPattern;
+    command += "\" 2>/dev/null";
+
+    std::array<char, 1024> buffer{};
+    std::string result;
+
+    std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(command.c_str(), "r"), pclose);
+    if (!pipe)
+        return "";
+
+    while (fgets(buffer.data(), (int)buffer.size(), pipe.get()) != nullptr)
+        result += buffer.data();
+
+    while (!result.empty() && (result.back() == '\n' || result.back() == '\r'))
+        result.pop_back();
+
+    return result;
+#endif
+}
+
 ImFont* FireboxEditor::EditorUtils::GetSelectedEntityNodeFont()
 {
 	return s_SelectedEntityNodeFont;

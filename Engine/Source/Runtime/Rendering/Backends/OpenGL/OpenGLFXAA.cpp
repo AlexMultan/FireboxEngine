@@ -43,6 +43,11 @@ void Firebox::OpenGL::OpenGLFXAA::BindSceneTexture(uint textureID, uint textureU
 	glBindTextureUnit(textureUnit, textureID);
 }
 
+void Firebox::OpenGL::OpenGLFXAA::UnbindSceneTexture(uint textureUnit)
+{
+	glBindTextureUnit(textureUnit, 0);
+}
+
 void Firebox::OpenGL::OpenGLFXAA::BlitToFramebuffer(uint destinationFramebufferID)
 {
 	glBlitNamedFramebuffer(m_FXAA_FBO, destinationFramebufferID, 0, 0, m_FXAAInfo.Width, m_FXAAInfo.Height, 0, 0, m_FXAAInfo.Width, 

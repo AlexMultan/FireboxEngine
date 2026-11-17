@@ -89,17 +89,38 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 		if (m_SelectedEntity.HasComponent<StaticMeshComponent>())
 		{
+			auto& smc = m_SelectedEntity.GetComponent<StaticMeshComponent>();
+
 			PushTreeNodeStyle();
-
 			bool staticMeshTree = ImGui::TreeNodeEx("Static Mesh", defaultFlags);
-
 			PopTreeNodeStyle();
 
 			if (staticMeshTree)
 			{
-
-				ImGui::Image((ImTextureID)(uintptr_t)FireboxEditor::EditorUtils::GetMeshIcon(),
-					{ 64.0f, 64.0f }, ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::Text(smc.StaticMesh->GetDirectory().c_str());
+				if (ImGui::Button("Load 3D Model"))
+				{
+					String utf8Path = EditorUtils::OpenFileDialog(L"3D Model", L"*.gltf\0*.glb\0*.fbx\0*obj\0*.dae", 
+						"3D Model | *.gltf\0*.glb\0*.fbx\0*obj\0*.dae");
+					FB_EDITOR_TRACE("Dialog returned: [{0}] (len={1})", utf8Path, utf8Path.size());
+					if (!utf8Path.empty())
+					{
+						try
+						{
+							Ref<Firebox::StaticMesh> loadedMesh = CreateRef<Firebox::StaticMesh>(utf8Path);
+							m_SelectedEntity.AddComponent<StaticMeshComponent>(loadedMesh);
+						}
+						catch (const std::exception& e)
+						{
+							FB_EDITOR_ERROR("Failed to load model: {}", e.what());
+						}
+						catch (...)
+						{
+							FB_EDITOR_ERROR("Failed to load model: unknown exception");
+						}
+					}
+				}
+				
 				ImGui::TreePop();
 			}
 
@@ -234,16 +255,24 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 			if (postProcessTree)
 			{
+				ImGui::SetCursorPosX(0.0f);
 				if (ImGui::TreeNodeEx("Color Grading", ImGuiTreeNodeFlags_Framed))
 				{
 					EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPostProcessSettings().Gamma, "Gamma");
 					ImGui::TreePop();
 				}
 
+				ImGui::SetCursorPosX(0.0f);
+				if (ImGui::TreeNodeEx("Anti-Aliasing", ImGuiTreeNodeFlags_Framed))
+				{
+					EditorUI::FloatParameters::Checkbox(&Firebox::Renderer3D::GetPostProcessSettings().EnableFXAA, "Enable FXAA");
+					ImGui::TreePop();
+				}
+
+				ImGui::SetCursorPosX(0.0f);
 				if (ImGui::TreeNodeEx("Ambient Occlusion", ImGuiTreeNodeFlags_Framed))
 				{
 					EditorUI::FloatParameters::Checkbox(&Firebox::Renderer3D::GetPostProcessSettings().EnableSSAO, "Enable SSAO");
-					EditorUI::FloatParameters::Checkbox(&Firebox::Renderer3D::GetPostProcessSettings().EnableFXAA, "Enable FXAA");
 					EditorUI::FloatParameters::Int1(&Firebox::Renderer3D::GetPostProcessSettings().AmbientOcclusionKernelSize, "Kernel Size");
 					EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPostProcessSettings().AmbientOcclusionIntensity, "Intensity");
 					EditorUI::FloatParameters::Float1(&Firebox::Renderer3D::GetPostProcessSettings().AmbientOcclusionRadius, "Radius");

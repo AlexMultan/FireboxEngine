@@ -21,6 +21,7 @@ namespace Firebox {
 		virtual void ResizeFXAABuffer(uint width, uint height) = 0;
 		virtual uint GetFXAAColorBuffer() = 0;
 		virtual void BindSceneTexture(uint textureID, uint textureUnit) = 0;
+		virtual void UnbindSceneTexture(uint textureUnit) = 0;
 		virtual void BlitToFramebuffer(uint destinationFramebufferID) = 0;
 
 		static Ref<FXAA> Create();

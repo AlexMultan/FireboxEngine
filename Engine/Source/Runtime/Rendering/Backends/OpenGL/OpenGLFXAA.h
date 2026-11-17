@@ -15,6 +15,7 @@ namespace Firebox::OpenGL {
 		virtual void ResizeFXAABuffer(uint width, uint height) override;
 		virtual uint GetFXAAColorBuffer() override;
 		virtual void BindSceneTexture(uint textureID, uint textureUnit) override;
+		virtual void UnbindSceneTexture(uint textureUnit) override;
 		virtual void BlitToFramebuffer(uint destinationFramebufferID) override;
 
 	private:

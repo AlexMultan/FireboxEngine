@@ -619,20 +619,23 @@ void Firebox::Renderer3D::SSAOPass()
 
 void Firebox::Renderer3D::FXAAPass()
 {
-	s_Data.FXAA->BindFXAABuffer();
+	if (s_Data.PostProcessing.EnableFXAA)
+	{
+		s_Data.FXAA->BindFXAABuffer();
 
-	constexpr uint sceneColorUnit = 0;
-	s_Data.FXAAShader->UseShader();
-	s_Data.FXAA->BindSceneTexture(s_Data.MainFramebuffer->GetColorAttachment(), sceneColorUnit);
-	s_Data.FXAAShader->SetInt("u_SceneColor", sceneColorUnit);
+		constexpr uint sceneColorUnit = 0;
+		s_Data.FXAAShader->UseShader();
+		s_Data.FXAA->BindSceneTexture(s_Data.MainFramebuffer->GetColorAttachment(), sceneColorUnit);
+		s_Data.FXAAShader->SetInt("u_SceneColor", sceneColorUnit);
 
-	s_Data.RendererAPI->Disable(APIEnum::API_DEPTH_TEST);
-	s_Data.RendererAPI->DrawIndexed(s_ScreenQuad->GetVertexArray());
-	s_Data.RendererAPI->Enable(APIEnum::API_DEPTH_TEST);
+		s_Data.RendererAPI->Disable(APIEnum::API_DEPTH_TEST);
+		s_Data.RendererAPI->DrawIndexed(s_ScreenQuad->GetVertexArray());
+		s_Data.RendererAPI->Enable(APIEnum::API_DEPTH_TEST);
 
-	s_Data.FXAA->UnbindFXAABuffer();
+		s_Data.FXAA->UnbindFXAABuffer();
 
-	s_Data.FXAA->BlitToFramebuffer(s_Data.MainFramebuffer->GetID());
+		s_Data.FXAA->BlitToFramebuffer(s_Data.MainFramebuffer->GetID());
+	}
 	s_Data.MainFramebuffer->BindFramebuffer();
 }
 
