@@ -1,0 +1,311 @@
+{
+    "Scene": "ShadowTest",
+    "Entities": [
+        {
+            "Entity": 11995809958443833510,
+            "Tag": "Directional Light",
+            "Transform": {
+                "Position": {
+                    "X": 0.0,
+                    "Y": 0.0,
+                    "Z": 0.0
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 1.0,
+                    "Y": 1.0,
+                    "Z": 1.0
+                }
+            },
+            "Directional Light": {
+                "Direction": {
+                    "X": -0.20000000298023224,
+                    "Y": -1.0,
+                    "Z": -0.30000001192092896
+                },
+                "Color": {
+                    "X": 1.0,
+                    "Y": 0.8899999856948853,
+                    "Z": 0.9599999785423279
+                },
+                "Intensity": 5.0
+            }
+        },
+        {
+            "Entity": 1906896838244281021,
+            "Tag": "Plane",
+            "Transform": {
+                "Position": {
+                    "X": 0.0,
+                    "Y": 0.0,
+                    "Z": 0.0
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 1.6999999284744263,
+                    "Y": 1.6999999284744263,
+                    "Z": 1.6999999284744263
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "Resources/EditorContent/Models/SM_Plane.glb",
+                "Materials": [
+                    {
+                        "Diffuse": null,
+                        "Roughness": null,
+                        "Metallic": null,
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
+                        },
+                        "Diffuse Color": {
+                            "R": 0.699999988079071,
+                            "G": 0.699999988079071,
+                            "B": 0.699999988079071,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.20000000298023224,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        },
+        {
+            "Entity": 5471102789038413820,
+            "Tag": "Cube",
+            "Transform": {
+                "Position": {
+                    "X": -1.0,
+                    "Y": 1.0,
+                    "Z": 0.0
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 0.03983496129512787,
+                    "Y": 1.0,
+                    "Z": 1.0
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "Resources/EditorContent/Models/SM_Cube.glb",
+                "Materials": [
+                    {
+                        "Diffuse": null,
+                        "Roughness": null,
+                        "Metallic": null,
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
+                        },
+                        "Diffuse Color": {
+                            "R": 0.0,
+                            "G": 0.9112149477005005,
+                            "B": 0.19586855173110962,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.5,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        },
+        {
+            "Entity": 3542642067798489434,
+            "Tag": "Cube",
+            "Transform": {
+                "Position": {
+                    "X": 1.0,
+                    "Y": 1.0,
+                    "Z": 0.0
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 0.03999999910593033,
+                    "Y": 1.0,
+                    "Z": 1.0
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "Resources/EditorContent/Models/SM_Cube.glb",
+                "Materials": [
+                    {
+                        "Diffuse": null,
+                        "Roughness": null,
+                        "Metallic": null,
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
+                        },
+                        "Diffuse Color": {
+                            "R": 1.0,
+                            "G": 0.0,
+                            "B": 0.0,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.5,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        },
+        {
+            "Entity": 1394106210622161653,
+            "Tag": "Cube",
+            "Transform": {
+                "Position": {
+                    "X": 0.0,
+                    "Y": 1.0,
+                    "Z": -0.9000000357627869
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 1.0,
+                    "Y": 1.0,
+                    "Z": 0.07000000029802322
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "Resources/EditorContent/Models/SM_Cube.glb",
+                "Materials": [
+                    {
+                        "Diffuse": null,
+                        "Roughness": null,
+                        "Metallic": null,
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
+                        },
+                        "Diffuse Color": {
+                            "R": 1.0,
+                            "G": 1.0,
+                            "B": 1.0,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.5,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        },
+        {
+            "Entity": 2754987514422753156,
+            "Tag": "Cube",
+            "Transform": {
+                "Position": {
+                    "X": 0.0,
+                    "Y": 2.0,
+                    "Z": 0.0
+                },
+                "Rotation": {
+                    "X": 0.0,
+                    "Y": -0.0,
+                    "Z": 0.0
+                },
+                "Scale": {
+                    "X": 1.0,
+                    "Y": 0.04000000283122063,
+                    "Z": 1.0
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "Resources/EditorContent/Models/SM_Cube.glb",
+                "Materials": [
+                    {
+                        "Diffuse": null,
+                        "Roughness": null,
+                        "Metallic": null,
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
+                        },
+                        "Diffuse Color": {
+                            "R": 1.0,
+                            "G": 1.0,
+                            "B": 1.0,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.5,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        },
+        {
+            "Entity": 7123480402542677965,
+            "Tag": "Monkey",
+            "Transform": {
+                "Position": {
+                    "X": 0.20000000298023224,
+                    "Y": 0.699999988079071,
+                    "Z": 1.100000023841858
+                },
+                "Rotation": {
+                    "X": -179.99871826171875,
+                    "Y": 80.98002624511719,
+                    "Z": 92.80013275146484
+                },
+                "Scale": {
+                    "X": 0.9999990463256836,
+                    "Y": 0.9999749660491943,
+                    "Z": 0.9999999403953552
+                }
+            },
+            "Static Mesh": {
+                "Model Path": "E:\\dev\\FireboxEngine\\Resources\\EditorContent\\Models\\SM_AKM.glb",
+                "Materials": [
+                    {
+                        "Diffuse": null,
+                        "Roughness": null,
+                        "Metallic": null,
+                        "Normal": {
+                            "Path": "Resources/EditorContent/Textures/T_FlatNormal.png"
+                        },
+                        "Diffuse Color": {
+                            "R": 0.0,
+                            "G": 0.5514020919799805,
+                            "B": 1.0,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.5,
+                        "Metallic Value": 0.0
+                    },
+                    {
+                        "Diffuse": {
+                            "Path": "E:\\dev\\FireboxEngine\\Resources\\EditorContent\\Models\\SM_AKM.glb/*3"
+                        },
+                        "Roughness": {
+                            "Path": "E:\\dev\\FireboxEngine\\Resources\\EditorContent\\Models\\SM_AKM.glb/*4"
+                        },
+                        "Metallic": null,
+                        "Normal": {
+                            "Path": "E:\\dev\\FireboxEngine\\Resources\\EditorContent\\Models\\SM_AKM.glb/*4"
+                        },
+                        "Diffuse Color": {
+                            "R": 0.699999988079071,
+                            "G": 0.699999988079071,
+                            "B": 0.699999988079071,
+                            "A": 1.0
+                        },
+                        "Roughness Value": 0.5,
+                        "Metallic Value": 0.0
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -8,6 +8,8 @@
 #include "Editor/EditorPaths.h"
 #include "Core/EditorUtils.h"
 #include "UI/ImGuiHelpers.h"
+#include "Window/ProjectSettings.h"
+#include "Window/EditorSettings.h"
 
 FireboxEditor::MenuBar::MenuBar(FireboxEditor::EditorContext& context) : m_Context(context), m_Scene(nullptr)
 {
@@ -24,14 +26,16 @@ FireboxEditor::MenuBar::~MenuBar()
 void FireboxEditor::MenuBar::RenderMenuBar()
 {
     static bool showProjectSettings = false;
+    static bool showEditorSettings = false;
 
     if (showProjectSettings)
     {
-        if (ImGui::Begin("Project Settings", &showProjectSettings))
-        {
-            ImGui::Text("In Progress");
-        }
-        ImGui::End();
+        ProjectSettings::ShowWindow(m_Context, &showProjectSettings);
+    }
+
+    if (showEditorSettings)
+    {
+        EditorSettings::ShowWindow(m_Context, &showEditorSettings);
     }
 
     if (ImGui::BeginMainMenuBar())
@@ -90,6 +94,11 @@ void FireboxEditor::MenuBar::RenderMenuBar()
             if (ImGui::MenuItem("Project Settings"))
             {
                 showProjectSettings = true;
+            }
+
+            if (ImGui::MenuItem("Editor Settings"))
+            {
+                showEditorSettings = true;
             }
             ImGui::EndMenu();
         }

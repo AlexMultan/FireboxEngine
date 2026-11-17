@@ -441,10 +441,13 @@ Ref<Firebox::Shader> Firebox::Renderer3D::BindLitUniforms()
 	Ref<Shader> shader = s_Data.LitShader;
 
 	shader->UseShader();
-	shader->SetFloat("u_FarPlane", s_Data.FarPlane);
 	shader->SetInt("u_CascadeCount", s_Data.ShadowMap->GetCascadeLevels().size());
-	for (size_t i = 0; i < s_Data.ShadowMap->GetCascadeLevels().size(); i++)
+	for (size_t i = 0; i < s_Data.ShadowMap->GetCascadeLevels().size(); i++) 
+	{
 		shader->SetFloat("u_CascadePlaneDistances[" + std::to_string(i) + "]", s_Data.ShadowMap->GetCascadeLevels()[i]);
+		shader->SetFloat("u_ShadowWorldTexelSize[" + std::to_string(i) + "]", s_Data.ShadowMap->GetWorldTexelSize());
+		shader->SetFloat("u_ShadowDepthRange[" + std::to_string(i) + "]", s_Data.ShadowMap->GetLightDepthRange());
+	}
 	s_Data.RendererAPI->BindTextureArray(31, s_Data.ShadowMap->GetDepthTexture());
 	shader->SetInt("u_ShadowMap", 31);
 	shader->SetMat4("u_View", s_Data.ViewMatrix);

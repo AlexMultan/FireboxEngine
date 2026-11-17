@@ -31,6 +31,8 @@ namespace Firebox {
 		static Ref<ShadowMap> Create(uint resolution);
 		
 		inline const std::vector<float>& GetCascadeLevels() const { return m_ShadowCascadeLevels; }
+		inline const float GetWorldTexelSize() const { return m_WorldTexelSize; }
+		inline const float GetLightDepthRange() const { return m_LightDepthRange; }
 		void SetCascadeLevels();
 		void SetShadowMapProps(float fov, float nearPlane, float farPlane, float aspectRatio, const Mat4x4& viewMatrix, const Vector3& lightDir);
 		std::vector<Vector3> GetFrustumCornersWorldSpace(const Mat4x4& projection, const Mat4x4& view);
@@ -43,6 +45,8 @@ namespace Firebox {
 		uint m_DepthMapResolution = 8192;
 		Mat4x4 m_LightSpaceMatrix = Mat4x4(1.0f);
 		std::vector<float> m_ShadowCascadeLevels{};
+		float m_WorldTexelSize = 0.0f;
+		float m_LightDepthRange = 0.0f;
 		
 	private:
 		Mat4x4 GetLightSpaceMatrix(const float nearPlane, const float farPlane);

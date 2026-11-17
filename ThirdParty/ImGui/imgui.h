@@ -425,7 +425,9 @@ namespace ImGui
     IMGUI_API void          FireboxEditorStyleClassic(ImGuiStyle* dst = NULL);
     IMGUI_API void          StyleColorsLight(ImGuiStyle* dst = NULL);   // best used with borders and a custom, thicker font
     IMGUI_API void          StyleColorsClassic(ImGuiStyle* dst = NULL); // classic imgui style
-    IMGUI_API void          FireboxStyleColorDark(ImGuiStyle* dst = NULL); // classic imgui style
+    IMGUI_API void          FireboxClassicDarkStyle(ImGuiStyle* dst = NULL);
+    IMGUI_API void          FireboxClassicLightStyle(ImGuiStyle* dst = NULL);
+    IMGUI_API void          FireboxVibrantDarkStyle(ImGuiStyle* dst = NULL);
 
     // Windows
     // - Begin() = push window to the stack and start appending to it. End() = pop window from the stack.

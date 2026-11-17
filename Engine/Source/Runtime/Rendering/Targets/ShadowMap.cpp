@@ -133,5 +133,8 @@ Mat4x4 Firebox::ShadowMap::GetLightSpaceMatrix(const float nearPlane, const floa
 	lightProjection[3][0] += roundOffset.x;
 	lightProjection[3][1] += roundOffset.y;
 
+	m_WorldTexelSize = (2.0f * radius) / static_cast<float>(m_DepthMapResolution);
+	m_LightDepthRange = std::abs(maxZ - minZ);
+
 	return lightProjection * lightView;
 }

@@ -62,9 +62,10 @@ layout (std140, binding = 0) uniform ShadowUniformBlock
 
 uniform float u_CascadePlaneDistances[16];
 uniform int u_CascadeCount;
-uniform float u_FarPlane;
 uniform sampler2DArray u_ShadowMap;
 uniform mat4 u_View;
+uniform float u_ShadowWorldTexelSize[16];
+uniform float u_ShadowDepthRange[16];
 
 const vec2 POISSON_DISK[32] = vec2[](
     vec2(0.27885360, -0.94997849),  vec2(-0.44994136, -0.55357852),
@@ -118,12 +119,13 @@ float CalculateShadow(vec3 lightDirection, vec3 normal, vec3 fragPosWorldSpace)
     vec3 N = normalize(normal);
     vec3 L = normalize(-lightDirection);
 
-    float NdotL = max(dot(N, L), 0.0);
+    float NdotL = clamp(dot(N, L), 0.0, 1.0);
+    float sinTheta = sqrt(max(1.0 - NdotL - NdotL, 0.0));
+    float tanTheta = sinTheta / max(NdotL, 0.2);
+    float worldBias = 0.002 + 0.5 * u_ShadowWorldTexelSize[layer] * tanTheta;
+    float bias = worldBias / max(u_ShadowDepthRange[layer], 0.0001);
 
-    float bias = max(0.05 * (1.0 - NdotL), 0.005);
-    float cascadeDistance = max(u_CascadePlaneDistances[layer], 0.001);
-
-    bias *= 1.0 / (cascadeDistance * 0.5);
+    bias = clamp(bias, 0.0001, 0.0005);
 
     vec2 texelSize = 1.0 / vec2(textureSize(u_ShadowMap, 0).xy);
 
