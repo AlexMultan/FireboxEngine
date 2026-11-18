@@ -29,6 +29,7 @@ A custom 3D game engine built from scratch in C++, featuring a standalone editor
 - **Physically Based Rendering (PBR)** with Cook Torrance BRDF, metallic/roughness workflow
 - **Cascaded Shadow Maps (CSM)** with Poisson Disc shadow sampling
 - **SSAO** (Screen Space Ambient Occlusion)
+- **FXAA** (Fast Approximate Anti-Aliasing)
 - **Skybox** rendering via dedicated render pass
 - **Post processing** pipeline with configurable settings
 - Debug visualization shaders: cascade levels, depth, albedo, metallic, roughness, normal, position
@@ -147,8 +148,8 @@ git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
  
 ### Rendering
 - Screen Space Reflections (SSR)
-- Screen Space Global Illumination (SSGI)
-- Subpixel Morphological Anti-Aliasing (SMAA)
+- Real-Time Global Illumination using Precomputed Light Field Probes
+- Temporal Anti-Aliasing (TAA)
 - Image-based lighting (IBL)
 - Bloom and other post processing effects
 - Point light and spot light shadows
@@ -169,7 +170,7 @@ git clone https://github.com/AlexMultan/FireboxEngine.git -b <branch name>
 - Hot reload for shaders and assets
 - Prefab system
 - Lua scripting
-- AngelScript scripting
+- Visual Scripting
 - Native C++ scripting for performance critical behaviors
 ### Editor
 - Content browser with asset drag and drop into viewport
