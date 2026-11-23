@@ -391,132 +391,691 @@ void ImGui::StyleColorsClassic(ImGuiStyle* dst)
     colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
 }
 
-void ImGui::FireboxStyleColorDark(ImGuiStyle* dst)
+void ImGui::FireboxClassicDarkStyle(ImGuiStyle* dst)
 {
     ImGuiStyle* style = dst ? dst : &ImGui::GetStyle();
+    // Start from a known base, then remove all hue from every color slot.
+    // This also covers ImGuiCol values not explicitly set below.
+    ImGui::StyleColorsDark(style);
     ImVec4* colors = style->Colors;
+    for (int i = 0; i < ImGuiCol_COUNT; ++i)
+    {
+        const float gray = 0.2126f * colors[i].x +
+            0.7152f * colors[i].y +
+            0.0722f * colors[i].z;
+        colors[i].x = colors[i].y = colors[i].z = gray;
+    }
 
-    const ImVec4 bg_darkest = ImVec4(0.11f, 0.11f, 0.12f, 1.00f);
-    const ImVec4 bg_dark = ImVec4(0.14f, 0.14f, 0.15f, 1.00f);
-    const ImVec4 bg_mid = ImVec4(0.18f, 0.18f, 0.19f, 1.00f);
-    const ImVec4 bg_light = ImVec4(0.24f, 0.24f, 0.26f, 1.00f);
-    const ImVec4 bg_lighter = ImVec4(0.30f, 0.30f, 0.32f, 1.00f);
+    // Background hierarchy — true grayscale, classic charcoal
+    const ImVec4 bg_void = ImVec4(0.085f, 0.085f, 0.085f, 1.00f);
+    const ImVec4 bg_darkest = ImVec4(0.115f, 0.115f, 0.115f, 1.00f);
+    const ImVec4 bg_dark = ImVec4(0.155f, 0.155f, 0.155f, 1.00f);
+    const ImVec4 bg_mid = ImVec4(0.195f, 0.195f, 0.195f, 1.00f);
+    const ImVec4 bg_light = ImVec4(0.240f, 0.240f, 0.240f, 1.00f);
+    const ImVec4 bg_lighter = ImVec4(0.300f, 0.300f, 0.300f, 1.00f);
 
-    const ImVec4 accent = ImVec4(0.00f, 0.48f, 0.80f, 1.00f);
-    const ImVec4 accent_hover = ImVec4(0.11f, 0.58f, 0.90f, 1.00f);
-    const ImVec4 accent_dim = ImVec4(0.00f, 0.48f, 0.80f, 0.35f);
+    // Blue is used only for selection, active focus, and selection indicators
+    const ImVec4 accent = ImVec4(0.045f, 0.465f, 1.000f, 1.00f);
+    const ImVec4 accent_hover = ImVec4(0.220f, 0.610f, 1.000f, 1.00f);
+    const ImVec4 accent_dim = ImVec4(0.045f, 0.465f, 1.000f, 0.42f);
+    const ImVec4 accent_subtle = ImVec4(0.045f, 0.465f, 1.000f, 0.26f);
 
-    const ImVec4 text = ImVec4(0.85f, 0.85f, 0.85f, 1.00f);
-    const ImVec4 text_dim = ImVec4(0.50f, 0.50f, 0.52f, 1.00f);
-    const ImVec4 border = ImVec4(0.08f, 0.08f, 0.09f, 1.00f);
+    // Typography
+    const ImVec4 text = ImVec4(0.920f, 0.920f, 0.920f, 1.00f);
+    const ImVec4 text_muted = ImVec4(0.660f, 0.660f, 0.660f, 1.00f);
+    const ImVec4 text_disabled = ImVec4(0.440f, 0.440f, 0.440f, 1.00f);
 
+    // Borders
+    const ImVec4 border = ImVec4(0.080f, 0.080f, 0.080f, 1.00f);
+    const ImVec4 border_soft = ImVec4(0.305f, 0.305f, 0.305f, 1.00f);
+
+
+#pragma region Text
     colors[ImGuiCol_Text] = text;
-    colors[ImGuiCol_TextDisabled] = text_dim;
-    colors[ImGuiCol_WindowBg] = bg_dark;
-    colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    colors[ImGuiCol_PopupBg] = bg_darkest;
-    colors[ImGuiCol_Border] = border;
-    colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    colors[ImGuiCol_TextDisabled] = text_disabled;
+    colors[ImGuiCol_TextLink] = text_muted;
+    colors[ImGuiCol_TextSelectedBg] = accent_dim;
+    colors[ImGuiCol_InputTextCursor] = text;
+#pragma endregion
 
+#pragma region Panels
+    colors[ImGuiCol_WindowBg] = bg_dark;
+    colors[ImGuiCol_ChildBg] = bg_dark;
+    colors[ImGuiCol_PopupBg] = bg_mid;
+
+    colors[ImGuiCol_Border] = border;
+    colors[ImGuiCol_BorderShadow] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+    colors[ImGuiCol_TitleBg] = bg_darkest;
+    colors[ImGuiCol_TitleBgActive] = bg_mid;
+    colors[ImGuiCol_TitleBgCollapsed] = bg_void;
+
+    colors[ImGuiCol_MenuBarBg] = bg_darkest;
+#pragma endregion
+
+#pragma region Input Fields
     colors[ImGuiCol_FrameBg] = bg_darkest;
     colors[ImGuiCol_FrameBgHovered] = bg_mid;
     colors[ImGuiCol_FrameBgActive] = bg_light;
+#pragma endregion
 
-    colors[ImGuiCol_TitleBg] = bg_darkest;
-    colors[ImGuiCol_TitleBgActive] = bg_darkest;
-    colors[ImGuiCol_TitleBgCollapsed] = bg_darkest;
-    colors[ImGuiCol_MenuBarBg] = bg_mid;
+#pragma region Buttons
+    colors[ImGuiCol_Button] = bg_light;
+    colors[ImGuiCol_ButtonHovered] = bg_lighter;
+    colors[ImGuiCol_ButtonActive] = bg_lighter;
+#pragma endregion
 
+#pragma region Selection
+    colors[ImGuiCol_Header] = ImVec4(0.300f, 0.300f, 0.300f, 0.26f);
+    colors[ImGuiCol_HeaderHovered] = ImVec4(0.390f, 0.390f, 0.390f, 0.75f);
+    colors[ImGuiCol_HeaderActive] = ImVec4(0.440f, 0.440f, 0.440f, 0.85f);
+
+    colors[ImGuiCol_TreeLines] = border_soft;
+#pragma endregion
+
+#pragma region Checkboxes & Sliders
+    colors[ImGuiCol_CheckMark] = accent_hover;
+
+    colors[ImGuiCol_SliderGrab] = bg_lighter;
+    colors[ImGuiCol_SliderGrabActive] = ImVec4(0.510f, 0.510f, 0.510f, 1.00f);
+#pragma endregion
+
+#pragma region Scrollbar
     colors[ImGuiCol_ScrollbarBg] = bg_darkest;
     colors[ImGuiCol_ScrollbarGrab] = bg_light;
     colors[ImGuiCol_ScrollbarGrabHovered] = bg_lighter;
-    colors[ImGuiCol_ScrollbarGrabActive] = accent;
+    colors[ImGuiCol_ScrollbarGrabActive] = bg_lighter;
+#pragma endregion
 
-    colors[ImGuiCol_CheckMark] = accent;
-    colors[ImGuiCol_SliderGrab] = ImVec4(0.45f, 0.45f, 0.47f, 1.00f);
-    colors[ImGuiCol_SliderGrabActive] = accent;
+#pragma region Separator
+    colors[ImGuiCol_Separator] = border_soft;
+    colors[ImGuiCol_SeparatorHovered] = bg_lighter;
+    colors[ImGuiCol_SeparatorActive] = bg_lighter;
+#pragma endregion
 
-    colors[ImGuiCol_Button] = bg_light;
-    colors[ImGuiCol_ButtonHovered] = bg_lighter;
-    colors[ImGuiCol_ButtonActive] = accent_dim;
+#pragma region Resize Grip
+    colors[ImGuiCol_ResizeGrip] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+    colors[ImGuiCol_ResizeGripHovered] = border_soft;
+    colors[ImGuiCol_ResizeGripActive] = bg_lighter;
+#pragma endregion
 
-    colors[ImGuiCol_Header] = bg_light;
-    colors[ImGuiCol_HeaderHovered] = bg_lighter;
-    colors[ImGuiCol_HeaderActive] = accent_dim;
-
-    colors[ImGuiCol_Separator] = border;
-    colors[ImGuiCol_SeparatorHovered] = accent;
-    colors[ImGuiCol_SeparatorActive] = accent_hover;
-
-    colors[ImGuiCol_ResizeGrip] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    colors[ImGuiCol_ResizeGripHovered] = accent_dim;
-    colors[ImGuiCol_ResizeGripActive] = accent;
-
-    colors[ImGuiCol_InputTextCursor] = colors[ImGuiCol_Text];
-
-    colors[ImGuiCol_Tab] = bg_dark;
-    colors[ImGuiCol_TabHovered] = bg_light;
+#pragma region Tabs
+    colors[ImGuiCol_Tab] = bg_darkest;
+    colors[ImGuiCol_TabHovered] = bg_lighter;
     colors[ImGuiCol_TabSelected] = bg_mid;
     colors[ImGuiCol_TabSelectedOverline] = accent;
-    colors[ImGuiCol_TabDimmed] = bg_darkest;
+
+    colors[ImGuiCol_TabDimmed] = bg_void;
     colors[ImGuiCol_TabDimmedSelected] = bg_dark;
-    colors[ImGuiCol_TabDimmedSelectedOverline] = ImVec4(0.00f, 0.48f, 0.80f, 0.00f);
+    colors[ImGuiCol_TabDimmedSelectedOverline] = accent_subtle;
+#pragma endregion
 
+#pragma region Docking
     colors[ImGuiCol_DockingPreview] = accent_dim;
-    colors[ImGuiCol_DockingEmptyBg] = bg_darkest;
 
-    colors[ImGuiCol_PlotLines] = ImVec4(0.70f, 0.70f, 0.72f, 1.00f);
-    colors[ImGuiCol_PlotLinesHovered] = accent_hover;
-    colors[ImGuiCol_PlotHistogram] = ImVec4(0.45f, 0.60f, 0.75f, 1.00f);
-    colors[ImGuiCol_PlotHistogramHovered] = accent_hover;
+    colors[ImGuiCol_DockingEmptyBg] = bg_void;
+#pragma endregion
 
+#pragma region Tables
     colors[ImGuiCol_TableHeaderBg] = bg_mid;
     colors[ImGuiCol_TableBorderStrong] = border;
-    colors[ImGuiCol_TableBorderLight] = ImVec4(0.16f, 0.16f, 0.17f, 1.00f);
-    colors[ImGuiCol_TableRowBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    colors[ImGuiCol_TableRowBgAlt] = ImVec4(1.00f, 1.00f, 1.00f, 0.02f);
+    colors[ImGuiCol_TableBorderLight] = border_soft;
 
-    colors[ImGuiCol_TextLink] = accent;
-    colors[ImGuiCol_TextSelectedBg] = accent_dim;
-    colors[ImGuiCol_TreeLines] = border;
+    colors[ImGuiCol_TableRowBg] = ImVec4(
+        0.0f, 0.0f, 0.0f, 0.0f);
 
-    colors[ImGuiCol_DragDropTarget] = accent;
-    colors[ImGuiCol_DragDropTargetBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    colors[ImGuiCol_TableRowBgAlt] = ImVec4(
+        1.0f, 1.0f, 1.0f, 0.025f);
+#pragma endregion 
 
-    colors[ImGuiCol_UnsavedMarker] = accent;
-    colors[ImGuiCol_NavCursor] = accent;
-    colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
-    colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.10f, 0.10f, 0.10f, 0.50f);
-    colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.05f, 0.05f, 0.05f, 0.60f);
+#pragma region Plots
+    colors[ImGuiCol_PlotLines] = text_muted;
+    colors[ImGuiCol_PlotLinesHovered] = text;
+    colors[ImGuiCol_PlotHistogram] = text_muted;
+    colors[ImGuiCol_PlotHistogramHovered] = text;
+#pragma endregion
 
-    style->WindowPadding = ImVec2(6, 6);
-    style->FramePadding = ImVec2(6, 3);
-    style->CellPadding = ImVec2(6, 3);
-    style->ItemSpacing = ImVec2(6, 4);
-    style->ItemInnerSpacing = ImVec2(5, 4);
-    style->IndentSpacing = 14.0f;
-    style->ScrollbarSize = 14.0f;
-    style->GrabMinSize = 8.0f;
+#pragma region Drag & Drop
+    colors[ImGuiCol_DragDropTarget] = bg_lighter;
+    colors[ImGuiCol_DragDropTargetBg] = ImVec4(0.400f, 0.400f, 0.400f, 0.20f);
+#pragma endregion
 
-    style->WindowBorderSize = 0.0f;
-    style->ChildBorderSize = 1.0f;
+#pragma region Navigation
+    colors[ImGuiCol_UnsavedMarker] = text_muted;
+    colors[ImGuiCol_NavCursor] = accent_hover;
+
+    colors[ImGuiCol_NavWindowingHighlight] = ImVec4(0.870f, 0.870f, 0.870f, 0.65f);
+
+    colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.020f, 0.020f, 0.020f, 0.55f);
+
+    colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.015f, 0.015f, 0.015f, 0.75f);
+#pragma endregion
+
+#pragma region Global
+    style->Alpha = 1.0f;
+    style->DisabledAlpha = 0.48f;
+#pragma endregion 
+
+#pragma region Spacing
+    style->WindowPadding = ImVec2(8.0f, 7.0f);
+    style->FramePadding = ImVec2(7.0f, 4.0f);
+    style->CellPadding = ImVec2(7.0f, 4.0f);
+
+    style->ItemSpacing = ImVec2(8.0f, 5.0f);
+    style->ItemInnerSpacing = ImVec2(6.0f, 4.0f);
+
+    style->TouchExtraPadding = ImVec2(0.0f, 0.0f);
+    style->IndentSpacing = 18.0f;
+    style->ColumnsMinSpacing = 8.0f;
+#pragma endregion
+
+#pragma region Borders
+    style->WindowBorderSize = 1.0f;
+    style->ChildBorderSize = 0.0f;
     style->PopupBorderSize = 1.0f;
-    style->FrameBorderSize = 0.0f;
+    style->FrameBorderSize = 1.0f;
+
     style->TabBorderSize = 0.0f;
     style->TabBarBorderSize = 1.0f;
-    style->SeparatorTextBorderSize = 1.0f;
 
+    style->SeparatorTextBorderSize = 1.0f;
+#pragma endregion 
+
+#pragma region Rounding
     style->WindowRounding = 0.0f;
     style->ChildRounding = 0.0f;
-    style->FrameRounding = 0.0f;
     style->PopupRounding = 0.0f;
+
+    style->FrameRounding = 0.0f;
     style->ScrollbarRounding = 0.0f;
     style->GrabRounding = 0.0f;
     style->TabRounding = 0.0f;
+#pragma endregion 
 
-    style->WindowTitleAlign = ImVec2(0.00f, 0.50f);
+    style->ScrollbarSize = 11.0f;
+    style->GrabMinSize = 10.0f;
+    style->LogSliderDeadzone = 4.0f;
+
+    style->WindowTitleAlign = ImVec2(0.02f, 0.50f);
     style->ButtonTextAlign = ImVec2(0.50f, 0.50f);
+    style->SelectableTextAlign = ImVec2(0.00f, 0.50f);
+
     style->SeparatorTextAlign = ImVec2(0.00f, 0.50f);
+    style->SeparatorTextPadding = ImVec2(8.0f, 3.0f);
+
+    style->WindowMinSize = ImVec2(32.0f, 32.0f);
+    style->WindowMenuButtonPosition = ImGuiDir_Left;
+
+    style->AntiAliasedLines = true;
+    style->AntiAliasedLinesUseTex = true;
+    style->AntiAliasedFill = true;
+
+    style->CurveTessellationTol = 1.25f;
+    style->CircleTessellationMaxError = 0.30f;
+}
+
+void ImGui::FireboxClassicLightStyle(ImGuiStyle* dst)
+{
+    ImGuiStyle* style = dst ? dst : &ImGui::GetStyle();
+    // Start from a known base, then remove all hue from every color slot.
+    // This also covers ImGuiCol values not explicitly set below.
+    ImGui::StyleColorsDark(style);
+    ImVec4* colors = style->Colors;
+    for (int i = 0; i < ImGuiCol_COUNT; ++i)
+    {
+        const float gray = 0.2126f * colors[i].x +
+            0.7152f * colors[i].y +
+            0.0722f * colors[i].z;
+        colors[i].x = colors[i].y = colors[i].z = gray;
+    }
+
+    // Background hierarchy — true grayscale, medium charcoal
+    const ImVec4 bg_void = ImVec4(0.140f, 0.140f, 0.140f, 1.00f);
+    const ImVec4 bg_darkest = ImVec4(0.175f, 0.175f, 0.175f, 1.00f);
+    const ImVec4 bg_dark = ImVec4(0.220f, 0.220f, 0.220f, 1.00f);
+    const ImVec4 bg_mid = ImVec4(0.260f, 0.260f, 0.260f, 1.00f);
+    const ImVec4 bg_light = ImVec4(0.310f, 0.310f, 0.310f, 1.00f);
+    const ImVec4 bg_lighter = ImVec4(0.370f, 0.370f, 0.370f, 1.00f);
+
+    // Accent colors — selected items only (orange)
+    const ImVec4 accent = ImVec4(0.880f, 0.390f, 0.055f, 1.00f);
+    const ImVec4 accent_hover = ImVec4(0.980f, 0.510f, 0.100f, 1.00f);
+    const ImVec4 accent_dim = ImVec4(0.880f, 0.390f, 0.055f, 0.42f);
+    const ImVec4 accent_subtle = ImVec4(0.880f, 0.390f, 0.055f, 0.26f);
+
+    // Typography
+    const ImVec4 text = ImVec4(0.940f, 0.940f, 0.940f, 1.00f);
+    const ImVec4 text_muted = ImVec4(0.710f, 0.710f, 0.710f, 1.00f);
+    const ImVec4 text_disabled = ImVec4(0.510f, 0.510f, 0.510f, 1.00f);
+
+    // Borders
+    const ImVec4 border = ImVec4(0.125f, 0.125f, 0.125f, 1.00f);
+    const ImVec4 border_soft = ImVec4(0.345f, 0.345f, 0.345f, 1.00f);
+
+
+#pragma region Text
+    colors[ImGuiCol_Text] = text;
+    colors[ImGuiCol_TextDisabled] = text_disabled;
+    colors[ImGuiCol_TextLink] = text_muted;
+    colors[ImGuiCol_TextSelectedBg] = accent_dim;
+    colors[ImGuiCol_InputTextCursor] = text;
+#pragma endregion
+
+#pragma region Panels
+    colors[ImGuiCol_WindowBg] = bg_dark;
+
+    colors[ImGuiCol_ChildBg] = ImVec4(0.235f, 0.235f, 0.235f, 1.00f);
+
+    colors[ImGuiCol_PopupBg] = bg_mid;
+
+    colors[ImGuiCol_Border] = border;
+    colors[ImGuiCol_BorderShadow] = ImVec4(
+        0.0f, 0.0f, 0.0f, 0.0f);
+
+    colors[ImGuiCol_TitleBg] = bg_darkest;
+    colors[ImGuiCol_TitleBgActive] = bg_mid;
+    colors[ImGuiCol_TitleBgCollapsed] = bg_darkest;
+
+    colors[ImGuiCol_MenuBarBg] = bg_darkest;
+#pragma endregion
+
+#pragma region Input Fields
+    // Recessed neutral inputs
+    colors[ImGuiCol_FrameBg] = bg_darkest;
+
+    colors[ImGuiCol_FrameBgHovered] = bg_mid;
+
+    colors[ImGuiCol_FrameBgActive] = bg_light;
+#pragma endregion
+
+#pragma region Buttons
+    // Neutral toolbar buttons, including pressed state
+    colors[ImGuiCol_Button] = bg_mid;
+    colors[ImGuiCol_ButtonHovered] = bg_lighter;
+    colors[ImGuiCol_ButtonActive] = bg_lighter;
+#pragma endregion
+
+#pragma region Selection
+    colors[ImGuiCol_Header] = ImVec4(0.340f, 0.340f, 0.340f, 0.40f);
+
+    colors[ImGuiCol_HeaderHovered] = ImVec4(0.420f, 0.420f, 0.420f, 0.75f);
+
+    colors[ImGuiCol_HeaderActive] = ImVec4(0.465f, 0.465f, 0.465f, 0.85f);
+
+    colors[ImGuiCol_TreeLines] = border_soft;
+#pragma endregion
+
+#pragma region Checkboxes & Sliders
+    colors[ImGuiCol_CheckMark] = accent_hover;
+
+    colors[ImGuiCol_SliderGrab] = bg_lighter;
+
+    colors[ImGuiCol_SliderGrabActive] = ImVec4(0.510f, 0.510f, 0.510f, 1.00f);
+#pragma endregion
+
+#pragma region Scrollbar
+    colors[ImGuiCol_ScrollbarBg] = bg_darkest;
+    colors[ImGuiCol_ScrollbarGrab] = bg_light;
+    colors[ImGuiCol_ScrollbarGrabHovered] = bg_lighter;
+    colors[ImGuiCol_ScrollbarGrabActive] = bg_lighter;
+#pragma endregion
+
+#pragma region Separator
+    colors[ImGuiCol_Separator] = border_soft;
+    colors[ImGuiCol_SeparatorHovered] = bg_lighter;
+    colors[ImGuiCol_SeparatorActive] = bg_lighter;
+#pragma endregion
+
+#pragma region Resize Grip
+    colors[ImGuiCol_ResizeGrip] = ImVec4(
+        0.0f, 0.0f, 0.0f, 0.0f);
+
+    colors[ImGuiCol_ResizeGripHovered] = border_soft;
+    colors[ImGuiCol_ResizeGripActive] = bg_lighter;
+#pragma endregion
+
+#pragma region Tabs
+    // Selected tab is neutral gray, with an accent-colored overline
+    colors[ImGuiCol_Tab] = bg_darkest;
+    colors[ImGuiCol_TabHovered] = bg_lighter;
+    colors[ImGuiCol_TabSelected] = bg_light;
+    colors[ImGuiCol_TabSelectedOverline] = accent;
+
+    colors[ImGuiCol_TabDimmed] = bg_void;
+    colors[ImGuiCol_TabDimmedSelected] = bg_dark;
+
+    colors[ImGuiCol_TabDimmedSelectedOverline] = accent_subtle;
+#pragma endregion
+
+#pragma region Docking
+    colors[ImGuiCol_DockingPreview] = accent_dim;
+
+    colors[ImGuiCol_DockingEmptyBg] = bg_void;
+#pragma endregion
+
+#pragma region Tables
+    colors[ImGuiCol_TableHeaderBg] = bg_mid;
+    colors[ImGuiCol_TableBorderStrong] = border;
+    colors[ImGuiCol_TableBorderLight] = border_soft;
+
+    colors[ImGuiCol_TableRowBg] = ImVec4(
+        0.0f, 0.0f, 0.0f, 0.0f);
+
+    colors[ImGuiCol_TableRowBgAlt] = ImVec4(
+        1.0f, 1.0f, 1.0f, 0.035f);
+#pragma endregion
+
+#pragma region Plots
+    colors[ImGuiCol_PlotLines] = text_muted;
+    colors[ImGuiCol_PlotLinesHovered] = text;
+    colors[ImGuiCol_PlotHistogram] = text_muted;
+    colors[ImGuiCol_PlotHistogramHovered] = text;
+#pragma endregion
+
+#pragma region DragDrop
+    colors[ImGuiCol_DragDropTarget] = bg_lighter;
+    colors[ImGuiCol_DragDropTargetBg] = ImVec4(0.400f, 0.400f, 0.400f, 0.20f);
+#pragma endregion
+
+#pragma region Navigation
+    colors[ImGuiCol_UnsavedMarker] = text_muted;
+    colors[ImGuiCol_NavCursor] = accent_hover;
+
+    colors[ImGuiCol_NavWindowingHighlight] = ImVec4(0.870f, 0.870f, 0.870f, 0.65f);
+
+    colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.020f, 0.020f, 0.020f, 0.55f);
+
+    colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.015f, 0.015f, 0.015f, 0.75f);
+#pragma endregion
+
+#pragma region Global
+    style->Alpha = 1.0f;
+    style->DisabledAlpha = 0.55f;
+#pragma endregion
+
+#pragma region Spacing
+    style->WindowPadding = ImVec2(10.0f, 8.0f);
+    style->FramePadding = ImVec2(8.0f, 5.0f);
+    style->CellPadding = ImVec2(8.0f, 5.0f);
+
+    style->ItemSpacing = ImVec2(8.0f, 6.0f);
+    style->ItemInnerSpacing = ImVec2(6.0f, 4.0f);
+
+    style->TouchExtraPadding = ImVec2(0.0f, 0.0f);
+    style->IndentSpacing = 18.0f;
+    style->ColumnsMinSpacing = 8.0f;
+#pragma endregion
+
+#pragma region Borders
+    style->WindowBorderSize = 1.0f;
+    style->ChildBorderSize = 0.0f;
+    style->PopupBorderSize = 1.0f;
+    style->FrameBorderSize = 1.0f;
+
+    style->TabBorderSize = 0.0f;
+    style->TabBarBorderSize = 1.0f;
+
+    style->SeparatorTextBorderSize = 1.0f;
+#pragma endregion
+
+#pragma region Rounding
+    // UE4 uses mostly rectangular editor controls
+    style->WindowRounding = 0.0f;
+    style->ChildRounding = 0.0f;
+    style->PopupRounding = 2.0f;
+
+    style->FrameRounding = 2.0f;
+    style->ScrollbarRounding = 2.0f;
+    style->GrabRounding = 2.0f;
+    style->TabRounding = 2.0f;
+#pragma endregion
+
+#pragma region Sizes
+    style->ScrollbarSize = 12.0f;
+    style->GrabMinSize = 11.0f;
+    style->LogSliderDeadzone = 4.0f;
+#pragma endregion
+
+#pragma region Alignment
+    style->WindowTitleAlign = ImVec2(0.02f, 0.50f);
+    style->ButtonTextAlign = ImVec2(0.50f, 0.50f);
+    style->SelectableTextAlign = ImVec2(0.00f, 0.50f);
+
+    style->SeparatorTextAlign = ImVec2(0.00f, 0.50f);
+    style->SeparatorTextPadding = ImVec2(8.0f, 3.0f);
+#pragma endregion
+
+#pragma region Misc
+    style->WindowMinSize = ImVec2(32.0f, 32.0f);
+    style->WindowMenuButtonPosition = ImGuiDir_Left;
+
+    style->AntiAliasedLines = true;
+    style->AntiAliasedLinesUseTex = true;
+    style->AntiAliasedFill = true;
+
+    style->CurveTessellationTol = 1.25f;
+    style->CircleTessellationMaxError = 0.30f;
+#pragma endregion
+}
+void ImGui::FireboxVibrantDarkStyle(ImGuiStyle* dst)
+{
+    ImGuiStyle* style = dst ? dst : &ImGui::GetStyle();
+    ImGui::StyleColorsDark(style);
+    ImVec4* colors = style->Colors;
+    for (int i = 0; i < ImGuiCol_COUNT; ++i)
+    {
+        const float gray = 0.2126f * colors[i].x +
+            0.7152f * colors[i].y +
+            0.0722f * colors[i].z;
+        colors[i].x = colors[i].y = colors[i].z = gray;
+    }
+
+    // Background hierarchy — true grayscale, deep charcoal
+    const ImVec4 bg_void = ImVec4(0.070f, 0.070f, 0.070f, 1.00f);
+    const ImVec4 bg_darkest = ImVec4(0.090f, 0.090f, 0.090f, 1.00f);
+    const ImVec4 bg_dark = ImVec4(0.120f, 0.120f, 0.120f, 1.00f);
+    const ImVec4 bg_mid = ImVec4(0.160f, 0.160f, 0.160f, 1.00f);
+    const ImVec4 bg_light = ImVec4(0.205f, 0.205f, 0.205f, 1.00f);
+    const ImVec4 bg_lighter = ImVec4(0.260f, 0.260f, 0.260f, 1.00f);
+
+    // Accent colors — selected items only (electric blue)
+    const ImVec4 accent = ImVec4(0.045f, 0.465f, 1.000f, 1.00f);
+    const ImVec4 accent_hover = ImVec4(0.220f, 0.610f, 1.000f, 1.00f);
+    const ImVec4 accent_dim = ImVec4(0.045f, 0.465f, 1.000f, 0.42f);
+    const ImVec4 accent_subtle = ImVec4(0.045f, 0.465f, 1.000f, 0.26f);
+
+    // Typography
+    const ImVec4 text = ImVec4(0.920f, 0.920f, 0.920f, 1.00f);
+    const ImVec4 text_muted = ImVec4(0.660f, 0.660f, 0.660f, 1.00f);
+    const ImVec4 text_disabled = ImVec4(0.440f, 0.440f, 0.440f, 1.00f);
+
+    // Borders
+    const ImVec4 border = ImVec4(0.065f, 0.065f, 0.065f, 1.00f);
+    const ImVec4 border_soft = ImVec4(0.265f, 0.265f, 0.265f, 1.00f);
+
+
+#pragma region Text
+    colors[ImGuiCol_Text] = text;
+    colors[ImGuiCol_TextDisabled] = text_disabled;
+    colors[ImGuiCol_TextLink] = text_muted;
+    colors[ImGuiCol_TextSelectedBg] = accent_dim;
+    colors[ImGuiCol_InputTextCursor] = text;
+#pragma endregion
+
+#pragma region Panels
+    colors[ImGuiCol_WindowBg] = bg_dark;
+    colors[ImGuiCol_ChildBg] = bg_dark;
+    colors[ImGuiCol_PopupBg] = bg_mid;
+
+    colors[ImGuiCol_Border] = border;
+    colors[ImGuiCol_BorderShadow] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+    colors[ImGuiCol_TitleBg] = bg_darkest;
+    colors[ImGuiCol_TitleBgActive] = bg_mid;
+    colors[ImGuiCol_TitleBgCollapsed] = bg_void;
+
+    colors[ImGuiCol_MenuBarBg] = bg_darkest;
+#pragma endregion
+
+#pragma region Input Fields
+    colors[ImGuiCol_FrameBg] = bg_darkest;
+    colors[ImGuiCol_FrameBgHovered] = bg_mid;
+    colors[ImGuiCol_FrameBgActive] = bg_light;
+#pragma endregion
+
+#pragma region Buttons
+    colors[ImGuiCol_Button] = bg_light;
+    colors[ImGuiCol_ButtonHovered] = bg_lighter;
+    colors[ImGuiCol_ButtonActive] = bg_lighter;
+#pragma endregion
+
+#pragma region Selection
+    colors[ImGuiCol_Header] = ImVec4(0.340f, 0.340f, 0.340f, 0.40f);
+    colors[ImGuiCol_HeaderHovered] = ImVec4(0.420f, 0.420f, 0.420f, 0.75f);
+    colors[ImGuiCol_HeaderActive] = ImVec4(0.465f, 0.465f, 0.465f, 0.85f);
+
+    colors[ImGuiCol_TreeLines] = border_soft;
+#pragma endregion
+
+#pragma region Checkboxes & Sliders
+    colors[ImGuiCol_CheckMark] = accent_hover;
+
+    colors[ImGuiCol_SliderGrab] = bg_lighter;
+    colors[ImGuiCol_SliderGrabActive] = ImVec4(0.510f, 0.510f, 0.510f, 1.00f);
+#pragma endregion
+
+#pragma region Scrollbar
+    colors[ImGuiCol_ScrollbarBg] = bg_darkest;
+    colors[ImGuiCol_ScrollbarGrab] = bg_light;
+    colors[ImGuiCol_ScrollbarGrabHovered] = bg_lighter;
+    colors[ImGuiCol_ScrollbarGrabActive] = bg_lighter;
+#pragma endregion
+
+#pragma region Separator
+    colors[ImGuiCol_Separator] = border_soft;
+    colors[ImGuiCol_SeparatorHovered] = bg_lighter;
+    colors[ImGuiCol_SeparatorActive] = bg_lighter;
+#pragma endregion
+
+#pragma region Resize Grip
+    colors[ImGuiCol_ResizeGrip] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+    colors[ImGuiCol_ResizeGripHovered] = border_soft;
+    colors[ImGuiCol_ResizeGripActive] = bg_lighter;
+#pragma endregion
+
+#pragma region Tabs
+    colors[ImGuiCol_Tab] = bg_darkest;
+    colors[ImGuiCol_TabHovered] = bg_lighter;
+    colors[ImGuiCol_TabSelected] = bg_mid;
+    colors[ImGuiCol_TabSelectedOverline] = accent;
+
+    colors[ImGuiCol_TabDimmed] = bg_void;
+    colors[ImGuiCol_TabDimmedSelected] = bg_dark;
+    colors[ImGuiCol_TabDimmedSelectedOverline] = accent_subtle;
+#pragma endregion
+
+#pragma region Docking
+    colors[ImGuiCol_DockingPreview] = accent_dim;
+
+    colors[ImGuiCol_DockingEmptyBg] = bg_void;
+#pragma endregion
+
+#pragma region Tables
+    colors[ImGuiCol_TableHeaderBg] = bg_mid;
+    colors[ImGuiCol_TableBorderStrong] = border;
+    colors[ImGuiCol_TableBorderLight] = border_soft;
+
+    colors[ImGuiCol_TableRowBg] = ImVec4(
+        0.0f, 0.0f, 0.0f, 0.0f);
+
+    colors[ImGuiCol_TableRowBgAlt] = ImVec4(
+        1.0f, 1.0f, 1.0f, 0.025f);
+#pragma endregion 
+
+#pragma region Plots
+    colors[ImGuiCol_PlotLines] = text_muted;
+    colors[ImGuiCol_PlotLinesHovered] = text;
+    colors[ImGuiCol_PlotHistogram] = text_muted;
+    colors[ImGuiCol_PlotHistogramHovered] = text;
+#pragma endregion
+
+#pragma region Drag & Drop
+    colors[ImGuiCol_DragDropTarget] = bg_lighter;
+    colors[ImGuiCol_DragDropTargetBg] = ImVec4(0.400f, 0.400f, 0.400f, 0.20f);
+#pragma endregion
+
+#pragma region Navigation
+    colors[ImGuiCol_UnsavedMarker] = text_muted;
+    colors[ImGuiCol_NavCursor] = accent_hover;
+
+    colors[ImGuiCol_NavWindowingHighlight] = ImVec4(0.870f, 0.870f, 0.870f, 0.65f);
+
+    colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.020f, 0.020f, 0.020f, 0.55f);
+
+    colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.015f, 0.015f, 0.015f, 0.75f);
+#pragma endregion
+
+#pragma region Global
+    style->Alpha = 1.0f;
+    style->DisabledAlpha = 0.48f;
+#pragma endregion 
+
+#pragma region Spacing
+    style->WindowPadding = ImVec2(8.0f, 7.0f);
+    style->FramePadding = ImVec2(7.0f, 4.0f);
+    style->CellPadding = ImVec2(7.0f, 4.0f);
+
+    style->ItemSpacing = ImVec2(8.0f, 5.0f);
+    style->ItemInnerSpacing = ImVec2(6.0f, 4.0f);
+
+    style->TouchExtraPadding = ImVec2(0.0f, 0.0f);
+    style->IndentSpacing = 18.0f;
+    style->ColumnsMinSpacing = 8.0f;
+#pragma endregion
+
+#pragma region Borders
+    style->WindowBorderSize = 1.0f;
+    style->ChildBorderSize = 0.0f;
+    style->PopupBorderSize = 1.0f;
+    style->FrameBorderSize = 1.0f;
+
+    style->TabBorderSize = 0.0f;
+    style->TabBarBorderSize = 1.0f;
+
+    style->SeparatorTextBorderSize = 1.0f;
+#pragma endregion 
+
+#pragma region Rounding
+    style->WindowRounding = 0.0f;
+    style->ChildRounding = 0.0f;
+    style->PopupRounding = 0.0f;
+
+    style->FrameRounding = 0.0f;
+    style->ScrollbarRounding = 0.0f;
+    style->GrabRounding = 0.0f;
+    style->TabRounding = 0.0f;
+#pragma endregion 
+
+    style->ScrollbarSize = 11.0f;
+    style->GrabMinSize = 10.0f;
+    style->LogSliderDeadzone = 4.0f;
+
+    style->WindowTitleAlign = ImVec2(0.02f, 0.50f);
+    style->ButtonTextAlign = ImVec2(0.50f, 0.50f);
+    style->SelectableTextAlign = ImVec2(0.00f, 0.50f);
+
+    style->SeparatorTextAlign = ImVec2(0.00f, 0.50f);
+    style->SeparatorTextPadding = ImVec2(8.0f, 3.0f);
+
+    style->WindowMinSize = ImVec2(32.0f, 32.0f);
+    style->WindowMenuButtonPosition = ImGuiDir_Left;
+
+    style->AntiAliasedLines = true;
+    style->AntiAliasedLinesUseTex = true;
+    style->AntiAliasedFill = true;
+
+    style->CurveTessellationTol = 1.25f;
+    style->CircleTessellationMaxError = 0.30f;
 }
 
 // Those light colors are better suited with a thicker font than the default one + FrameBorder

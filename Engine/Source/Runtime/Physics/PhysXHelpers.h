@@ -4,16 +4,22 @@
 
 #include <physx/include/PxPhysicsAPI.h>
 
-const physx::PxTransform& ConvertToPxTransform(const TransformComponent& transform)
+inline physx::PxTransform ConvertToPxTransform(const TransformComponent& transform)
 {
-	glm::quat glmQ(glm::radians(transform.Rotation));
-	physx::PxQuat physxQ(glmQ.x, glmQ.y, glmQ.z, glmQ.w);
+    const glm::quat q = glm::normalize(
+        glm::quat(glm::radians(transform.Rotation)));
 
-	return physx::PxTransform({ transform.Position.x, transform.Position.y, transform.Position.z}, physxQ);
+    return physx::PxTransform(
+        physx::PxVec3(transform.Position.x,
+            transform.Position.y,
+            transform.Position.z),
+        physx::PxQuat(q.x, q.y, q.z, q.w));
 }
 
-const Vector3& ConvertPxQuatToRotation(const PxQuat& rotation)
+inline Vector3 ConvertPxQuatToRotation(const PxQuat& rotation)
 {
-	glm::quat glmQ(rotation.x, rotation.y, rotation.z, rotation.w);
-	return glm::eulerAngles(glmQ);
+    const glm::quat q = glm::normalize(
+        glm::quat(rotation.w, rotation.x, rotation.y, rotation.z));
+
+    return glm::degrees(glm::eulerAngles(q));
 }

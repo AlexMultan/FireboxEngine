@@ -87,6 +87,7 @@ struct PostProcessComponent
 	float AmbientOcclusionRadius = 0.5f;
 	float AmbientOcclusionBias = 0.025f;
 	bool EnableSSAO = true;
+	bool EnableFXAA = true;
 	float MotionBlurIntensity = 0.5f;
 
 	bool InfiniteExtent = true;
@@ -96,11 +97,11 @@ struct PostProcessComponent
 	PostProcessComponent(float gamma, float contrast, float saturation, float gain, float temperature, float tint, float bloomIntensity,
 		float exposure, float vignetteIntensity, float sharpen, float chromaticAbberrationIntensity, float slope, float toe,
 		int ambientOcclusionKernelSize, float ambientOcclusionIntensity, float ambientOcclusionRadius, float ambientOcclusionBias, bool enableSSAO, 
-		float motionBlurIntensity, bool infiniteExtent) : Gamma(gamma), Contrast(contrast), Saturation(saturation), Gain(gain), Temperature(temperature), 
+		bool enableFXAA, float motionBlurIntensity, bool infiniteExtent) : Gamma(gamma), Contrast(contrast), Saturation(saturation), Gain(gain), Temperature(temperature), 
 		Tint(tint), BloomIntensity(bloomIntensity), Exposure(exposure), VignetteIntensity(vignetteIntensity), Sharpen(sharpen),
 		ChromaticAbberrationIntensity(chromaticAbberrationIntensity), Slope(slope), Toe(toe), AmbientOcclusionKernelSize(ambientOcclusionKernelSize),
 		AmbientOcclusionIntensity(ambientOcclusionIntensity), AmbientOcclusionRadius(ambientOcclusionRadius), AmbientOcclusionBias(ambientOcclusionBias),
-		EnableSSAO(enableSSAO), MotionBlurIntensity(motionBlurIntensity), InfiniteExtent(infiniteExtent)
+		EnableSSAO(enableSSAO), EnableFXAA(enableFXAA), MotionBlurIntensity(motionBlurIntensity), InfiniteExtent(infiniteExtent)
 	{
 	};
 };

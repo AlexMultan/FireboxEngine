@@ -5,6 +5,15 @@
 
 #include <imgui.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#include <commdlg.h>
+#else
+#include <array>
+#include <cstdio>
+#include <memory>
+#endif
+
 namespace FireboxEditor {
 
 	class EditorUtils
@@ -24,6 +33,8 @@ namespace FireboxEditor {
 		static const uint GetCameraSettingsIcon();
 		static const uint GetRenderingSettingsIcon();
 		static const uint GetPointLightIcon();
+		
+		static String OpenFileDialog(const wchar_t* filterName, const wchar_t* filterPattern, const char* zenityPattern);
 
 	private:
 		static Ref<Firebox::Texture> s_MeshIconTexture;

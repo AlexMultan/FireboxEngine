@@ -36,6 +36,7 @@ namespace Firebox {
 		inline const String& GetRelativePath() const { return m_RelativePath; }
 		inline auto& GetBoneInfoMap() { return m_BoneInfoMap; }
 		inline int& GetBoneCount() { return m_BoneCounter; }
+		inline const String& GetModelName() const { return m_ModelName; }
 
 	private:
 		void LoadModel(const String& path);
@@ -54,5 +55,7 @@ namespace Firebox {
 		LoadedTextures m_LoadedTextures;
 		std::map<String, BoneInfo> m_BoneInfoMap;
 		int m_BoneCounter;
+
+		String m_ModelName;
 	};
 }

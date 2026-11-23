@@ -14,6 +14,7 @@
 #include "Buffers/GBuffer.h"
 #include "Targets/ShadowMask.h"
 #include "PostProcess/SSAO.h"
+#include "PostProcess/FXAA.h"
 #include "Animation/Animator.h"
 #include "Rendering/Geometry/Quad.h"
 #include "Scene/Entity.h"
@@ -91,6 +92,7 @@ namespace Firebox {
 		static Ref<Shader> GetAmbientOcclusionVisShader();
 		static Ref<Shader> GetSSAOShader();
 		static Ref<Shader> GetSSAOBlurShader();
+		static Ref<Shader> GetFXAAShader();
 		static Ref<Shader> GetDepthShader();
 		static Ref<Shader> GetShadowShader();
 		static Ref<Shader> GetDebugCascadeLevelsShader();
@@ -117,6 +119,7 @@ namespace Firebox {
 		static void Flush();
 		static void GeometryPass();
 		static void SSAOPass();
+		static void FXAAPass();
 		static void ShadowMaskPass();
 		static void ShadowMapPass();
 		static void SkyboxPass();
@@ -153,6 +156,7 @@ namespace Firebox {
 			Ref<Shader> LightShader;
 			Ref<Shader> GridShader;
 			Ref<Shader> DebugShapeShader;
+			Ref<Shader> FXAAShader;
 			Ref<Material> DefaultMaterial;
 			Mat4x4 ViewProjectionMatrix;
 			Mat4x4 ViewMatrix;
@@ -174,6 +178,7 @@ namespace Firebox {
 			Ref<GBuffer> gBuffer;
 			Ref<ShadowMask> ShadowMask;
 			Ref<SSAO> SSAO;
+			Ref<FXAA> FXAA;
 			Ref<Mesh> BoxMesh;
 		};
 

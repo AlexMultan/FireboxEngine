@@ -10,6 +10,7 @@ namespace Firebox {
 	{
 		m_RelativePath = path;
 		LoadModel(EngineContent::GetRoot(path).string());
+		m_ModelName = EngineContent::GetRoot(path).filename().string();
 	}
 
 	void StaticMesh::SetMaterial(size_t slotIndex, const Ref<Material>& material)

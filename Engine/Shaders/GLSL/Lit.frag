@@ -62,9 +62,10 @@ layout (std140, binding = 0) uniform ShadowUniformBlock
 
 uniform float u_CascadePlaneDistances[16];
 uniform int u_CascadeCount;
-uniform float u_FarPlane;
 uniform sampler2DArray u_ShadowMap;
 uniform mat4 u_View;
+uniform float u_ShadowWorldTexelSize[16];
+uniform float u_ShadowDepthRange[16];
 
 const vec2 POISSON_DISK[32] = vec2[](
     vec2(0.27885360, -0.94997849),  vec2(-0.44994136, -0.55357852),
@@ -92,57 +93,66 @@ float randomAngle(vec3 seed)
 
 float CalculateShadow(vec3 lightDirection, vec3 normal, vec3 fragPosWorldSpace)
 {
-    if (length(fragPosWorldSpace) < 0.0001)
-    {
-        return 0.0;
-    }
+    vec4 fragPosView = u_View * vec4(fragPosWorldSpace, 1.0);
+    float viewDepth = abs(fragPosView.z);
 
-    vec4 fragPosViewSpace = u_View * vec4(fragPosWorldSpace, 1.0);
-    float depthValue = abs(fragPosViewSpace.z);
+    int layer = u_CascadeCount - 1;
 
-    int layer = -1;
-    for (int i = 0; i < u_CascadeCount; i++)
+    for (int i = 0; i < u_CascadeCount - 1; ++i)
     {
-        if (depthValue < u_CascadePlaneDistances[i])
+        if (viewDepth < u_CascadePlaneDistances[i])
         {
             layer = i;
             break;
         }
     }
 
-    if (layer == -1 || layer >= u_CascadeCount)
-    {
-        layer = u_CascadeCount - 1;
-    }
+    vec4 lightClip = LighSpaceMatrices[layer] * vec4(fragPosWorldSpace, 1.0);
+    vec3 p = lightClip.xyz / lightClip.w;
+    p.xy = p.xy * 0.5 + 0.5;
 
-    vec4 fragPosLightSpace = LighSpaceMatrices[layer] * vec4(fragPosWorldSpace, 1.0);
-    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    projCoords.xy = projCoords.xy * 0.5 + 0.5;
-    
-    float currentDepth = projCoords.z;
-
-    if (currentDepth > 1.0)
+    if (any(lessThan(p, vec3(0.0))) || any(greaterThan(p, vec3(1.0))))
     {
         return 0.0;
     }
 
-    vec3 lightDir = normalize(-lightDirection);
-    float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
-    const float biasModifier = 0.5f;
-    float currentDistance = (layer < u_CascadeCount) ? u_CascadePlaneDistances[layer] : u_FarPlane;
-    bias *= 1.0 / (currentDistance * biasModifier);
+    vec3 N = normalize(normal);
+    vec3 L = normalize(-lightDirection);
 
-    float shadow = 0.0;
-    vec2 texelSize = 1.0 / vec2(textureSize(u_ShadowMap, 0));
-    float filterRadius = 1.5 * (1.0 / float(layer + 1));
+    float NdotL = clamp(dot(N, L), 0.0, 1.0);
+    float sinTheta = sqrt(max(1.0 - NdotL - NdotL, 0.0));
+    float tanTheta = sinTheta / max(NdotL, 0.2);
+    float worldBias = 0.002 + 0.5 * u_ShadowWorldTexelSize[layer] * tanTheta;
+    float bias = worldBias / max(u_ShadowDepthRange[layer], 0.0001);
+
+    bias = clamp(bias, 0.0001, 0.0005);
+
+    vec2 texelSize = 1.0 / vec2(textureSize(u_ShadowMap, 0).xy);
+
     float angle = randomAngle(fragPosWorldSpace);
-    mat2 rot = mat2(cos(angle), -sin(angle), sin(angle), cos(angle));
 
-    for (int i = 0; i < 32; i++)
+    float c = cos(angle);
+    float s = sin(angle);
+
+    mat2 rotation = mat2(c, -s, s, c);
+    float filterRadius = 2.5;
+    float shadow = 0.0;
+
+    const bool SHADOW_MAP_REVERSED_Z = false;
+    for (int i = 0; i < 32; ++i)
     {
-        vec2 offset = rot * POISSON_DISK[i] * texelSize * filterRadius;
-        float pcfDepth = texture(u_ShadowMap, vec3(projCoords.xy + offset, layer)).r;
-        shadow += (currentDepth - bias) > pcfDepth ? 1.0 : 0.0;
+        vec2 offset = rotation * POISSON_DISK[i] * texelSize * filterRadius;
+
+        float sampledDepth = texture(u_ShadowMap, vec3(p.xy + offset, layer)).r;
+
+        if (SHADOW_MAP_REVERSED_Z)
+        {
+            shadow += (p.z + bias < sampledDepth) ? 1.0 : 0.0;
+        }
+        else
+        {
+            shadow += (p.z - bias > sampledDepth) ? 1.0 : 0.0;
+        }
     }
 
     return shadow / 32.0;
@@ -246,7 +256,7 @@ vec3 CalculateDirectionalLight(DirectionalLight directionalLight, vec3 viewDir, 
 vec3 CalculatePointLight(PointLight pointLight, vec3 fragPos, vec3 viewDir, vec3 albedo, float roughness, float ssao, vec3 normal, float metallic)
 {
     vec3 N = normalize(normal);
-    float dist = length(fragPos);
+    float dist = length(pointLight.position - fragPos);
     float attenuation = 1.0 / (pointLight.constant + pointLight.linear * dist + pointLight.quadratic * (dist * dist));
     vec3 radiance = pointLight.color.rgb * attenuation * pointLight.intensity;
     vec3 Lo = CookTorrancePointLight(N, viewDir, pointLight.position, fragPos, albedo, metallic, roughness, radiance);
