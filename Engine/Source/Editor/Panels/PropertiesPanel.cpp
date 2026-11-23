@@ -97,8 +97,15 @@ void FireboxEditor::PropertiesPanel::RenderPanel()
 
 			if (staticMeshTree)
 			{
-				ImGui::Text(smc.StaticMesh->GetDirectory().c_str());
-				if (ImGui::Button("Load 3D Model"))
+				ImVec2 originalPos = ImGui::GetCursorPos();
+				bool modelButton = ImGui::ImageButton(std::to_string(m_SelectedEntity.GetComponent<IdComponent>().GetId()).c_str(),
+					(ImTextureID)(uintptr_t)FireboxEditor::EditorUtils::GetMeshIcon(), { 64.0f, 64.0f }, { 1, 0 }, { 0, 1 });
+
+				ImGui::SameLine();
+				ImGui::SetCursorPosY(originalPos.y + 32.0f);
+				ImGui::TextWithBackground(smc.StaticMesh->GetModelName().c_str());
+
+				if (ImGui::Button("Load 3D Model") || modelButton)
 				{
 					String utf8Path = EditorUtils::OpenFileDialog(L"3D Model", L"*.gltf\0*.glb\0*.fbx\0*obj\0*.dae", 
 						"3D Model | *.gltf\0*.glb\0*.fbx\0*obj\0*.dae");

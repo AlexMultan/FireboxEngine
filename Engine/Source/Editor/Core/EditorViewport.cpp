@@ -38,7 +38,7 @@ void FireboxEditor::EditorViewport::OnAttach()
 
     io->FontDefault = io->Fonts->AddFontFromFileTTF(FireboxEditor::EditorContent::Get("Fonts/RobotoMono/RobotoMono-Medium.ttf").string().c_str(), 16.0f);
 
-    ImGui::FireboxEditorStyleClassic();
+    ImGui::FireboxClassicDarkStyle();
 
     Firebox::Window& window = Firebox::Application::Get().GetWindow();
     SDL_Window* sdlWindow = window.GetSDLWindow();
